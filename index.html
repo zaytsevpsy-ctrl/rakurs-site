@@ -1467,11 +1467,25 @@ Don't invent numbers or cases beyond these. If unsure, offer a call. Say honestl
      +'<div class="rk-line rk-amber" style="border-top:1px solid #3A332C;padding-top:5px">один вместо рутины на всех</div></div>'
      +'<div class="cap"><b>Это про вас,</b> если админ-рутина съедает лучших людей.</div>'
   };
+  function norm(s){return s.replace(/ /g,' ').replace(/[‐‑‒–—]/g,'-').replace(/\s+/g,' ').trim();}
+  function isEN(){
+    var btn=null;
+    var els=document.querySelectorAll('button,a,div,span');
+    for(var i=0;i<els.length;i++){var t=(els[i].textContent||'').replace(/\s+/g,' ').trim();if((t==='EN · RU'||t==='RU · EN')&&els[i].children.length<=3){btn=els[i];break;}}
+    if(!btn) return true; // EN is the default
+    return /^EN/.test((btn.textContent||'').replace(/\s+/g,' ').trim());
+  }
+  function applyENto(el){
+    var D=window.__RAKURS_EN; if(!D) return;
+    var w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,null),n,nodes=[];
+    while(n=w.nextNode())nodes.push(n);
+    for(var i=0;i<nodes.length;i++){var t=nodes[i];if(!/[Ѐ-ӿ]/.test(t.nodeValue))continue;var en=D[norm(t.nodeValue)];if(en==null){var keys=Object.keys(D);for(var j=0;j<keys.length;j++){if(norm(keys[j])===norm(t.nodeValue)){en=D[keys[j]];break;}}}if(en!=null){if(t._ru==null)t._ru=t.nodeValue;var lead=t.nodeValue.match(/^\s*/)[0],tail=t.nodeValue.match(/\s*$/)[0];t.nodeValue=lead+en+tail;}}
+  }
   function inject(){
     var slots=document.querySelectorAll('[data-scene]');
     if(!slots.length) return false;
-    var any=false;
-    for(var i=0;i<slots.length;i++){var s=slots[i];if(s.getAttribute('data-filled'))continue;var k=s.getAttribute('data-scene');if(SCENES[k]){s.innerHTML=SCENES[k];s.setAttribute('data-filled','1');any=true;}}
+    var any=false,en=isEN();
+    for(var i=0;i<slots.length;i++){var s=slots[i];if(s.getAttribute('data-filled'))continue;var k=s.getAttribute('data-scene');if(SCENES[k]){s.innerHTML=SCENES[k];s.setAttribute('data-filled','1');if(en)applyENto(s);any=true;}}
     if(any){try{window.dispatchEvent(new Event('resize'));}catch(e){}}
     return true;
   }
