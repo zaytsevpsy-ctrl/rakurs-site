@@ -10,13 +10,60 @@ html,body{overflow-x:hidden!important;max-width:100%}
   [data-report]{max-width:100%!important}
   [data-report]>div{padding-left:12px!important;padding-right:12px!important}
 }
-.rk-store-grid{display:flex!important;grid-template-columns:none!important;overflow-x:auto;scroll-snap-type:x mandatory;gap:20px!important;padding:4px 2px 18px;scroll-behavior:smooth;cursor:grab;-webkit-overflow-scrolling:touch}
-.rk-store-grid.rk-drag{cursor:grabbing;scroll-behavior:auto}
-.rk-store-grid>*{flex:0 0 clamp(270px,31%,360px);scroll-snap-align:start}
-.rk-store-nav{display:flex;justify-content:flex-end;gap:10px;margin:6px 2px 16px}
-.rk-arrow{width:42px;height:42px;border-radius:50%;border:1.5px solid #241F1B;background:transparent;color:#241F1B;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .18s,border-color .18s}
-.rk-arrow:hover{background:#E37722;border-color:#E37722}
-@media(max-width:620px){.rk-store-grid>*{flex:0 0 85%}.rk-store-nav{display:none}}
+/* ===== Spotlight showcase ===== */
+.rk-spot{display:flex;flex-direction:column;gap:14px;counter-reset:spot;max-width:1080px}
+.rk-spot-card{counter-increment:spot;position:relative;background:#FBF7EF;border:1px solid #E4DBCD;border-radius:16px;overflow:hidden;transition:background .3s,border-color .3s,box-shadow .35s,opacity .35s,filter .35s}
+.rk-spot-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#E37722;transform:scaleY(0);transform-origin:top;transition:transform .45s cubic-bezier(.22,1,.36,1)}
+.rk-spot-card:hover{background:#fff;border-color:#D8CDBB}
+.rk-spot-card.is-open{background:#fff;border-color:#E9C7A3;box-shadow:0 28px 64px -24px rgba(36,31,27,.34)}
+.rk-spot-card.is-open::before{transform:scaleY(1)}
+.rk-spot.has-open .rk-spot-card:not(.is-open){opacity:.5;filter:saturate(.65)}
+.rk-spot.has-open .rk-spot-card:not(.is-open):hover{opacity:1;filter:none}
+.rk-spot-head{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:20px;padding:22px 26px;cursor:pointer;-webkit-user-select:none;user-select:none}
+.rk-spot-num{font-family:'Manrope';font-weight:700;font-size:26px;color:#CDBFA9;line-height:1;transition:color .3s;font-variant-numeric:tabular-nums}
+.rk-spot-num::before{content:counter(spot,decimal-leading-zero)}
+.rk-spot-card.is-open .rk-spot-num,.rk-spot-card:hover .rk-spot-num{color:#E37722}
+.rk-spot-headmid{min-width:0}
+.rk-spot-hole{font-family:'JetBrains Mono';font-size:11px;letter-spacing:.03em;color:#B35F17;margin-bottom:6px}
+.rk-spot-title{font-family:'Manrope';font-weight:700;font-size:clamp(18px,1.9vw,23px);line-height:1.2;letter-spacing:-.01em;color:#241F1B;margin:0;transition:transform .3s}
+.rk-spot-card:hover .rk-spot-title{transform:translateX(3px)}
+.rk-spot-headside{display:flex;align-items:center;gap:18px;white-space:nowrap}
+.rk-spot-price{font-family:'Manrope';font-weight:700;font-size:15px;color:#241F1B}
+.rk-spot-chev{width:34px;height:34px;border-radius:50%;border:1.5px solid #C9BEAC;display:flex;align-items:center;justify-content:center;transition:transform .4s cubic-bezier(.22,1,.36,1),background .25s,border-color .25s;flex:0 0 auto}
+.rk-spot-chev svg{transition:stroke .25s}
+.rk-spot-card:hover .rk-spot-chev{border-color:#E37722}
+.rk-spot-card.is-open .rk-spot-chev{transform:rotate(180deg);background:#E37722;border-color:#E37722}
+.rk-spot-card.is-open .rk-spot-chev svg{stroke:#F9F5EC}
+.rk-spot-body{height:0;overflow:hidden;transition:height .44s cubic-bezier(.22,1,.36,1)}
+.rk-spot-body-in{padding:2px 26px 26px 26px;opacity:0;transform:translateY(12px);transition:opacity .42s .05s,transform .42s .05s}
+.rk-spot-card.is-open .rk-spot-body-in{opacity:1;transform:none}
+.rk-spot-tagrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.rk-spot-code{font-family:'JetBrains Mono';font-size:11px;letter-spacing:.06em;color:#6E6259}
+.rk-spot-tag{font-family:'JetBrains Mono';font-size:11px;color:#B35F17;background:#FBEFE2;padding:4px 10px;border-radius:20px}
+.rk-spot-desc{font-size:15px;line-height:1.6;color:#4A423B;margin:0 0 18px;max-width:760px}
+.rk-spot-demo{background:#F5F0E6;border:1px solid #E4DBCD;border-radius:12px;padding:16px;margin-bottom:18px;min-height:120px}
+.rk-spot-gets{list-style:none;padding:0;margin:0 0 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.rk-spot-gets li{font-size:13.5px;line-height:1.5;color:#241F1B;display:flex;gap:9px;align-items:flex-start;padding-top:12px;border-top:2px solid #EDE4D6}
+.rk-spot-gets li .b{color:#E37722;font-weight:700;line-height:1.4}
+.rk-spot-note{font-size:12.5px;color:#6E6259;font-style:italic;margin-bottom:16px}
+.rk-spot-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid #E4DBCD;padding-top:18px}
+.rk-spot-priceblock{display:flex;flex-direction:column;gap:2px}
+.rk-spot-pricebig{font-family:'Manrope';font-weight:700;font-size:22px;color:#241F1B}
+.rk-spot-launch{font-family:'JetBrains Mono';font-size:11px;color:#6E6259}
+.rk-spot-cta{font-family:'Manrope';font-weight:600;font-size:14.5px;color:#F9F5EC;background:#E37722;border:1px solid #E37722;padding:13px 24px;border-radius:10px;display:inline-flex;align-items:center;gap:8px;transition:background .18s,transform .15s}
+.rk-spot-cta:hover{background:#C9611A;color:#F9F5EC;transform:translateY(-1px)}
+.rk-spot-hint{font-family:'JetBrains Mono';font-size:11.5px;color:#8A7E71;margin:2px 2px 18px;display:flex;align-items:center;gap:8px}
+.rk-spot-hint b{color:#B35F17;font-weight:500}
+@media(max-width:760px){
+  .rk-spot-head{gap:14px;padding:18px 16px}
+  .rk-spot-price{display:none}
+  .rk-spot-gets{grid-template-columns:1fr;gap:0}
+  .rk-spot-gets li{border-top:none;padding-top:0;margin-top:9px}
+  .rk-spot-body-in{padding:2px 16px 20px}
+  .rk-spot-num{font-size:22px}
+  .rk-spot-cta{width:100%;justify-content:center}
+  .rk-spot-foot{gap:14px}
+}
 </style>
 </head>
 <body>
@@ -55,7 +102,7 @@ html,body{overflow-x:hidden!important;max-width:100%}
     .rk-founder-intro > div:first-child { min-height: 240px !important; }
   }
   @media (max-width: 620px) {
-    .rk-store-grid { grid-template-columns: 1fr !important; }
+    .rk-spot { max-width: 100% !important; }
     .rk-form-fields { grid-template-columns: 1fr !important; }
     .rk-navlink { display: none !important; }
     nav { flex-wrap: wrap; row-gap: 8px; padding: 12px 16px !important; }
@@ -277,38 +324,50 @@ html,body{overflow-x:hidden!important;max-width:100%}
     <div style="max-width: 1280px; margin: 0 auto;">
       <div data-reveal style="font-family: 'JetBrains Mono'; font-size: 13px; letter-spacing: .04em; color: #6E6259; margin-bottom: 18px;">// витрина решений — наведите кадр на любое, и оно заработает</div>
       <h2 data-reveal style="font-family: 'Manrope'; font-weight: 700; font-size: clamp(28px,3.4vw,46px); line-height: 1.1; letter-spacing: -.02em; margin: 0 0 18px; max-width: 900px;">Готовые решения с фиксированной ценой. Запуск за одну–три недели.</h2>
-      <p data-reveal style="font-family: 'Inter'; font-weight: 300; font-size: clamp(16px,1.3vw,19px); line-height: 1.6; color: #4A423B; max-width: 720px; margin: 0 0 46px;">Четыре продукта из проверенных шаблонов. Под каждым — конкретная дыра в деньгах, живое демо и цена без звёздочек.</p>
+      <p data-reveal style="font-family: 'Inter'; font-weight: 300; font-size: clamp(16px,1.3vw,19px); line-height: 1.6; color: #4A423B; max-width: 720px; margin: 0 0 22px;">Шесть готовых продуктов из проверенных шаблонов. Под каждым — конкретная дыра в деньгах, живое демо и цена без звёздочек.</p>
 
-      <div style="display: grid; grid-template-columns: repeat(2,1fr); gap: 20px;" class="rk-store-grid">
-        <sc-for list="{{ products }}" as="p" hint-placeholder-count="4">
-          <div data-reveal data-lens="target" style="position: relative; display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #E4DBCD; border-radius: 16px; padding: 26px 26px 24px; transition: transform .2s, box-shadow .2s, border-color .2s;" style-hover="transform: translateY(-4px); box-shadow: 0 22px 46px rgba(36,31,27,.12); border-color: #E37722;">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-              <span style="font-family: 'JetBrains Mono'; font-size: 11px; letter-spacing: .06em; color: #6E6259;">{{ p.code }}</span>
-              <span style="font-family: 'JetBrains Mono'; font-size: 11px; color: #B35F17; background: #FBEFE2; padding: 4px 10px; border-radius: 20px;">{{ p.tag }}</span>
-            </div>
-            <div style="font-family: 'JetBrains Mono'; font-size: 11px; color: #B35F17; letter-spacing: .03em; margin-bottom: 8px;">{{ p.hole }}</div>
-            <h3 style="font-family: 'Manrope'; font-weight: 700; font-size: 22px; line-height: 1.18; letter-spacing: -.01em; margin: 0 0 12px;">{{ p.title }}</h3>
-            <p style="font-size: 14.5px; line-height: 1.55; color: #4A423B; margin: 0 0 18px;">{{ p.desc }}</p>
+      <div data-reveal class="rk-spot-hint"><b>↕</b><span>Разверните любое решение — демо оживёт прямо в карточке.</span></div>
 
-            <!-- live demo slot -->
-            <div style="background: #F5F0E6; border: 1px solid #E4DBCD; border-radius: 12px; padding: 14px; margin-bottom: 18px; min-height: 108px;">
-              <dc-import name="Demo" kind="{{ p.demo }}" hint-size="100%,80px"></dc-import>
-            </div>
-
-            <ul style="list-style: none; padding: 0; margin: 0 0 18px; display: flex; flex-direction: column; gap: 7px;">
-              <sc-for list="{{ p.gets }}" as="g" hint-placeholder-count="3">
-                <li style="font-size: 13.5px; color: #241F1B; display: flex; gap: 9px; align-items: flex-start;"><span style="color: #E37722; font-weight: 700; line-height: 1.4;">·</span><span>{{ g }}</span></li>
-              </sc-for>
-            </ul>
-            <sc-if value="{{ p.note }}" hint-placeholder-val="{{ true }}">
-              <div style="margin-bottom: 14px; font-size: 12.5px; color: #6E6259; font-style: italic;">{{ p.note }}</div>
-            </sc-if>
-            <div style="margin-top: auto;">
-              <div style="border-top: 1px solid #E4DBCD; padding-top: 14px; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
-                <span style="font-family: 'Manrope'; font-weight: 700; font-size: 20px; color: #241F1B;">{{ p.price }}</span>
-                <span style="font-family: 'JetBrains Mono'; font-size: 11px; color: #6E6259;">{{ p.launch }}</span>
+      <div class="rk-spot" data-spot data-reveal>
+        <sc-for list="{{ products }}" as="p" hint-placeholder-count="6">
+          <div class="rk-spot-card" data-spot-card>
+            <div class="rk-spot-head" data-spot-head>
+              <div class="rk-spot-num"></div>
+              <div class="rk-spot-headmid">
+                <div class="rk-spot-hole">{{ p.hole }}</div>
+                <h3 class="rk-spot-title">{{ p.title }}</h3>
               </div>
-              <a href="#form" data-lens="target" style="margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Manrope'; font-weight: 600; font-size: 14.5px; color: #241F1B; background: #F5F0E6; border: 1px solid #E4DBCD; padding: 12px; border-radius: 10px; transition: background .18s, color .18s;" style-hover="background: #E37722; color: #F9F5EC; border-color: #E37722;">{{ p.cta }} →</a>
+              <div class="rk-spot-headside">
+                <span class="rk-spot-price">{{ p.price }}</span>
+                <span class="rk-spot-chev"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#241F1B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+              </div>
+            </div>
+            <div class="rk-spot-body" data-spot-body>
+              <div class="rk-spot-body-in">
+                <div class="rk-spot-tagrow">
+                  <span class="rk-spot-code">{{ p.code }}</span>
+                  <sc-if value="{{ p.tag }}" hint-placeholder-val="{{ true }}"><span class="rk-spot-tag">{{ p.tag }}</span></sc-if>
+                </div>
+                <p class="rk-spot-desc">{{ p.desc }}</p>
+                <div class="rk-spot-demo">
+                  <dc-import name="Demo" kind="{{ p.demo }}" hint-size="100%,90px"></dc-import>
+                </div>
+                <ul class="rk-spot-gets">
+                  <sc-for list="{{ p.gets }}" as="g" hint-placeholder-count="3">
+                    <li><span class="b">·</span><span>{{ g }}</span></li>
+                  </sc-for>
+                </ul>
+                <sc-if value="{{ p.note }}" hint-placeholder-val="{{ true }}">
+                  <div class="rk-spot-note">{{ p.note }}</div>
+                </sc-if>
+                <div class="rk-spot-foot">
+                  <div class="rk-spot-priceblock">
+                    <span class="rk-spot-pricebig">{{ p.price }}</span>
+                    <span class="rk-spot-launch">{{ p.launch }}</span>
+                  </div>
+                  <a href="#form" data-lens="target" class="rk-spot-cta">{{ p.cta }} →</a>
+                </div>
+              </div>
             </div>
           </div>
         </sc-for>
@@ -1177,6 +1236,41 @@ Don't invent numbers or cases beyond these. If unsure, offer a call. Say honestl
   }
   var n=0,t=setInterval(function(){if(init()||++n>30)clearInterval(t);},250);
   if(document.readyState!=='loading')init();else document.addEventListener('DOMContentLoaded',init);
+})();
+</script>
+<script>
+/* ===== Rakurs spotlight showcase controller ===== */
+(function(){
+  function wire(){
+    var spot=document.querySelector('[data-spot]');
+    if(!spot) return false;
+    if(spot.__rkspot) return true;
+    var cards=[].slice.call(spot.querySelectorAll('[data-spot-card]'));
+    if(!cards.length) return false;
+    spot.__rkspot=1;
+    function body(c){return c.querySelector('[data-spot-body]');}
+    function collapse(c){var b=body(c);if(!b)return;b.style.height=b.scrollHeight+'px';b.offsetHeight;b.style.height='0px';c.classList.remove('is-open');var h=c.querySelector('[data-spot-head]');if(h)h.setAttribute('aria-expanded','false');}
+    function expand(c){var b=body(c);if(!b)return;c.classList.add('is-open');b.style.height=b.scrollHeight+'px';var h=c.querySelector('[data-spot-head]');if(h)h.setAttribute('aria-expanded','true');b.addEventListener('transitionend',function te(e){if(e.propertyName==='height'&&c.classList.contains('is-open')){b.style.height='auto';b.removeEventListener('transitionend',te);}});}
+    function toggle(c){
+      var isOpen=c.classList.contains('is-open');
+      cards.forEach(function(x){if(x!==c&&x.classList.contains('is-open'))collapse(x);});
+      if(isOpen){collapse(c);spot.classList.remove('has-open');}
+      else{expand(c);spot.classList.add('has-open');}
+    }
+    cards.forEach(function(c){
+      var b=body(c);if(b)b.style.height='0px';
+      var h=c.querySelector('[data-spot-head]');
+      if(!h)return;
+      h.setAttribute('role','button');h.setAttribute('tabindex','0');h.setAttribute('aria-expanded','false');
+      h.addEventListener('click',function(){toggle(c);});
+      h.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '||e.key==='Spacebar'){e.preventDefault();toggle(c);}});
+    });
+    expand(cards[0]);spot.classList.add('has-open');
+    window.addEventListener('resize',function(){var o=spot.querySelector('.is-open [data-spot-body]');if(o)o.style.height='auto';});
+    return true;
+  }
+  var n=0,t=setInterval(function(){if(wire()||++n>80)clearInterval(t);},180);
+  if(document.readyState!=='loading')wire();else document.addEventListener('DOMContentLoaded',wire);
 })();
 </script>
 </body>

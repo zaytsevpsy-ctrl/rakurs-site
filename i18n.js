@@ -1,4 +1,6 @@
 window.__RAKURS_EN = {
+"Шесть готовых продуктов из проверенных шаблонов. Под каждым — конкретная дыра в деньгах, живое демо и цена без звёздочек.":"Six ready-made products from proven templates. Under each: a specific money leak, a live demo, and a price with no fine print.",
+"Разверните любое решение — демо оживёт прямо в карточке.":"Expand any solution — the demo comes alive right inside the card.",
 "B5 · Панель управления бизнесом":"B5 · Business Command Panel",
 "весь бизнес на экране":"the whole business on one screen",
 "// дыра: руководитель решает вслепую":"// gap: leaders decide blind",
