@@ -66,6 +66,41 @@ html,body{overflow-x:hidden!important;max-width:100%}
 @keyframes rk-fillw{0%{width:0}100%{width:var(--w,100%)}}
 @keyframes rk-sweepx{0%{left:-45%}100%{left:130%}}
 @keyframes rk-bobble{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+/* scene: looping arcs, setting & motion */
+.rk-spot-card:not(.is-open) .rk-scene *{animation-play-state:paused!important}
+.rk-cyc{animation:rk-fadecycle var(--d,5s) linear infinite both}
+.rk-night{background:linear-gradient(164deg,#212a3d 0%,#2b3448 46%,#EFE7D8 46%,#EFE7D8 100%)!important;border-color:#2b3448!important}
+.rk-moon{position:absolute;top:9px;right:14px;width:15px;height:15px;border-radius:50%;background:#EFD9A8;box-shadow:0 0 12px rgba(239,217,168,.6);z-index:1}
+.rk-star{position:absolute;width:2px;height:2px;border-radius:50%;background:#EFD9A8;animation:rk-twinkle 2.6s infinite;z-index:1}
+.rk-pill-flip{font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;animation:rk-flipcold 4.6s infinite}
+.rk-belt{position:absolute;left:0;right:40px;top:50%;height:2px;background:repeating-linear-gradient(90deg,#C9BEAC 0 7px,transparent 7px 14px);animation:rk-belt 1s linear infinite;opacity:.7}
+.rk-chip.rk-tk{position:absolute;left:0;animation:rk-conveyor 3.2s linear infinite}
+.rk-trackbar{flex:1;min-width:36px;height:6px;border-radius:4px;background:#2C2721;overflow:hidden}
+.rk-trackbar > i{display:block;height:100%;border-radius:4px;animation:rk-fillw 2.4s cubic-bezier(.3,1,.4,1) infinite}
+.rk-ok-bar{background:#6FB56A}.rk-amber-bar{background:#E37722}
+.rk-clock{display:inline-block;animation:rk-spinfast 1.1s linear infinite}
+.rk-uline{position:absolute;left:0;bottom:-2px;height:2px;width:100%;background:#E37722;transform:scaleX(0);transform-origin:left;animation:rk-uline 5s infinite}
+.rk-stampd{position:absolute;top:-3px;right:4px;font-family:'Manrope';font-weight:800;font-size:13px;color:#6FB56A;border:2px solid #6FB56A;border-radius:6px;padding:1px 6px;transform:rotate(-13deg);animation:rk-stamp 3s infinite}
+.rk-bar > i.rk-loopfill{position:absolute;left:0;top:0;bottom:0;background:#E37722;border-radius:4px;animation:rk-fillw 3s cubic-bezier(.3,1,.4,1) infinite}
+.rk-gauge{background:#17140F;border:1px solid #2C2721;border-radius:8px;padding:6px 7px;text-align:center}
+.rk-gauge.rk-alert{border-color:#F0653F;animation:rk-pulse 1.6s infinite}
+.rk-spark{margin-top:3px;display:block}
+.rk-spark polyline{stroke-dasharray:84;stroke-dashoffset:84;animation:rk-spark 2.6s ease-in-out infinite}
+.rk-tickpop{display:inline-block;animation:rk-tick 5s infinite}
+.rk-paper{position:absolute;left:30px;top:8px;width:9px;height:11px;background:#fff;border:1px solid #DBCFBB;border-radius:1px;animation:rk-fly 3.4s ease-in infinite;z-index:0}
+@keyframes rk-fadecycle{0%{opacity:0;transform:translateY(7px)}9%{opacity:1;transform:none}86%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-3px)}}
+@keyframes rk-twinkle{0%,100%{opacity:.2}50%{opacity:1}}
+@keyframes rk-buzz{0%,14%,100%{transform:translate(0,0) rotate(0)}3%{transform:translate(-1px,1px) rotate(-4deg)}6%{transform:translate(1px,-1px) rotate(4deg)}9%{transform:translate(-1px,0) rotate(-3deg)}12%{transform:translate(1px,0) rotate(2deg)}}
+@keyframes rk-flipcold{0%,42%{background:#CDBFA9;color:#6E6259}54%,100%{background:#E37722;color:#F9F5EC}}
+@keyframes rk-belt{to{background-position:14px 0}}
+@keyframes rk-conveyor{0%{left:-16%;opacity:0}12%{opacity:1}66%{left:64%;opacity:1}80%,100%{left:64%;opacity:0}}
+@keyframes rk-spinfast{to{transform:rotate(360deg)}}
+@keyframes rk-uline{0%,22%{transform:scaleX(0)}46%,86%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+@keyframes rk-stamp{0%,52%{transform:scale(2.4) rotate(-13deg);opacity:0}66%{transform:scale(.86) rotate(-13deg);opacity:1}78%,92%{transform:scale(1) rotate(-13deg);opacity:1}100%{opacity:0}}
+@keyframes rk-spark{0%{stroke-dashoffset:84}55%,100%{stroke-dashoffset:0}}
+@keyframes rk-tick{0%,48%{transform:scale(0);opacity:0}62%{transform:scale(1.35);opacity:1}80%,92%{transform:scale(1);opacity:1}100%{transform:scale(1);opacity:.85}}
+@keyframes rk-shuffle{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-2px) rotate(1.5deg)}}
+@keyframes rk-nudge{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(calc(-50% - 6px),-50%)}}
 @media(max-width:760px){.rk-scene{grid-template-columns:1fr;min-height:0;gap:10px}.rk-scene .stage{min-height:118px}.rk-bub{max-width:none}}
 .rk-spot-gets{list-style:none;padding:0;margin:0 0 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .rk-spot-gets li{font-size:13.5px;line-height:1.5;color:#241F1B;display:flex;gap:9px;align-items:flex-start;padding-top:12px;border-top:2px solid #EDE4D6}
@@ -983,42 +1018,42 @@ class Component extends DCLogic {
     const status = card.querySelector('[data-report-status]');
     const touch = matchMedia('(hover: none)').matches;
     if (touch) {
-      // Mobile: drag a curtain — the green dashboard wipes into the real red one
+      // Mobile: drag ONLY the handle. The handle captures the gesture (pointer capture +
+      // touch-action:none); the rest of the card and the page scroll normally.
       card.style.cursor = 'ew-resize';
-      card.style.touchAction = 'none';
       if (ring) ring.style.display = 'none';
       trueLayer.style.opacity = '1';
       trueLayer.style.webkitMaskImage = 'none';
       trueLayer.style.maskImage = 'none';
       const hint = card.nextElementSibling;
-      if (hint) hint.textContent = 'Потяните шторку влево ← дашборд покажет реальные цифры.';
+      if (hint) hint.textContent = 'Тяните за кружок ← дашборд покажет реальные цифры.';
       const bar = document.createElement('div');
       bar.style.cssText = 'position:absolute;top:0;bottom:0;width:2px;background:#F0653F;z-index:6;pointer-events:none;box-shadow:0 0 16px rgba(240,101,63,.6);';
+      const hit = document.createElement('div');
+      hit.style.cssText = 'position:absolute;top:0;bottom:0;width:58px;transform:translateX(-29px);z-index:7;touch-action:none;cursor:ew-resize;';
       const grip = document.createElement('div');
-      grip.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:42px;height:42px;border-radius:50%;background:#F0653F;box-shadow:0 6px 18px rgba(240,101,63,.5);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;';
+      grip.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:#F0653F;box-shadow:0 6px 20px rgba(240,101,63,.55);display:flex;align-items:center;justify-content:center;color:#fff;font-size:17px;animation:rk-nudge 2.2s ease-in-out infinite;';
       grip.textContent = '⇆';
-      bar.appendChild(grip);
+      hit.appendChild(grip);
       card.appendChild(bar);
-      let P = 0.62;
+      card.appendChild(hit);
+      let P = 0.6;
       const apply = () => {
         const pct = (P * 100).toFixed(1) + '%';
         trueLayer.style.webkitClipPath = 'inset(0 0 0 ' + pct + ')';
         trueLayer.style.clipPath = 'inset(0 0 0 ' + pct + ')';
         bar.style.left = pct;
+        hit.style.left = pct;
         if (status) status.textContent = P < 0.92 ? '● a different picture under the lens' : '● goals met';
       };
       apply();
-      let drag = false;
-      const fromX = (clientX) => { const r = card.getBoundingClientRect(); const v = (clientX - r.left) / r.width; P = Math.max(0, Math.min(1, v)); apply(); if (hint) hint.style.opacity = '0.55'; };
-      const down = (e) => { drag = true; fromX((e.touches ? e.touches[0] : e).clientX); };
-      const mv = (e) => { if (drag) fromX((e.touches ? e.touches[0] : e).clientX); };
-      const up = () => { drag = false; };
-      card.addEventListener('touchstart', down, { passive: true });
-      card.addEventListener('touchmove', mv, { passive: true });
-      card.addEventListener('touchend', up);
-      card.addEventListener('mousedown', down);
-      window.addEventListener('mousemove', mv);
-      window.addEventListener('mouseup', up);
+      const fromX = (clientX) => { const r = card.getBoundingClientRect(); const v = (clientX - r.left) / r.width; P = Math.max(0, Math.min(1, v)); apply(); grip.style.animation = 'none'; if (hint) hint.style.opacity = '0.55'; };
+      let pid = null;
+      hit.addEventListener('pointerdown', (e) => { pid = e.pointerId; try { hit.setPointerCapture(pid); } catch (x) {} fromX(e.clientX); e.preventDefault(); });
+      hit.addEventListener('pointermove', (e) => { if (pid !== null) { fromX(e.clientX); e.preventDefault(); } });
+      const end = () => { pid = null; };
+      hit.addEventListener('pointerup', end);
+      hit.addEventListener('pointercancel', end);
       return;
     }
     const R = 150; // spotlight diameter
@@ -1408,47 +1443,52 @@ Don't invent numbers or cases beyond these. If unsure, offer a call. Say honestl
     +'<rect x="4" y="16" width="3" height="6" fill="#2E2822"/>'
     +'<rect x="9" y="16" width="3" height="6" fill="#2E2822"/>'
     +'</svg>';}
+  function SPARK(c,up){var pts=up?'0,16 12,11 24,13 36,7 48,9 60,3':'0,4 12,8 24,6 36,11 48,10 60,16';return '<svg class="rk-spark" width="100%" height="18" viewBox="0 0 60 18" preserveAspectRatio="none"><polyline points="'+pts+'" fill="none" stroke="'+c+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';}
   var SCENES={
-   chat:'<div class="stage">'
-     +'<div class="rk-row" style="justify-content:space-between"><span class="rk-tag">02:47 · ночь</span><span class="rk-tag rk-ok">● на связи 24/7</span></div>'
-     +'<div class="rk-row" style="align-items:flex-end">'+P('#4E7A96')
-     +'<div style="display:flex;flex-direction:column;gap:5px"><span class="rk-bub me" style="animation:rk-pop .5s .1s both">Вы работаете ночью?</span><span class="rk-bub" style="animation:rk-pop .5s 1s both">Да — записываю вас на встречу</span></div>'
-     +'<div style="margin-left:auto;position:relative">'+BOT+'<span class="rk-glow"></span></div></div></div>'
+   chat:'<div class="stage rk-night">'
+     +'<span class="rk-moon"></span><span class="rk-star" style="top:11px;left:26px"></span><span class="rk-star" style="top:24px;left:78px;animation-delay:.7s"></span><span class="rk-star" style="top:8px;left:130px;animation-delay:1.3s"></span>'
+     +'<div class="rk-row" style="justify-content:space-between;position:relative;z-index:2"><span class="rk-tag" style="color:#C7CEDC">02:47 · ночь</span><span class="rk-tag rk-ok">● на связи 24/7</span></div>'
+     +'<div class="rk-row" style="align-items:flex-end;position:relative;z-index:2"><div style="animation:rk-buzz 3.2s infinite">'+P('#4E7A96')+'</div>'
+     +'<div style="display:flex;flex-direction:column;gap:5px"><span class="rk-bub me rk-cyc" style="--d:4.6s">Вы работаете ночью?</span><span class="rk-bub rk-cyc" style="--d:4.6s;animation-delay:1.2s">Да — записываю вас на встречу</span></div>'
+     +'<div style="margin-left:auto;position:relative">'+BOT+'<span class="rk-glow"></span></div></div>'
+     +'<div class="rk-row" style="position:relative;z-index:2;gap:8px"><span class="rk-pill-flip">$</span><span class="rk-tag" style="color:#8892A6;letter-spacing:.2em">z z z</span></div></div>'
      +'<div class="out"><div class="rk-tag">// пока конкурент спит</div>'
-     +'<div class="rk-line" style="animation:rk-slidein .5s .3s both">→ лид пойман <span class="rk-ok">✓</span></div>'
-     +'<div class="rk-line" style="animation:rk-slidein .5s .9s both">→ квалифицирован <span class="rk-ok">✓</span></div>'
-     +'<div class="rk-line" style="animation:rk-slidein .5s 1.5s both">→ встреча 15:00 → CRM <span class="rk-ok">✓</span></div>'
-     +'<div class="rk-line rk-amber" style="animation:rk-slidein .5s 2.1s both">к утру лид НЕ остыл</div></div>'
+     +'<div class="rk-line rk-cyc" style="--d:5s">→ лид пойман <span class="rk-ok">✓</span></div>'
+     +'<div class="rk-line rk-cyc" style="--d:5s;animation-delay:.7s">→ квалифицирован <span class="rk-ok">✓</span></div>'
+     +'<div class="rk-line rk-cyc" style="--d:5s;animation-delay:1.4s">→ встреча 15:00 → CRM <span class="rk-ok">✓</span></div>'
+     +'<div class="rk-line rk-amber rk-cyc" style="--d:5s;animation-delay:2.1s">к утру лид НЕ остыл</div></div>'
      +'<div class="cap"><b>Это про вас,</b> если вечерние заявки к утру уже холодные.</div>',
    intake:'<div class="stage">'
      +'<div class="rk-row" style="justify-content:space-between"><span class="rk-tag">поток обращений</span><span class="rk-tag rk-amber">● сортирует ИИ</span></div>'
-     +'<div style="position:relative;height:50px"><span class="rk-chip" style="position:absolute;left:0;top:2px;animation:rk-sweepx 2.6s linear infinite">#4821</span><span class="rk-chip" style="position:absolute;left:0;top:20px;animation:rk-sweepx 2.6s linear infinite .5s">#4822</span><span class="rk-chip" style="position:absolute;left:0;top:38px;animation:rk-sweepx 2.6s linear infinite 1s">#4823</span><div style="position:absolute;right:4px;top:6px">'+BOT+'</div></div>'
-     +'<div class="rk-row">'+P('#6B8E6A')+'<span class="rk-tag">оператор спокоен — проверяет 3, а не 300</span></div></div>'
+     +'<div style="position:relative;height:54px"><span class="rk-belt"></span>'
+     +'<span class="rk-chip rk-tk" style="top:3px">#4821</span><span class="rk-chip rk-tk" style="top:21px;animation-delay:.7s">#4822</span><span class="rk-chip rk-tk" style="top:39px;animation-delay:1.4s">#4823</span><span class="rk-chip rk-tk" style="top:12px;animation-delay:2.1s">#4824</span>'
+     +'<div style="position:absolute;right:2px;top:6px;animation:rk-bobble 2.4s infinite">'+BOT+'<span class="rk-glow"></span></div></div>'
+     +'<div class="rk-row"><div style="animation:rk-bobble 3s infinite">'+P('#6B8E6A')+'</div><span class="rk-tag">оператор спокоен — проверяет 3, а не 300</span></div></div>'
      +'<div class="out"><div class="rk-tag">// сегодня</div>'
      +'<div class="rk-line">обращений <b class="rk-amber">1 240</b></div>'
-     +'<div class="rk-line">авто-решено <span class="rk-ok">1 187 ✓</span></div>'
-     +'<div class="rk-line">оператору <span class="rk-amber">53</span></div>'
+     +'<div class="rk-line" style="display:flex;align-items:center;gap:8px">авто-решено <span class="rk-ok">1 187 ✓</span><span class="rk-trackbar"><i class="rk-ok-bar" style="--w:96%"></i></span></div>'
+     +'<div class="rk-line" style="display:flex;align-items:center;gap:8px">оператору <span class="rk-amber">53</span><span class="rk-trackbar"><i class="rk-amber-bar" style="--w:14%"></i></span></div>'
      +'<div class="rk-line" style="border-top:1px solid #3A332C;padding-top:5px">штат 3 — не растёт с потоком</div></div>'
      +'<div class="cap"><b>Это про вас,</b> если каждый новый поток — это новые люди в штат.</div>',
    kb:'<div class="stage"><div class="rk-row" style="justify-content:space-between;align-items:flex-start">'
-     +'<div style="text-align:center"><div style="display:flex;flex-direction:column-reverse;gap:2px;align-items:center"><div style="width:34px;height:7px;background:#B79B72;border-radius:2px"></div><div style="width:30px;height:7px;background:#C6A97F;border-radius:2px"></div><div style="width:36px;height:7px;background:#A98A62;border-radius:2px"></div><div style="width:28px;height:7px;background:#C6A97F;border-radius:2px"></div></div><div class="rk-tag" style="margin-top:4px">регламенты · 12:40</div>'+P('#8A6D4B')+'</div>'
+     +'<div style="text-align:center"><div style="animation:rk-shuffle 1.2s infinite;display:flex;flex-direction:column-reverse;gap:2px;align-items:center"><div style="width:34px;height:7px;background:#B79B72;border-radius:2px"></div><div style="width:30px;height:7px;background:#C6A97F;border-radius:2px"></div><div style="width:36px;height:7px;background:#A98A62;border-radius:2px"></div><div style="width:28px;height:7px;background:#C6A97F;border-radius:2px"></div></div><div class="rk-tag" style="margin-top:4px"><span class="rk-clock">◷</span> регламенты · 12:40</div>'+P('#8A6D4B')+'</div>'
      +'<div class="rk-tag" style="align-self:center">старый путь →</div>'
-     +'<div style="text-align:center"><div style="position:relative;display:inline-block">'+BOT+'<span class="rk-glow"></span></div><div class="rk-tag rk-ok" style="margin-top:4px">0:03 сек</div></div></div></div>'
-     +'<div class="out"><div class="rk-bub me" style="animation:rk-pop .5s .2s both;max-width:none">«Какой срок гарантии по договору №7?»</div>'
-     +'<div class="rk-line" style="animation:rk-slidein .5s 1s both;margin-top:3px;font-weight:600">36 месяцев с даты приёмки</div>'
-     +'<div class="rk-line rk-amber" style="animation:rk-slidein .5s 1.4s both">источник: Регламент, п. 4.2 →</div></div>'
+     +'<div style="text-align:center"><div style="position:relative;display:inline-block;animation:rk-bobble 2.6s infinite">'+BOT+'<span class="rk-glow"></span></div><div class="rk-tag rk-ok" style="margin-top:4px">0:03 сек</div></div></div></div>'
+     +'<div class="out"><div class="rk-bub me rk-cyc" style="--d:5s;max-width:none">«Какой срок гарантии по договору №7?»</div>'
+     +'<div class="rk-line rk-cyc" style="--d:5s;animation-delay:.9s;margin-top:3px;font-weight:600;position:relative;display:inline-block">36 месяцев с даты приёмки<span class="rk-uline"></span></div>'
+     +'<div class="rk-line rk-amber rk-cyc" style="--d:5s;animation-delay:1.4s">источник: Регламент, п. 4.2 →</div></div>'
      +'<div class="cap"><b>Это про вас,</b> если знания живут в головах и толстых папках.</div>',
    kp:'<div class="stage"><div class="rk-row" style="justify-content:space-between"><span class="rk-tag">Черновик КП №2201</span><span class="rk-tag rk-ok">● сборка 0:58</span></div>'
-     +'<div style="display:flex;flex-direction:column;gap:6px"><div class="rk-bar"><i style="--w:92%"></i></div><div class="rk-bar"><i style="--w:70%;animation-delay:.25s"></i></div><div class="rk-bar"><i style="--w:84%;animation-delay:.5s"></i></div></div>'
-     +'<div class="rk-row"><span class="rk-tag rk-mut" style="text-decoration:line-through">инженер занят</span>'+P('#B26A2E')+'<span class="rk-tag">менеджер не ждёт</span></div></div>'
+     +'<div style="position:relative"><div style="display:flex;flex-direction:column;gap:6px"><div class="rk-bar"><i class="rk-loopfill" style="--w:92%"></i></div><div class="rk-bar"><i class="rk-loopfill" style="--w:70%;animation-delay:.3s"></i></div><div class="rk-bar"><i class="rk-loopfill" style="--w:84%;animation-delay:.6s"></i></div></div><span class="rk-stampd">ГОТОВО</span></div>'
+     +'<div class="rk-row"><span class="rk-tag rk-mut" style="text-decoration:line-through">инженер занят</span><div style="animation:rk-bobble 2.2s infinite">'+P('#B26A2E')+'</div><span class="rk-tag">менеджер не ждёт</span></div></div>'
      +'<div class="out"><div class="rk-tag">// собирает по вашей техбазе</div>'
-     +'<div class="rk-line" style="animation:rk-slidein .5s .3s both">позиции подобраны <span class="rk-ok">✓</span></div>'
-     +'<div class="rk-line" style="animation:rk-slidein .5s .8s both">характеристики <span class="rk-ok">✓</span></div>'
-     +'<div class="rk-line" style="animation:rk-slidein .5s 1.3s both">условия и цены <span class="rk-ok">✓</span></div>'
-     +'<div class="rk-line rk-amber" style="animation:rk-slidein .5s 1.8s both">черновик за минуту, не за дни</div></div>'
+     +'<div class="rk-line rk-cyc" style="--d:5s">позиции подобраны <span class="rk-ok">✓</span></div>'
+     +'<div class="rk-line rk-cyc" style="--d:5s;animation-delay:.6s">характеристики <span class="rk-ok">✓</span></div>'
+     +'<div class="rk-line rk-cyc" style="--d:5s;animation-delay:1.2s">условия и цены <span class="rk-ok">✓</span></div>'
+     +'<div class="rk-line rk-amber rk-cyc" style="--d:5s;animation-delay:1.8s">черновик за минуту, не за дни</div></div>'
      +'<div class="cap"><b>Это про вас,</b> если сделки стоят в очереди к инженерам.</div>',
-   panel:'<div class="stage"><span class="rk-sweep"></span><div class="rk-row" style="justify-content:space-between"><span class="rk-tag">кабина · все отделы</span><span class="rk-tag rk-warn">● 1 алерт</span></div>'
-     +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px"><div class="rk-chip" style="text-align:center">ПРОДАЖИ<br><span class="rk-ok">▲</span></div><div class="rk-chip" style="text-align:center">ФИНАНСЫ<br><span class="rk-mut">→</span></div><div class="rk-chip" style="text-align:center;border-color:#F0653F;color:#F0653F;animation:rk-pulse 1.6s infinite">СКЛАД<br>▼</div></div>'
+   panel:'<div class="stage"><span class="rk-sweep"></span><div class="rk-row" style="justify-content:space-between"><span class="rk-tag">кабина · все отделы</span><span class="rk-tag rk-warn" style="animation:rk-blink 1.2s infinite">● 1 алерт</span></div>'
+     +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px"><div class="rk-gauge"><div class="rk-tag rk-ok">ПРОДАЖИ <span>▲</span></div>'+SPARK('#8FD08A',1)+'</div><div class="rk-gauge"><div class="rk-tag rk-mut">ФИНАНСЫ <span>→</span></div>'+SPARK('#8A7E71',1)+'</div><div class="rk-gauge rk-alert"><div class="rk-tag rk-warn">СКЛАД <span>▼</span></div>'+SPARK('#F0653F',0)+'</div></div>'
      +'<div class="rk-row">'+P('#3E6E8E')+'<span class="rk-tag rk-amber">ИИ: склад −8% к плану — смотри сюда</span></div></div>'
      +'<div class="out"><div class="rk-tag">// один экран вместо 7 отчётов</div>'
      +'<div class="rk-line">выручка <span class="rk-ok">▲ 112%</span></div>'
@@ -1457,9 +1497,10 @@ Don't invent numbers or cases beyond these. If unsure, offer a call. Say honestl
      +'<div class="rk-line" style="border-top:1px solid #3A332C;padding-top:5px">отчёты собираются сами</div></div>'
      +'<div class="cap"><b>Это про вас,</b> если решения принимаются по интуиции, а не по приборам.</div>',
    employee:'<div class="stage"><div class="rk-row" style="justify-content:space-between"><span class="rk-tag">цифровой сотрудник · сегодня</span><span class="rk-tag rk-ok">● 24/7</span></div>'
-     +'<div class="rk-row" style="align-items:flex-end"><div style="position:relative">'+BOT+'<span class="rk-glow"></span></div>'
-     +'<div style="display:flex;flex-direction:column;gap:3px;margin-left:2px"><span class="rk-line" style="animation:rk-slidein .5s .2s both">письмо клиенту <span class="rk-ok">✓</span></span><span class="rk-line" style="animation:rk-slidein .5s .7s both">встреча — чт 15:00 <span class="rk-ok">✓</span></span><span class="rk-line" style="animation:rk-slidein .5s 1.2s both">задача → @Ирина <span class="rk-ok">✓</span></span><span class="rk-line rk-mut" style="animation:rk-slidein .5s 1.7s both">саммари встречи…</span></div></div>'
-     +'<div class="rk-row">'+P('#6B8E6A')+P('#B26A2E')+'<span class="rk-tag">команда — на деле, не на рутине</span></div></div>'
+     +'<div class="rk-row" style="align-items:flex-end;position:relative"><div style="position:relative;animation:rk-bobble 2.6s infinite">'+BOT+'<span class="rk-glow"></span></div>'
+     +'<div style="display:flex;flex-direction:column;gap:3px;margin-left:2px"><span class="rk-line rk-cyc" style="--d:5s">письмо клиенту <span class="rk-ok rk-tickpop">✓</span></span><span class="rk-line rk-cyc" style="--d:5s;animation-delay:.6s">встреча — чт 15:00 <span class="rk-ok rk-tickpop">✓</span></span><span class="rk-line rk-cyc" style="--d:5s;animation-delay:1.2s">задача → @Ирина <span class="rk-ok rk-tickpop">✓</span></span><span class="rk-line rk-mut rk-cyc" style="--d:5s;animation-delay:1.8s">саммари встречи…</span></div>'
+     +'<span class="rk-paper"></span><span class="rk-paper" style="animation-delay:1.6s"></span></div>'
+     +'<div class="rk-row"><div style="animation:rk-bobble 3s infinite">'+P('#6B8E6A')+'</div><div style="animation:rk-bobble 3s infinite .4s">'+P('#B26A2E')+'</div><span class="rk-tag">команда — на деле, не на рутине</span></div></div>'
      +'<div class="out"><div class="rk-tag">// за него — рутина всей команды</div>'
      +'<div class="rk-line">14 писем · 6 встреч</div>'
      +'<div class="rk-line">9 задач · 3 саммари</div>'

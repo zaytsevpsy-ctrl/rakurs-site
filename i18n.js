@@ -1,4 +1,6 @@
 window.__RAKURS_EN = {
+"ГОТОВО":"READY",
+"Тяните за кружок ← дашборд покажет реальные цифры.":"Drag the circle ← the dashboard shows the real numbers.",
 "02:47 · ночь":"02:47 · night",
 "● на связи 24/7":"● online 24/7",
 "Вы работаете ночью?":"Do you work nights?",
