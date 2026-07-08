@@ -68,7 +68,7 @@ window.__RAKURS_EN = {
 "ПРОСТОЙ ФОНДА":"PAYROLL IDLE",
 "SLA НОЧЬЮ":"SLA AT NIGHT",
 "ОТТОК КЛИЕНТОВ":"CHURN",
-"КРИТ. ОШИБКИ":"CRITICAL ERRORS",
+"КРИТ. ОШИБКИ":"CRIT. ERRORS",
 "● 0 инцидентов · план закрывается вовремя":"● 0 incidents · plan on track",
 "● −$38K/мес утекает мимо кассы":"● −$38K/mo leaking past the register",
 "Q2 · итоги":"Q2 · results",

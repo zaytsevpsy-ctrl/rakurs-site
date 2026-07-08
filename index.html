@@ -42,6 +42,9 @@ html,body{overflow-x:hidden!important;max-width:100%}
 .rk-spot-tag{font-family:'JetBrains Mono';font-size:11px;color:#B35F17;background:#FBEFE2;padding:4px 10px;border-radius:20px}
 .rk-spot-desc{font-size:15px;line-height:1.6;color:#4A423B;margin:0 0 18px;max-width:760px}
 .rk-spot-demo{background:#F5F0E6;border:1px solid #E4DBCD;border-radius:12px;padding:14px;margin-bottom:18px;min-height:120px}
+/* ===== Report KPI cards: one-line labels & values, even rows (both layers) ===== */
+[data-report] div[style*="padding: 11px 12px"] > div:first-child{font-size:8.5px!important;letter-spacing:0!important;white-space:nowrap!important}
+[data-report] div[style*="padding: 11px 12px"] > div:last-child{white-space:nowrap!important}
 /* ===== Immersive product scenes ===== */
 .rk-scene{display:grid;grid-template-columns:1.02fr .98fr;gap:12px;min-height:158px;font-family:'JetBrains Mono',monospace}
 .rk-scene .stage{position:relative;background:#EFE7D8;border:1px solid #E1D6C4;border-radius:10px;padding:12px 13px;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;gap:8px}
