@@ -1401,13 +1401,25 @@ Don't invent numbers or cases beyond these. If unsure, offer a call. Say honestl
     function body(c){return c&&c.querySelector('[data-spot-body]');}
     function collapse(c){var b=body(c);if(!b)return;b.style.height=b.scrollHeight+'px';b.offsetHeight;b.style.height='0px';c.classList.remove('is-open');var h=c.querySelector('[data-spot-head]');if(h)h.setAttribute('aria-expanded','false');}
     function expand(c){var b=body(c);if(!b)return;c.classList.add('is-open');b.style.height=b.scrollHeight+'px';var h=c.querySelector('[data-spot-head]');if(h)h.setAttribute('aria-expanded','true');b.addEventListener('transitionend',function te(e){if(e.propertyName==='height'&&c.classList.contains('is-open')){b.style.height='auto';b.removeEventListener('transitionend',te);}});}
+    function navOffset(){var n=document.querySelector('nav');return (n?Math.round(n.getBoundingClientRect().height):0)+12;}
+    function keepInView(c){
+      var off=navOffset();
+      var adjust=function(smooth){
+        var top=c.getBoundingClientRect().top;
+        var vh=window.innerHeight||document.documentElement.clientHeight;
+        if(top<off-2||top>vh*0.5){var y=top+window.pageYOffset-off;window.scrollTo({top:y<0?0:y,behavior:smooth?'smooth':'auto'});}
+      };
+      requestAnimationFrame(function(){adjust(true);});
+      var b=body(c);
+      if(b)b.addEventListener('transitionend',function te(e){if(e.propertyName==='height'){adjust(false);b.removeEventListener('transitionend',te);}});
+    }
     function toggle(c){
       if(!c)return;
       var list=[].slice.call(spot.querySelectorAll('[data-spot-card]'));
       var isOpen=c.classList.contains('is-open');
       list.forEach(function(x){if(x!==c&&x.classList.contains('is-open'))collapse(x);});
       if(isOpen){collapse(c);spot.classList.remove('has-open');}
-      else{expand(c);spot.classList.add('has-open');}
+      else{expand(c);spot.classList.add('has-open');keepInView(c);}
     }
     function decorate(){
       var list=[].slice.call(spot.querySelectorAll('[data-spot-card]'));
