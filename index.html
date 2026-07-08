@@ -41,7 +41,32 @@ html,body{overflow-x:hidden!important;max-width:100%}
 .rk-spot-code{font-family:'JetBrains Mono';font-size:11px;letter-spacing:.06em;color:#6E6259}
 .rk-spot-tag{font-family:'JetBrains Mono';font-size:11px;color:#B35F17;background:#FBEFE2;padding:4px 10px;border-radius:20px}
 .rk-spot-desc{font-size:15px;line-height:1.6;color:#4A423B;margin:0 0 18px;max-width:760px}
-.rk-spot-demo{background:#F5F0E6;border:1px solid #E4DBCD;border-radius:12px;padding:16px;margin-bottom:18px;min-height:120px}
+.rk-spot-demo{background:#F5F0E6;border:1px solid #E4DBCD;border-radius:12px;padding:14px;margin-bottom:18px;min-height:120px}
+/* ===== Immersive product scenes ===== */
+.rk-scene{display:grid;grid-template-columns:1.02fr .98fr;gap:12px;min-height:158px;font-family:'JetBrains Mono',monospace}
+.rk-scene .stage{position:relative;background:#EFE7D8;border:1px solid #E1D6C4;border-radius:10px;padding:12px 13px;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;gap:8px}
+.rk-scene .out{position:relative;background:#211D19;border-radius:10px;padding:12px 13px;color:#EFE7D8;overflow:hidden;display:flex;flex-direction:column;gap:6px;justify-content:center}
+.rk-scene .cap{grid-column:1/-1;font-size:11.5px;color:#8A7E71;line-height:1.45;margin-top:1px}
+.rk-scene .cap b{color:#B35F17;font-weight:600}
+.rk-px{image-rendering:pixelated;flex:0 0 auto;filter:drop-shadow(0 2px 3px rgba(36,31,27,.18))}
+.rk-eye{animation:rk-blink 3.4s infinite}
+.rk-row{display:flex;align-items:center;gap:8px}
+.rk-tag{font-size:9.5px;letter-spacing:.03em;color:#8A7E71}
+.rk-line{font-size:11px;line-height:1.5}
+.rk-ok{color:#8FD08A}.rk-warn{color:#F0653F}.rk-amber{color:#E37722}.rk-mut{color:#8A7E71}
+.rk-bub{background:#241F1B;color:#F1EAE0;font-size:10.5px;padding:5px 9px;border-radius:9px;display:inline-block;max-width:190px}
+.rk-bub.me{background:#fff;color:#241F1B;border:1px solid #DBCFBB}
+.rk-chip{font-size:9px;padding:3px 7px;border-radius:5px;background:#fff;border:1px solid #DBCFBB;color:#4A423B;display:inline-block}
+.rk-bar{height:7px;border-radius:4px;background:#DBCFBB;overflow:hidden;position:relative}
+.rk-bar > i{position:absolute;left:0;top:0;bottom:0;background:#E37722;border-radius:4px;animation:rk-fillw 1.4s cubic-bezier(.3,1,.4,1) forwards}
+.rk-glow{position:absolute;inset:-6px;border-radius:50%;box-shadow:0 0 18px 4px rgba(227,119,34,.34);animation:rk-pulse 2.4s infinite}
+.rk-sweep{position:absolute;top:0;bottom:0;width:40%;background:linear-gradient(90deg,transparent,rgba(227,119,34,.14),transparent);animation:rk-sweepx 3.2s linear infinite}
+@keyframes rk-slidein{0%{transform:translateX(-12px);opacity:0}100%{transform:translateX(0);opacity:1}}
+@keyframes rk-pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.07)}100%{transform:scale(1);opacity:1}}
+@keyframes rk-fillw{0%{width:0}100%{width:var(--w,100%)}}
+@keyframes rk-sweepx{0%{left:-45%}100%{left:130%}}
+@keyframes rk-bobble{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@media(max-width:760px){.rk-scene{grid-template-columns:1fr;min-height:0;gap:10px}.rk-scene .stage{min-height:118px}.rk-bub{max-width:none}}
 .rk-spot-gets{list-style:none;padding:0;margin:0 0 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .rk-spot-gets li{font-size:13.5px;line-height:1.5;color:#241F1B;display:flex;gap:9px;align-items:flex-start;padding-top:12px;border-top:2px solid #EDE4D6}
 .rk-spot-gets li .b{color:#E37722;font-weight:700;line-height:1.4}
@@ -351,7 +376,7 @@ html,body{overflow-x:hidden!important;max-width:100%}
 
   <!-- STOREFRONT -->
   <section id="storefront" style="padding: clamp(72px,11vh,128px) clamp(20px,5vw,64px);">
-    <div style="max-width: 1280px; margin: 0 auto;">
+    <div style="max-width: 1080px; margin: 0 auto;">
       <div data-reveal style="font-family: 'JetBrains Mono'; font-size: 13px; letter-spacing: .04em; color: #6E6259; margin-bottom: 18px;">// витрина решений — наведите кадр на любое, и оно заработает</div>
       <h2 data-reveal style="font-family: 'Manrope'; font-weight: 700; font-size: clamp(28px,3.4vw,46px); line-height: 1.1; letter-spacing: -.02em; margin: 0 0 18px; max-width: 900px;">Готовые решения с фиксированной ценой. Запуск за одну–три недели.</h2>
       <p data-reveal style="font-family: 'Inter'; font-weight: 300; font-size: clamp(16px,1.3vw,19px); line-height: 1.6; color: #4A423B; max-width: 720px; margin: 0 0 22px;">Шесть готовых продуктов из проверенных шаблонов. Под каждым — конкретная дыра в деньгах, живое демо и цена без звёздочек.</p>
@@ -379,9 +404,7 @@ html,body{overflow-x:hidden!important;max-width:100%}
                   <sc-if value="{{ p.tag }}" hint-placeholder-val="{{ true }}"><span class="rk-spot-tag">{{ p.tag }}</span></sc-if>
                 </div>
                 <p class="rk-spot-desc">{{ p.desc }}</p>
-                <div class="rk-spot-demo">
-                  <dc-import name="Demo" kind="{{ p.demo }}" hint-size="100%,90px"></dc-import>
-                </div>
+                <div class="rk-spot-demo"><div class="rk-scene" data-scene="{{ p.demo }}"></div></div>
                 <ul class="rk-spot-gets">
                   <sc-for list="{{ p.gets }}" as="g" hint-placeholder-count="3">
                     <li><span class="b">·</span><span>{{ g }}</span></li>
@@ -1356,6 +1379,100 @@ Don't invent numbers or cases beyond these. If unsure, offer a call. Say honestl
   }
   var n=0,t=setInterval(function(){if(wire()||++n>80)clearInterval(t);},180);
   if(document.readyState!=='loading')wire();else document.addEventListener('DOMContentLoaded',wire);
+})();
+</script>
+<script>
+/* ===== Rakurs — immersive product scenes ===== */
+(function(){
+  var BOT='<svg class="rk-px" width="40" height="46" viewBox="0 0 20 23" shape-rendering="crispEdges">'
+    +'<rect x="9" y="0" width="2" height="3" fill="#E37722"/>'
+    +'<rect x="7" y="2" width="6" height="2" fill="#E37722"/>'
+    +'<rect x="3" y="4" width="14" height="10" fill="#2E2822"/>'
+    +'<rect x="5" y="7" width="3" height="3" fill="#8FD08A" class="rk-eye"/>'
+    +'<rect x="12" y="7" width="3" height="3" fill="#8FD08A" class="rk-eye"/>'
+    +'<rect x="8" y="11" width="4" height="1" fill="#5A6E58"/>'
+    +'<rect x="6" y="14" width="8" height="6" fill="#3A332C"/>'
+    +'<rect x="3" y="15" width="2" height="4" fill="#3A332C"/>'
+    +'<rect x="15" y="15" width="2" height="4" fill="#3A332C"/>'
+    +'</svg>';
+  function P(t){return '<svg class="rk-px" width="30" height="42" viewBox="0 0 16 22" shape-rendering="crispEdges">'
+    +'<rect x="4" y="1" width="8" height="5" fill="#2E2822"/>'
+    +'<rect x="5" y="3" width="6" height="4" fill="#E8C9A0"/>'
+    +'<rect x="3" y="8" width="10" height="8" fill="'+t+'"/>'
+    +'<rect x="1" y="9" width="2" height="6" fill="#E8C9A0"/>'
+    +'<rect x="13" y="9" width="2" height="6" fill="#E8C9A0"/>'
+    +'<rect x="4" y="16" width="3" height="6" fill="#2E2822"/>'
+    +'<rect x="9" y="16" width="3" height="6" fill="#2E2822"/>'
+    +'</svg>';}
+  var SCENES={
+   chat:'<div class="stage">'
+     +'<div class="rk-row" style="justify-content:space-between"><span class="rk-tag">02:47 · ночь</span><span class="rk-tag rk-ok">● на связи 24/7</span></div>'
+     +'<div class="rk-row" style="align-items:flex-end">'+P('#4E7A96')
+     +'<div style="display:flex;flex-direction:column;gap:5px"><span class="rk-bub me" style="animation:rk-pop .5s .1s both">Вы работаете ночью?</span><span class="rk-bub" style="animation:rk-pop .5s 1s both">Да — записываю вас на встречу</span></div>'
+     +'<div style="margin-left:auto;position:relative">'+BOT+'<span class="rk-glow"></span></div></div></div>'
+     +'<div class="out"><div class="rk-tag">// пока конкурент спит</div>'
+     +'<div class="rk-line" style="animation:rk-slidein .5s .3s both">→ лид пойман <span class="rk-ok">✓</span></div>'
+     +'<div class="rk-line" style="animation:rk-slidein .5s .9s both">→ квалифицирован <span class="rk-ok">✓</span></div>'
+     +'<div class="rk-line" style="animation:rk-slidein .5s 1.5s both">→ встреча 15:00 → CRM <span class="rk-ok">✓</span></div>'
+     +'<div class="rk-line rk-amber" style="animation:rk-slidein .5s 2.1s both">к утру лид НЕ остыл</div></div>'
+     +'<div class="cap"><b>Это про вас,</b> если вечерние заявки к утру уже холодные.</div>',
+   intake:'<div class="stage">'
+     +'<div class="rk-row" style="justify-content:space-between"><span class="rk-tag">поток обращений</span><span class="rk-tag rk-amber">● сортирует ИИ</span></div>'
+     +'<div style="position:relative;height:50px"><span class="rk-chip" style="position:absolute;left:0;top:2px;animation:rk-sweepx 2.6s linear infinite">#4821</span><span class="rk-chip" style="position:absolute;left:0;top:20px;animation:rk-sweepx 2.6s linear infinite .5s">#4822</span><span class="rk-chip" style="position:absolute;left:0;top:38px;animation:rk-sweepx 2.6s linear infinite 1s">#4823</span><div style="position:absolute;right:4px;top:6px">'+BOT+'</div></div>'
+     +'<div class="rk-row">'+P('#6B8E6A')+'<span class="rk-tag">оператор спокоен — проверяет 3, а не 300</span></div></div>'
+     +'<div class="out"><div class="rk-tag">// сегодня</div>'
+     +'<div class="rk-line">обращений <b class="rk-amber">1 240</b></div>'
+     +'<div class="rk-line">авто-решено <span class="rk-ok">1 187 ✓</span></div>'
+     +'<div class="rk-line">оператору <span class="rk-amber">53</span></div>'
+     +'<div class="rk-line" style="border-top:1px solid #3A332C;padding-top:5px">штат 3 — не растёт с потоком</div></div>'
+     +'<div class="cap"><b>Это про вас,</b> если каждый новый поток — это новые люди в штат.</div>',
+   kb:'<div class="stage"><div class="rk-row" style="justify-content:space-between;align-items:flex-start">'
+     +'<div style="text-align:center"><div style="display:flex;flex-direction:column-reverse;gap:2px;align-items:center"><div style="width:34px;height:7px;background:#B79B72;border-radius:2px"></div><div style="width:30px;height:7px;background:#C6A97F;border-radius:2px"></div><div style="width:36px;height:7px;background:#A98A62;border-radius:2px"></div><div style="width:28px;height:7px;background:#C6A97F;border-radius:2px"></div></div><div class="rk-tag" style="margin-top:4px">регламенты · 12:40</div>'+P('#8A6D4B')+'</div>'
+     +'<div class="rk-tag" style="align-self:center">старый путь →</div>'
+     +'<div style="text-align:center"><div style="position:relative;display:inline-block">'+BOT+'<span class="rk-glow"></span></div><div class="rk-tag rk-ok" style="margin-top:4px">0:03 сек</div></div></div></div>'
+     +'<div class="out"><div class="rk-bub me" style="animation:rk-pop .5s .2s both;max-width:none">«Какой срок гарантии по договору №7?»</div>'
+     +'<div class="rk-line" style="animation:rk-slidein .5s 1s both;margin-top:3px;font-weight:600">36 месяцев с даты приёмки</div>'
+     +'<div class="rk-line rk-amber" style="animation:rk-slidein .5s 1.4s both">источник: Регламент, п. 4.2 →</div></div>'
+     +'<div class="cap"><b>Это про вас,</b> если знания живут в головах и толстых папках.</div>',
+   kp:'<div class="stage"><div class="rk-row" style="justify-content:space-between"><span class="rk-tag">Черновик КП №2201</span><span class="rk-tag rk-ok">● сборка 0:58</span></div>'
+     +'<div style="display:flex;flex-direction:column;gap:6px"><div class="rk-bar"><i style="--w:92%"></i></div><div class="rk-bar"><i style="--w:70%;animation-delay:.25s"></i></div><div class="rk-bar"><i style="--w:84%;animation-delay:.5s"></i></div></div>'
+     +'<div class="rk-row"><span class="rk-tag rk-mut" style="text-decoration:line-through">инженер занят</span>'+P('#B26A2E')+'<span class="rk-tag">менеджер не ждёт</span></div></div>'
+     +'<div class="out"><div class="rk-tag">// собирает по вашей техбазе</div>'
+     +'<div class="rk-line" style="animation:rk-slidein .5s .3s both">позиции подобраны <span class="rk-ok">✓</span></div>'
+     +'<div class="rk-line" style="animation:rk-slidein .5s .8s both">характеристики <span class="rk-ok">✓</span></div>'
+     +'<div class="rk-line" style="animation:rk-slidein .5s 1.3s both">условия и цены <span class="rk-ok">✓</span></div>'
+     +'<div class="rk-line rk-amber" style="animation:rk-slidein .5s 1.8s both">черновик за минуту, не за дни</div></div>'
+     +'<div class="cap"><b>Это про вас,</b> если сделки стоят в очереди к инженерам.</div>',
+   panel:'<div class="stage"><span class="rk-sweep"></span><div class="rk-row" style="justify-content:space-between"><span class="rk-tag">кабина · все отделы</span><span class="rk-tag rk-warn">● 1 алерт</span></div>'
+     +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px"><div class="rk-chip" style="text-align:center">ПРОДАЖИ<br><span class="rk-ok">▲</span></div><div class="rk-chip" style="text-align:center">ФИНАНСЫ<br><span class="rk-mut">→</span></div><div class="rk-chip" style="text-align:center;border-color:#F0653F;color:#F0653F;animation:rk-pulse 1.6s infinite">СКЛАД<br>▼</div></div>'
+     +'<div class="rk-row">'+P('#3E6E8E')+'<span class="rk-tag rk-amber">ИИ: склад −8% к плану — смотри сюда</span></div></div>'
+     +'<div class="out"><div class="rk-tag">// один экран вместо 7 отчётов</div>'
+     +'<div class="rk-line">выручка <span class="rk-ok">▲ 112%</span></div>'
+     +'<div class="rk-line">маржа <span class="rk-mut">→ 31%</span></div>'
+     +'<div class="rk-line rk-warn">склад 78% · риск простоя</div>'
+     +'<div class="rk-line" style="border-top:1px solid #3A332C;padding-top:5px">отчёты собираются сами</div></div>'
+     +'<div class="cap"><b>Это про вас,</b> если решения принимаются по интуиции, а не по приборам.</div>',
+   employee:'<div class="stage"><div class="rk-row" style="justify-content:space-between"><span class="rk-tag">цифровой сотрудник · сегодня</span><span class="rk-tag rk-ok">● 24/7</span></div>'
+     +'<div class="rk-row" style="align-items:flex-end"><div style="position:relative">'+BOT+'<span class="rk-glow"></span></div>'
+     +'<div style="display:flex;flex-direction:column;gap:3px;margin-left:2px"><span class="rk-line" style="animation:rk-slidein .5s .2s both">письмо клиенту <span class="rk-ok">✓</span></span><span class="rk-line" style="animation:rk-slidein .5s .7s both">встреча — чт 15:00 <span class="rk-ok">✓</span></span><span class="rk-line" style="animation:rk-slidein .5s 1.2s both">задача → @Ирина <span class="rk-ok">✓</span></span><span class="rk-line rk-mut" style="animation:rk-slidein .5s 1.7s both">саммари встречи…</span></div></div>'
+     +'<div class="rk-row">'+P('#6B8E6A')+P('#B26A2E')+'<span class="rk-tag">команда — на деле, не на рутине</span></div></div>'
+     +'<div class="out"><div class="rk-tag">// за него — рутина всей команды</div>'
+     +'<div class="rk-line">14 писем · 6 встреч</div>'
+     +'<div class="rk-line">9 задач · 3 саммари</div>'
+     +'<div class="rk-line">помнит контекст компании <span class="rk-ok">✓</span></div>'
+     +'<div class="rk-line rk-amber" style="border-top:1px solid #3A332C;padding-top:5px">один вместо рутины на всех</div></div>'
+     +'<div class="cap"><b>Это про вас,</b> если админ-рутина съедает лучших людей.</div>'
+  };
+  function inject(){
+    var slots=document.querySelectorAll('[data-scene]');
+    if(!slots.length) return false;
+    var any=false;
+    for(var i=0;i<slots.length;i++){var s=slots[i];if(s.getAttribute('data-filled'))continue;var k=s.getAttribute('data-scene');if(SCENES[k]){s.innerHTML=SCENES[k];s.setAttribute('data-filled','1');any=true;}}
+    if(any){try{window.dispatchEvent(new Event('resize'));}catch(e){}}
+    return true;
+  }
+  var n=0,t=setInterval(function(){if(inject()||++n>90)clearInterval(t);},150);
+  if(document.readyState!=='loading')inject();else document.addEventListener('DOMContentLoaded',inject);
 })();
 </script>
 </body>
