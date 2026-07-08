@@ -1404,15 +1404,16 @@ Don't invent numbers or cases beyond these. If unsure, offer a call. Say honestl
     function navOffset(){var n=document.querySelector('nav');return (n?Math.round(n.getBoundingClientRect().height):0)+12;}
     function pageScroller(){var b=document.body,d=document.documentElement;if(b&&b.scrollHeight>b.clientHeight+4&&/(auto|scroll|overlay)/.test(getComputedStyle(b).overflowY))return b;if(d&&d.scrollHeight>d.clientHeight+4&&/(auto|scroll|overlay)/.test(getComputedStyle(d).overflowY))return d;return document.scrollingElement||d;}
     function keepInView(c){
-      var sc=pageScroller(),off=navOffset();
-      var adjust=function(smooth){
-        var top=c.getBoundingClientRect().top;
-        var vh=sc.clientHeight||window.innerHeight;
-        if(top<off-2||top>vh*0.5){var y=sc.scrollTop+top-off;if(y<0)y=0;try{sc.scrollTo({top:y,behavior:smooth?'smooth':'auto'});}catch(_){sc.scrollTop=y;}}
-      };
-      requestAnimationFrame(function(){adjust(true);});
-      var b=body(c);
-      if(b)b.addEventListener('transitionend',function te(e){if(e.propertyName==='height'){adjust(false);b.removeEventListener('transitionend',te);}});
+      var sc=pageScroller(),off=navOffset(),vh=sc.clientHeight||window.innerHeight;
+      var top0=c.getBoundingClientRect().top;
+      if(top0>=off-2&&top0<=vh*0.5)return; // already comfortably in view
+      var frames=0;
+      (function step(){
+        var delta=c.getBoundingClientRect().top-off;
+        var ns=sc.scrollTop+delta*0.28; if(ns<0)ns=0; sc.scrollTop=ns;
+        if(++frames<44&&Math.abs(delta)>1){requestAnimationFrame(step);}
+        else{var d2=c.getBoundingClientRect().top-off;var f=sc.scrollTop+d2;sc.scrollTop=f<0?0:f;} // final snap
+      })();
     }
     function toggle(c){
       if(!c)return;
