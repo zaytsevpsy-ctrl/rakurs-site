@@ -928,6 +928,36 @@ class Component extends DCLogic {
     const trueLayer = card.querySelector('[data-report-true]');
     const ring = card.querySelector('[data-report-ring]');
     const status = card.querySelector('[data-report-status]');
+    const touch = matchMedia('(hover: none)').matches;
+    if (touch) {
+      // Mobile: one tap flips the card to the real dashboard — no lens dragging
+      card.style.cursor = 'pointer';
+      if (ring) ring.style.display = 'none';
+      const hint = card.nextElementSibling;
+      if (hint) hint.textContent = 'Нажмите на дашборд — покажем, что прячется за красивыми стрелками.';
+      let flipped = false, busy = false;
+      card.addEventListener('click', () => {
+        if (busy) return; busy = true;
+        flipped = !flipped;
+        card.style.transition = 'transform .34s ease';
+        card.style.transform = 'perspective(1100px) rotateY(90deg)';
+        setTimeout(() => {
+          if (flipped) {
+            trueLayer.style.transition = 'opacity .2s';
+            trueLayer.style.opacity = '1';
+            trueLayer.style.webkitMaskImage = 'none';
+            trueLayer.style.maskImage = 'none';
+            if (status) status.textContent = '● a different picture under the lens';
+          } else {
+            trueLayer.style.opacity = '0';
+            if (status) status.textContent = '● goals met';
+          }
+          card.style.transform = 'perspective(1100px) rotateY(0deg)';
+          setTimeout(() => { busy = false; }, 360);
+        }, 340);
+      });
+      return;
+    }
     const R = 150; // spotlight diameter
     const setMask = (x, y) => {
       const m = `radial-gradient(circle ${R/2}px at ${x}px ${y}px, #000 60%, transparent 72%)`;
@@ -948,12 +978,6 @@ class Component extends DCLogic {
       if (ring) ring.style.opacity = '0';
       if (status) status.textContent = '● goals met';
     });
-    // touch: tap reveals full true layer briefly
-    card.addEventListener('touchstart', () => {
-      trueLayer.style.opacity = '1';
-      trueLayer.style.webkitMaskImage = 'none';
-      trueLayer.style.maskImage = 'none';
-    }, { passive: true });
   }
 
   setupPipe() {
@@ -976,6 +1000,28 @@ class Component extends DCLogic {
       if (hint) hint.textContent = discovered.size < 3 ? 'keep looking — more leaks to find' : 'all three leaks found — and we close each one';
     };
 
+    const touch = matchMedia('(hover: none)').matches;
+    if (touch) {
+      // Mobile: leaks reveal themselves as the pipe scrolls up the page — no dragging
+      if (ring) ring.style.display = 'none';
+      scene.style.cursor = 'default';
+      if (hint) hint.textContent = 'Листайте страницу — дыры проявятся сами.';
+      const order = cracks.map((cr, i) => ({ i, cy: parseFloat(cr.getAttribute('data-cy')) || 0 }))
+                          .sort((a, b) => a.cy - b.cy).map((o) => o.i);
+      const onScroll = () => {
+        const r = scene.getBoundingClientRect();
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        const p = (vh - r.top) / (vh + r.height);
+        if (p > 0.30 && order[0] != null) reveal(order[0]);
+        if (p > 0.46 && order[1] != null) reveal(order[1]);
+        if (p > 0.62 && order[2] != null) reveal(order[2]);
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+      onScroll();
+      return;
+    }
+
     const move = (e) => {
       const r = scene.getBoundingClientRect();
       const sx = r.width / 450, sy = r.height / 560;
@@ -989,7 +1035,6 @@ class Component extends DCLogic {
     };
     scene.addEventListener('mousemove', move);
     scene.addEventListener('mouseleave', () => { if (ring) ring.style.opacity = '0'; });
-    scene.addEventListener('touchstart', () => { [0, 1, 2].forEach(reveal); }, { passive: true });
   }
 
   setupLens() {
