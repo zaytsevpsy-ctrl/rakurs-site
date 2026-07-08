@@ -281,13 +281,13 @@ html,body{overflow-x:hidden!important;max-width:100%}
 
   <!-- PAIN (dark) -->
   <section id="pain" style="background: #1B1815; color: #F1EAE0; padding: clamp(72px,11vh,128px) clamp(20px,5vw,64px);">
-    <div style="max-width: 1200px; margin: 0 auto;">
+    <div style="max-width: 1080px; margin: 0 auto;">
       <div data-reveal style="font-family: 'JetBrains Mono'; font-size: 13px; letter-spacing: .04em; color: #A2968A; margin-bottom: 20px;">// почему утечек не видно в отчётах</div>
       <h2 data-reveal style="font-family: 'Manrope'; font-weight: 700; font-size: clamp(28px,3.4vw,46px); line-height: 1.1; letter-spacing: -.02em; margin: 0 0 20px; max-width: 900px;">В отчётах всё хорошо. Просто на них никто не смотрит под нужным углом.</h2>
       <p data-reveal style="font-family: 'Inter'; font-weight: 300; font-size: clamp(16px,1.3vw,19px); line-height: 1.6; color: #CFC5B8; max-width: 720px; margin: 0 0 12px;">Все делают ИИ. Мы меняем ракурс: автоматизация «не туда» лишь ускоряет хаос — за ваши деньги. Настоящие потери прячутся там, куда красивые дашборды не заглядывают.</p>
 
       <!-- report second-layer reveal -->
-      <div data-reveal style="margin: 40px 0 48px; max-width: 820px;">
+      <div data-reveal style="margin: 40px 0 44px;">
         <div data-report style="position: relative; border: 1px solid #35302B; border-radius: 16px; overflow: hidden; background: #211D19; cursor: none;">
           <!-- SURFACE (looks great) -->
           <div style="padding: 16px 20px;">
@@ -706,9 +706,9 @@ html,body{overflow-x:hidden!important;max-width:100%}
       </sc-if>
 
       <sc-if value="{{ hasForm }}" hint-placeholder-val="{{ true }}">
-      <div class="rk-form-grid" style="display: grid; grid-template-columns: 1fr 1.15fr; gap: clamp(28px,4vw,52px); align-items: start;">
+      <div class="rk-form-grid" style="display: grid; grid-template-columns: 1fr 1.08fr; gap: clamp(28px,4vw,52px); align-items: stretch;">
         <!-- left: ticket + kadr frame -->
-        <div>
+        <div style="display: flex; flex-direction: column;">
           <div data-reveal style="background: #211D19; border: 1px solid #35302B; border-radius: 14px; overflow: hidden; margin-bottom: 22px;">
             <div style="padding: 20px 22px;">
               <div style="font-family: 'JetBrains Mono'; font-size: 11px; letter-spacing: .06em; color: #A2968A; margin-bottom: 14px;">ЧТО ВЫ ПОЛУЧАЕТЕ</div>
@@ -723,7 +723,7 @@ html,body{overflow-x:hidden!important;max-width:100%}
           </div>
 
           <!-- kadr viewfinder frame -->
-          <div data-reveal style="position: relative; min-height: 150px; border-radius: 14px; padding: 26px 22px; background: #17140F;">
+          <div data-reveal style="position: relative; min-height: 150px; border-radius: 14px; padding: 26px 22px; background: #17140F; flex: 1; display: flex; flex-direction: column; justify-content: center;">
             <span style="position: absolute; top: 12px; left: 12px; width: 22px; height: 22px; border-top: 2px solid #F1EAE0; border-left: 2px solid #F1EAE0;"></span>
             <span style="position: absolute; top: 12px; right: 12px; width: 22px; height: 22px; border-top: 2px solid #EDA05C; border-right: 2px solid #EDA05C; transform: rotate(12deg);"></span>
             <span style="position: absolute; bottom: 12px; left: 12px; width: 22px; height: 22px; border-bottom: 2px solid #F1EAE0; border-left: 2px solid #F1EAE0;"></span>
