@@ -154,9 +154,10 @@ html,body{overflow-x:hidden!important;max-width:100%}
   @keyframes rk-type { 0%,100% { opacity: .25; } 50% { opacity: 1; } }
   @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
   @media (max-width: 900px) {
-    #top { grid-template-columns: minmax(0,1fr) !important; gap: 30px !important; padding-top: clamp(96px,12vh,120px) !important; }
-    #top > div { min-width: 0 !important; max-width: 100% !important; }
-    #top > div:last-child { align-items: flex-start !important; }
+    #top { padding-top: clamp(96px,12vh,120px) !important; }
+    #top > div { grid-template-columns: minmax(0,1fr) !important; gap: 30px !important; max-width: 100% !important; }
+    #top > div > div { min-width: 0 !important; max-width: 100% !important; }
+    #top > div > div:last-child { align-items: flex-start !important; }
   }
   @media (max-width: 768px) {
     .rk-flag-grid, .rk-founder-intro, .rk-founder-cards, .rk-form-grid, .rk-holes, .rk-incl-grid { grid-template-columns: 1fr !important; }
