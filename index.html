@@ -1347,38 +1347,42 @@ Don't invent numbers or cases beyond these. If unsure, offer a call. Say honestl
 })();
 </script>
 <script>
-/* ===== Rakurs spotlight showcase controller ===== */
+/* ===== Rakurs spotlight showcase controller (delegated, re-render-proof) ===== */
 (function(){
-  function wire(){
+  function init(){
     var spot=document.querySelector('[data-spot]');
     if(!spot) return false;
-    if(spot.__rkspot) return true;
-    var cards=[].slice.call(spot.querySelectorAll('[data-spot-card]'));
-    if(!cards.length) return false;
-    spot.__rkspot=1;
-    function body(c){return c.querySelector('[data-spot-body]');}
+    if(!spot.querySelectorAll('[data-spot-card]').length) return false;
+    function body(c){return c&&c.querySelector('[data-spot-body]');}
     function collapse(c){var b=body(c);if(!b)return;b.style.height=b.scrollHeight+'px';b.offsetHeight;b.style.height='0px';c.classList.remove('is-open');var h=c.querySelector('[data-spot-head]');if(h)h.setAttribute('aria-expanded','false');}
     function expand(c){var b=body(c);if(!b)return;c.classList.add('is-open');b.style.height=b.scrollHeight+'px';var h=c.querySelector('[data-spot-head]');if(h)h.setAttribute('aria-expanded','true');b.addEventListener('transitionend',function te(e){if(e.propertyName==='height'&&c.classList.contains('is-open')){b.style.height='auto';b.removeEventListener('transitionend',te);}});}
     function toggle(c){
+      if(!c)return;
+      var list=[].slice.call(spot.querySelectorAll('[data-spot-card]'));
       var isOpen=c.classList.contains('is-open');
-      cards.forEach(function(x){if(x!==c&&x.classList.contains('is-open'))collapse(x);});
+      list.forEach(function(x){if(x!==c&&x.classList.contains('is-open'))collapse(x);});
       if(isOpen){collapse(c);spot.classList.remove('has-open');}
       else{expand(c);spot.classList.add('has-open');}
     }
-    cards.forEach(function(c){
-      var b=body(c);if(b)b.style.height='0px';
-      var h=c.querySelector('[data-spot-head]');
-      if(!h)return;
-      h.setAttribute('role','button');h.setAttribute('tabindex','0');h.setAttribute('aria-expanded','false');
-      h.addEventListener('click',function(){toggle(c);});
-      h.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '||e.key==='Spacebar'){e.preventDefault();toggle(c);}});
-    });
-    expand(cards[0]);spot.classList.add('has-open');
-    window.addEventListener('resize',function(){var o=spot.querySelector('.is-open [data-spot-body]');if(o)o.style.height='auto';});
+    function decorate(){
+      var list=[].slice.call(spot.querySelectorAll('[data-spot-card]'));
+      if(!list.length)return;
+      list.forEach(function(c){var h=c.querySelector('[data-spot-head]');if(h&&!h.getAttribute('role')){h.setAttribute('role','button');h.setAttribute('tabindex','0');h.setAttribute('aria-expanded',c.classList.contains('is-open')?'true':'false');}});
+      if(!list.some(function(c){return c.classList.contains('is-open');})){expand(list[0]);spot.classList.add('has-open');}
+    }
+    if(!spot.__rkspot){
+      spot.__rkspot=1;
+      spot.addEventListener('click',function(e){var h=e.target.closest&&e.target.closest('[data-spot-head]');if(h&&spot.contains(h))toggle(h.closest('[data-spot-card]'));});
+      spot.addEventListener('keydown',function(e){var h=e.target.closest&&e.target.closest('[data-spot-head]');if(h&&(e.key==='Enter'||e.key===' '||e.key==='Spacebar')){e.preventDefault();toggle(h.closest('[data-spot-card]'));}});
+      var raf=null;
+      new MutationObserver(function(){if(raf)cancelAnimationFrame(raf);raf=requestAnimationFrame(decorate);}).observe(spot,{childList:true,subtree:true});
+      window.addEventListener('resize',function(){var o=spot.querySelector('.is-open [data-spot-body]');if(o)o.style.height='auto';});
+    }
+    decorate();
     return true;
   }
-  var n=0,t=setInterval(function(){if(wire()||++n>80)clearInterval(t);},180);
-  if(document.readyState!=='loading')wire();else document.addEventListener('DOMContentLoaded',wire);
+  var n=0,t=setInterval(function(){if(init()||++n>90)clearInterval(t);},160);
+  if(document.readyState!=='loading')init();else document.addEventListener('DOMContentLoaded',init);
 })();
 </script>
 <script>
