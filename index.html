@@ -1406,14 +1406,19 @@ Don't invent numbers or cases beyond these. If unsure, offer a call. Say honestl
     function keepInView(c){
       var sc=pageScroller(),off=navOffset(),vh=sc.clientHeight||window.innerHeight;
       var top0=c.getBoundingClientRect().top;
-      if(top0>=off-2&&top0<=vh*0.5)return; // already comfortably in view
+      if(top0>=off-2&&top0<=vh*0.55)return; // already comfortably in view
+      var settled=false;
+      function snap(){var d=c.getBoundingClientRect().top-off;var f=sc.scrollTop+d;sc.scrollTop=f<0?0:f;}
       var frames=0;
       (function step(){
+        if(settled)return;
         var delta=c.getBoundingClientRect().top-off;
-        var ns=sc.scrollTop+delta*0.28; if(ns<0)ns=0; sc.scrollTop=ns;
-        if(++frames<44&&Math.abs(delta)>1){requestAnimationFrame(step);}
-        else{var d2=c.getBoundingClientRect().top-off;var f=sc.scrollTop+d2;sc.scrollTop=f<0?0:f;} // final snap
+        var ns=sc.scrollTop+delta*0.3; if(ns<0)ns=0; sc.scrollTop=ns; // smooth ease (foreground rAF)
+        if(++frames<48&&Math.abs(delta)>1){requestAnimationFrame(step);}
+        else{settled=true;snap();}
       })();
+      // fallback: guarantee alignment even if rAF is throttled/paused (background/slow devices)
+      setTimeout(function(){if(settled)return;settled=true;var d=c.getBoundingClientRect().top-off;if(Math.abs(d)>2)snap();},900);
     }
     function toggle(c){
       if(!c)return;
