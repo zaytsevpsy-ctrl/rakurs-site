@@ -1,8 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rakurs — AI solutions that close money leaks | Fixed price, 1–3 weeks</title>
+<meta name="description" content="Rakurs finds where your business loses money and closes the gaps with ready-made AI solutions: fixed price, launch in 1–3 weeks, ROI calculated before you start.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Rakurs — AI solutions that close money leaks">
+<meta property="og:description" content="We find where your business loses money and close the gaps with ready-made AI solutions. Fixed price, launch in 1–3 weeks.">
+<meta property="og:url" content="https://zaytsevpsy-ctrl.github.io/rakurs-site/">
+<meta property="og:image" content="https://zaytsevpsy-ctrl.github.io/rakurs-site/rakurs-team.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23E37722'/%3E%3Ctext x='32' y='47' font-family='ui-monospace,SFMono-Regular,Menlo,Consolas,monospace' font-size='42' font-weight='700' text-anchor='middle' fill='%23F9F5EC'%3Er%3C/text%3E%3C/svg%3E">
+<!-- ===== АНАЛИТИКА: раскомментировать ОДИН из вариантов после создания аккаунта =====
+Вариант A. Google Analytics 4 (заменить G-XXXXXXXXXX на свой Measurement ID):
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>
+Вариант B. GoatCounter (бесплатно, без cookie-баннера; заменить MYCODE на код аккаунта):
+<script data-goatcounter="https://MYCODE.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+===== конец блока аналитики ===== -->
 <script src="./support.js"></script>
 <style id="rk-fixes">
 html,body{overflow-x:hidden!important;max-width:100%}
@@ -590,6 +611,7 @@ html,body{overflow-x:hidden!important;max-width:100%}
           <div style="font-family: 'JetBrains Mono'; font-size: 11px; color: #6E6259; letter-spacing: .05em; margin-bottom: 8px;">3–5 ДНЕЙ · ФИКС</div>
           <h3 style="font-family: 'Manrope'; font-weight: 700; font-size: 21px; margin: 0 0 10px;">Экспресс-диагностика</h3>
           <p style="font-size: 15px; line-height: 1.6; color: #4A423B; margin: 0;">Короткая серия интервью и разбор процессов под своим углом. На выходе — топ-3 дыры в деньгах и какое решение закроет самую дорогую. Стоимость зачтём в цену решения.</p>
+          <div style="font-family: 'Manrope'; font-weight: 700; font-size: 15px; color: #241F1B; margin-top: 12px;">$1 500–3 000 · фикс, зачитывается в цену решения</div>
         </div>
 
         <div data-reveal data-step="1" style="position: relative; z-index: 1; transition: transform .2s;" style-hover="transform: translateY(-4px);">
@@ -794,6 +816,7 @@ html,body{overflow-x:hidden!important;max-width:100%}
           </div>
           <h3 style="font-family: 'Manrope'; font-weight: 700; font-size: 26px; margin: 0 0 12px;">Спасибо! Заявка ушла.</h3>
           <p style="font-size: 16px; line-height: 1.6; color: #CFC5B8; margin: 0;">Ответим в течение рабочего дня — и обычно уже на первом созвоне подсказываем, где стоит искать потери.</p>
+          <p style="font-size: 13px; line-height: 1.6; color: #A2968A; margin: 14px 0 0;">Если ответа не будет 24 часа — напишите zaytsev.psy@gmail.com</p>
         </div>
       </sc-if>
 
@@ -846,17 +869,21 @@ html,body{overflow-x:hidden!important;max-width:100%}
           </div>
 
           <div data-reveal class="rk-form-fields" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
-            <input type="text" placeholder="Name" value="{{ form.name }}" onInput="{{ setName }}" style="font-family: 'Inter'; font-size: 15px; padding: 13px 15px; border-radius: 10px; border: 1px solid #35302B; background: #211D19; color: #F1EAE0;"/>
-            <input type="text" placeholder="Company" value="{{ form.company }}" onInput="{{ setCompany }}" style="font-family: 'Inter'; font-size: 15px; padding: 13px 15px; border-radius: 10px; border: 1px solid #35302B; background: #211D19; color: #F1EAE0;"/>
-            <input type="text" placeholder="Role at your company" value="{{ form.role }}" onInput="{{ setRole }}" style="font-family: 'Inter'; font-size: 15px; padding: 13px 15px; border-radius: 10px; border: 1px solid #35302B; background: #211D19; color: #F1EAE0;"/>
-            <input type="text" placeholder="Email / Telegram / WhatsApp" value="{{ form.contact }}" onInput="{{ setContact }}" style="font-family: 'Inter'; font-size: 15px; padding: 13px 15px; border-radius: 10px; border: 1px solid #35302B; background: #211D19; color: #F1EAE0;"/>
+            <input type="text" placeholder="Имя" value="{{ form.name }}" onInput="{{ setName }}" style="font-family: 'Inter'; font-size: 15px; padding: 13px 15px; border-radius: 10px; border: 1px solid #35302B; background: #211D19; color: #F1EAE0;"/>
+            <input type="text" placeholder="Компания" value="{{ form.company }}" onInput="{{ setCompany }}" style="font-family: 'Inter'; font-size: 15px; padding: 13px 15px; border-radius: 10px; border: 1px solid #35302B; background: #211D19; color: #F1EAE0;"/>
+            <input type="text" placeholder="Роль в компании" value="{{ form.role }}" onInput="{{ setRole }}" style="font-family: 'Inter'; font-size: 15px; padding: 13px 15px; border-radius: 10px; border: 1px solid #35302B; background: #211D19; color: #F1EAE0;"/>
+            <input type="text" placeholder="Телеграм / почта / WhatsApp" value="{{ form.contact }}" onInput="{{ setContact }}" style="font-family: 'Inter'; font-size: 15px; padding: 13px 15px; border-radius: 10px; border: 1px solid #35302B; background: #211D19; color: #F1EAE0;"/>
           </div>
-          <textarea placeholder="What hurts — in your own words (optional)" value="{{ form.pain }}" onInput="{{ setPain }}" data-reveal rows="3" style="width: 100%; font-family: 'Inter'; font-size: 15px; padding: 13px 15px; border-radius: 10px; border: 1px solid #35302B; background: #211D19; color: #F1EAE0; resize: vertical; margin-bottom: 16px; box-sizing: border-box;"></textarea>
+          <textarea placeholder="Что болит — своими словами (необязательно)" value="{{ form.pain }}" onInput="{{ setPain }}" data-reveal rows="3" style="width: 100%; font-family: 'Inter'; font-size: 15px; padding: 13px 15px; border-radius: 10px; border: 1px solid #35302B; background: #211D19; color: #F1EAE0; resize: vertical; margin-bottom: 16px; box-sizing: border-box;"></textarea>
 
           <label data-reveal style="display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: #A2968A; line-height: 1.5; margin-bottom: 20px; cursor: pointer;">
             <input type="checkbox" checked="{{ form.consent }}" onChange="{{ toggleConsent }}" style="margin-top: 2px; accent-color: #E37722; width: 16px; height: 16px; flex-shrink: 0;"/>
             <span>Согласен на обработку персональных данных для ответа на заявку.</span>
           </label>
+
+          <sc-if value="{{ formError }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size: 13px; color: #F0653F; margin: -10px 0 16px;">Отметьте согласие на обработку данных</div>
+          </sc-if>
 
           <button type="submit" data-reveal data-lens="target" style="font-family: 'Manrope'; font-weight: 600; font-size: 16px; color: #1B1815; background: #E37722; padding: 16px 28px; border-radius: 10px; border: none; cursor: pointer; width: 100%; transition: background .15s;" style-hover="background: #EDA05C;">Улучшить бизнес — начать с диагностики</button>
           <div data-reveal style="text-align: center; font-family: 'JetBrains Mono'; font-size: 11px; color: #6E6259; margin-top: 14px;">20 минут · без обязательств · отвечаем в течение рабочего дня</div>
@@ -879,7 +906,7 @@ html,body{overflow-x:hidden!important;max-width:100%}
         <span style="font-family: 'Manrope'; font-weight: 700; font-size: 18px; color: #F1EAE0;">rakurs</span>
       </div>
       <div style="font-size: 13px; line-height: 1.6;">готовые ИИ‑решения и диагностика операционных потерь</div>
-      <div style="display: flex; gap: 20px; font-size: 14px;"><a href="mailto:hello@rakurs.ai" style="color: #EDA05C;">hello@rakurs.ai</a><a href="#top" style="color: #EDA05C;">LinkedIn</a></div>
+      <div style="display: flex; gap: 20px; font-size: 14px;"><a href="mailto:zaytsev.psy@gmail.com" style="color: #EDA05C;">zaytsev.psy@gmail.com</a><!-- TODO: вернуть LinkedIn с реальным URL профиля --></div>
     </div>
   </footer>
   <!-- SECTION-ANCHOR -->
@@ -890,7 +917,7 @@ html,body{overflow-x:hidden!important;max-width:100%}
       <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: #FFFFFF; border-bottom: 1px solid #E4DBCD;">
         <div style="display: flex; align-items: center; gap: 10px;">
           <svg viewBox="0 0 100 100" width="24" height="24" aria-hidden="true"><rect x="20" y="20" width="26" height="8" rx="2" fill="#241F1B"/><rect x="20" y="20" width="8" height="26" rx="2" fill="#241F1B"/><g transform="rotate(12 68 26)"><rect x="54" y="20" width="26" height="8" rx="2" fill="#E37722"/><rect x="72" y="20" width="8" height="26" rx="2" fill="#E37722"/></g><rect x="20" y="72" width="26" height="8" rx="2" fill="#241F1B"/><rect x="20" y="54" width="8" height="26" rx="2" fill="#241F1B"/><rect x="54" y="72" width="26" height="8" rx="2" fill="#241F1B"/><rect x="72" y="54" width="8" height="26" rx="2" fill="#241F1B"/></svg>
-          <div><div style="font-family: 'Manrope'; font-weight: 700; font-size: 14px; color: #241F1B;">Rakurs AI assistant</div><div style="font-family: 'JetBrains Mono'; font-size: 10px; color: #7E8C7C;">● живой ИИ · это и есть продукт B1</div></div>
+          <div><div style="font-family: 'Manrope'; font-weight: 700; font-size: 14px; color: #241F1B;">Rakurs AI assistant</div><div style="font-family: 'JetBrains Mono'; font-size: 10px; color: #7E8C7C;">● демо-сценарий · так работает продукт B1</div></div>
         </div>
         <button onClick="{{ closeChat }}" aria-label="Close" style="border: none; background: transparent; cursor: pointer; font-size: 20px; color: #6E6259; line-height: 1; padding: 4px;">×</button>
       </div>
@@ -907,7 +934,7 @@ html,body{overflow-x:hidden!important;max-width:100%}
         </sc-if>
       </div>
       <form onSubmit="{{ sendChat }}" style="display: flex; gap: 8px; padding: 12px; border-top: 1px solid #E4DBCD; background: #FFFFFF;">
-        <input type="text" value="{{ chatInput }}" onInput="{{ onChatInput }}" placeholder="Where do you feel money is leaking?" style="flex: 1; font-family: 'Inter'; font-size: 14px; padding: 11px 13px; border-radius: 10px; border: 1px solid #E4DBCD; background: #F5F0E6; color: #241F1B; min-width: 0;"/>
+        <input type="text" value="{{ chatInput }}" onInput="{{ onChatInput }}" placeholder="Где, чувствуете, утекают деньги?" style="flex: 1; font-family: 'Inter'; font-size: 14px; padding: 11px 13px; border-radius: 10px; border: 1px solid #E4DBCD; background: #F5F0E6; color: #241F1B; min-width: 0;"/>
         <button type="submit" data-lens="target" style="border: none; background: #E37722; color: #F9F5EC; border-radius: 10px; padding: 0 16px; cursor: pointer; font-size: 16px; font-weight: 700;">→</button>
       </form>
     </div>
@@ -926,12 +953,12 @@ class Component extends DCLogic {
   el = {};
 
   PRODUCTS = [
-    { code: 'B1 · Sales-ассистент 24/7', tag: 'с этого начинают', hole: '// дыра: заявки остывают за ночь', title: 'Заявки больше не остывают до утра', desc: 'ИИ-ассистент отвечает на сайте и в мессенджерах круглосуточно: квалифицирует лид, записывает на встречу и передаёт в CRM. Заметная доля клиентов готова оставить заявку вечером — а к утру она уже холодная.', demo: 'chat', gets: ['ловит вечерние и ночные заявки', 'сам квалифицирует и назначает встречу', 'опция: новый продающий лендинг в комплекте'], price: 'от $2 500 + от $300/мес', launch: 'запуск 2 недели', cta: 'Хочу это решение', note: 'Такой же ассистент дежурит на этой странице — откройте чат в правом нижнем углу.' },
-    { code: 'B2 · ИИ-приёмная заявок', tag: 'флагман витрины', hole: '// дыра: фонд оплаты растёт с потоком', title: 'Поток обращений разбирает алгоритм, а не отдел', desc: 'ИИ-приёмная обрабатывает типовые заявки без человека, а сложные передаёт сотруднику — тот проверяет готовый разбор, а не разбирает заявку с нуля. Интеграция с вашей CRM или ERP.', demo: 'intake', gets: ['типовое уходит без оператора', 'штат не растёт вместе с потоком', 'кейс: страховая — +30% к скорости'], price: 'от $10 000 + от $1 000/мес', launch: 'запуск 2–3 недели', cta: 'Хочу это решение', note: '' },
-    { code: 'B3 · База знаний', tag: '', hole: '// дыра: часы на поиск по регламентам', title: 'Ответ по документации — за секунды, со ссылкой', desc: 'ИИ-ассистент по вашей внутренней документации понимает вопрос обычным языком и отвечает сразу — со ссылкой на первоисточник. Сотрудники перестают часами искать пункт в регламентах или дёргать коллег.', demo: 'kb', gets: ['ответ обычным языком за секунды', 'всегда со ссылкой на источник', 'кейс: ж/д станция — поиск по томам ушёл'], price: 'от $6 000 + от $500/мес', launch: 'запуск 1–2 недели', cta: 'Хочу это решение', note: '' },
-    { code: 'B4 · Генератор КП', tag: '', hole: '// дыра: КП собирают вручную, теряя сделки', title: 'Черновик КП — за минуту', desc: 'Генератор собирает черновик по вашей техбазе и прайсу: подбирает позиции, характеристики и условия — менеджеру остаётся проверить. Сборка перестаёт быть ручной и долгой.', demo: 'kp', gets: ['черновик КП за минуту вместо дней', 'менеджер не ждёт неделями', 'кейс: поставщик оборудования'], price: 'от $5 000 + от $500/мес', launch: 'запуск 2 недели', cta: 'Хочу это решение', note: '' },
-    { code: 'B5 · Панель управления бизнесом', tag: 'весь бизнес на экране', hole: '// дыра: руководитель решает вслепую', title: 'Кабина пилота для руководителя', desc: 'Все показатели компании и отделов на одном экране: продажи, финансы, операционка, маркетинг, люди. ИИ подсвечивает отклонения и говорит, куда смотреть первым. Решения — по приборам, а не по интуиции.', demo: 'panel', gets: ['весь бизнес и отделы на одном экране в реальном времени', 'ИИ-алерты: где показатель поехал и почему', 'отчёты собираются сами — команда не сводит таблицы'], price: 'от $9 500 + от $1 200/мес', launch: 'запуск 3 недели', cta: 'Хочу это решение', note: 'Подключаем ваши источники: CRM, бухгалтерия, склад, реклама, поддержка.' },
-    { code: 'B6 · Цифровой сотрудник', tag: 'работает 24/7', hole: '// дыра: рутина администрирования съедает команду', title: 'Цифровой сотрудник, который знает всё о компании', desc: 'Берёт на себя офис-менеджмент и администрирование: помнит контекст компании, пишет и рассылает письма, бронирует встречи, ставит задачи, готовит саммари и находит нужное. Один ассистент вместо рутины на всей команде.', demo: 'employee', gets: ['письма, встречи, задачи и саммари — на нём', 'знает контекст компании, процессы и людей', 'команда занимается делом, а не администрированием'], price: 'от $7 000 + от $900/мес', launch: 'запуск 2 недели', cta: 'Хочу это решение', note: '' },
+    { code: 'B1 · Sales-ассистент 24/7', tag: 'с этого начинают', hole: '// дыра: заявки остывают за ночь', title: 'Заявки больше не остывают до утра', desc: 'ИИ-ассистент отвечает на сайте и в мессенджерах круглосуточно: квалифицирует лид, записывает на встречу и передаёт в CRM. Заметная доля клиентов готова оставить заявку вечером — а к утру она уже холодная.', demo: 'chat', gets: ['ловит вечерние и ночные заявки', 'сам квалифицирует и назначает встречу', 'опция: новый продающий лендинг в комплекте'], price: 'от $2 500 + от $500/мес', launch: 'запуск 2 недели', cta: 'Хочу это решение', note: 'Демо-сценарий такого ассистента — в чате на этой странице, в правом нижнем углу.' },
+    { code: 'B2 · ИИ-приёмная заявок', tag: 'по запросу', hole: '// дыра: фонд оплаты растёт с потоком', title: 'Поток обращений разбирает алгоритм, а не отдел', desc: 'ИИ-приёмная обрабатывает типовые заявки без человека, а сложные передаёт сотруднику — тот проверяет готовый разбор, а не разбирает заявку с нуля. Интеграция с вашей CRM или ERP.', demo: 'intake', gets: ['типовое уходит без оператора', 'штат не растёт вместе с потоком', 'кейс: страховая — +30% к скорости'], price: 'от $10 000 + от $1 000/мес', launch: 'запуск 2–3 недели', cta: 'Хочу это решение', note: '' },
+    { code: 'B3 · База знаний', tag: 'проверено: 3 кейса', hole: '// дыра: часы на поиск по регламентам', title: 'Ответ по документации — за секунды, со ссылкой', desc: 'ИИ-ассистент по вашей внутренней документации понимает вопрос обычным языком и отвечает сразу — со ссылкой на первоисточник. Сотрудники перестают часами искать пункт в регламентах или дёргать коллег.', demo: 'kb', gets: ['ответ обычным языком за секунды', 'всегда со ссылкой на источник', 'кейс: ж/д станция — поиск по томам ушёл'], price: 'от $8 000 + от $500/мес', launch: 'запуск 1–2 недели', cta: 'Хочу это решение', note: '' },
+    { code: 'B4 · Генератор КП', tag: 'по запросу', hole: '// дыра: КП собирают вручную, теряя сделки', title: 'Черновик КП — за минуту', desc: 'Генератор собирает черновик по вашей техбазе и прайсу: подбирает позиции, характеристики и условия — менеджеру остаётся проверить. Сборка перестаёт быть ручной и долгой.', demo: 'kp', gets: ['черновик КП за минуту вместо дней', 'менеджер не ждёт неделями', 'кейс: поставщик оборудования'], price: 'от $5 000 + от $500/мес', launch: 'запуск 2 недели', cta: 'Хочу это решение', note: '' },
+    { code: 'B5 · Панель управления бизнесом', tag: 'по запросу', hole: '// дыра: руководитель решает вслепую', title: 'Кабина пилота для руководителя', desc: 'Все показатели компании и отделов на одном экране: продажи, финансы, операционка, маркетинг, люди. ИИ подсвечивает отклонения и говорит, куда смотреть первым. Решения — по приборам, а не по интуиции.', demo: 'panel', gets: ['весь бизнес и отделы на одном экране в реальном времени', 'ИИ-алерты: где показатель поехал и почему', 'отчёты собираются сами — команда не сводит таблицы'], price: 'от $9 500 + от $1 200/мес', launch: 'запуск 3 недели', cta: 'Хочу это решение', note: 'Подключаем ваши источники: CRM, бухгалтерия, склад, реклама, поддержка.' },
+    { code: 'B6 · Цифровой сотрудник', tag: 'по запросу', hole: '// дыра: рутина администрирования съедает команду', title: 'Цифровой сотрудник, который знает всё о компании', desc: 'Берёт на себя офис-менеджмент и администрирование: помнит контекст компании, пишет и рассылает письма, бронирует встречи, ставит задачи, готовит саммари и находит нужное. Один ассистент вместо рутины на всей команде.', demo: 'employee', gets: ['письма, встречи, задачи и саммари — на нём', 'знает контекст компании, процессы и людей', 'команда занимается делом, а не администрированием'], price: 'от $7 000 + от $900/мес', launch: 'запуск 2 недели', cta: 'Хочу это решение', note: '' },
   ];
 
   CASES = [
@@ -955,8 +982,9 @@ class Component extends DCLogic {
     chatOpen: false,
     chatBusy: false,
     chatInput: '',
-    chat: [{ who: 'bot', text: 'Hi! I’m Rakurs’ AI assistant — the B1 product itself, live. Tell me where you sense money is leaking and I’ll point you to where to start.' }],
+    chat: [{ who: 'bot', text: (/^ru/i.test(navigator.language || '')) ? 'Здравствуйте! Я ИИ-ассистент Rakurs — демо-сценарий продукта B1. Расскажите, где, чувствуете, утекают деньги, — подскажу, с чего начать.' : 'Hi! I’m Rakurs’ AI assistant — a demo scenario of our B1 product. Tell me where you sense money is leaking and I’ll point you to where to start.' }],
     formSubmitted: false,
+    formError: false,
     form: { name: '', company: '', role: '', pain: '', contact: '', consent: false },
   };
 
@@ -1010,6 +1038,25 @@ class Component extends DCLogic {
     };
     const setBtn = (label) => { btn.innerHTML = label; };
 
+    // RU <-> EN placeholders (the text-node walker skips INPUT/TEXTAREA)
+    const PH_EN = {
+      'Имя': 'Name',
+      'Компания': 'Company',
+      'Роль в компании': 'Role at your company',
+      'Телеграм / почта / WhatsApp': 'Email / Telegram / WhatsApp',
+      'Что болит — своими словами (необязательно)': 'What hurts — in your own words (optional)',
+      'Где, чувствуете, утекают деньги?': 'Where do you feel money is leaking?',
+    };
+    const PH_RU = {};
+    Object.keys(PH_EN).forEach((k) => { PH_RU[PH_EN[k]] = k; });
+    const swapPlaceholders = (lang) => {
+      const map = lang === 'en' ? PH_EN : PH_RU;
+      root.querySelectorAll('input[placeholder], textarea[placeholder]').forEach((el) => {
+        const cur = norm(el.getAttribute('placeholder') || '');
+        if (map[cur]) el.setAttribute('placeholder', map[cur]);
+      });
+    };
+
     const applyEN = () => {
       collectNodes().forEach((n) => {
         const en = EN[norm(n.nodeValue)];
@@ -1020,9 +1067,10 @@ class Component extends DCLogic {
           n.nodeValue = lead + en + tail;
         }
       });
+      swapPlaceholders('en');
     };
     this._applyEN = applyEN;
-    const restoreRU = () => { collectNodesAny().forEach((n) => { if (n._ru != null) n.nodeValue = n._ru; }); };
+    const restoreRU = () => { collectNodesAny().forEach((n) => { if (n._ru != null) n.nodeValue = n._ru; }); swapPlaceholders('ru'); };
 
     // Re-apply EN after React re-renders (chat/form/calculator re-insert Russian text)
     let raf = null;
@@ -1038,16 +1086,27 @@ class Component extends DCLogic {
         this._lang = 'ru';
         restoreRU();
         setBtn('RU · <span style="color:#B35F17">EN</span>');
+        document.documentElement.lang = 'ru';
       } else {
         this._lang = 'en';
         applyEN();
         setBtn('EN · <span style="color:#B35F17">RU</span>');
+        document.documentElement.lang = 'en';
       }
     });
 
-    // English by default for the international market
-    applyEN();
-    setBtn('EN · <span style="color:#B35F17">RU</span>');
+    // Language auto-detect: RU browsers keep the Russian DOM, everyone else gets EN
+    const isRu = /^ru/i.test(navigator.language || '');
+    if (isRu) {
+      this._lang = 'ru';
+      setBtn('RU · <span style="color:#B35F17">EN</span>');
+      document.documentElement.lang = 'ru';
+    } else {
+      this._lang = 'en';
+      applyEN();
+      setBtn('EN · <span style="color:#B35F17">RU</span>');
+      document.documentElement.lang = 'en';
+    }
   }
 
   setupScrub() {
@@ -1364,11 +1423,29 @@ class Component extends DCLogic {
       // form
       form: this.state.form,
       formSubmitted: this.state.formSubmitted,
+      formError: this.state.formError,
       chipCount: this.state.chips.length,
       toggleChip: (label) => this.setState((s) => ({ chips: s.chips.includes(label) ? s.chips.filter((x) => x !== label) : [...s.chips, label] })),
       setField: (k) => (e) => this.setState((s) => ({ form: { ...s.form, [k]: e.target.value } })),
-      toggleConsent: (e) => this.setState((s) => ({ form: { ...s.form, consent: e.target.checked } })),
-      submitForm: (e) => { e.preventDefault(); if (this.state.form.consent) this.setState({ formSubmitted: true }); },
+      toggleConsent: (e) => this.setState((s) => ({ form: { ...s.form, consent: e.target.checked }, formError: e.target.checked ? false : s.formError })),
+      submitForm: (e) => {
+        e.preventDefault();
+        const f = this.state.form;
+        if (!f.consent) { this.setState({ formError: true }); return; }
+        fetch('https://formsubmit.co/ajax/zaytsev.psy@gmail.com', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            name: f.name, company: f.company, role: f.role,
+            contact: f.contact, pain: f.pain,
+            plan: (this.state.chips || []).join('; '),
+            lang: this._lang || 'ru',
+            page: location.href,
+            _subject: 'Заявка с сайта Rakurs',
+          }),
+        }).then(() => this.setState({ formSubmitted: true, formError: false }))
+          .catch(() => this.setState({ formSubmitted: true, formError: false }));
+      },
 
       // chat
       chat: this.state.chat,
@@ -1424,24 +1501,33 @@ class Component extends DCLogic {
   }
 
   SYSTEM_PROMPT = `You are the AI assistant for Rakurs, a consultancy that finds where a business loses money and closes the gap with fixed-price AI products.
-Tone: calm expert confidence, about money and people, not technology. No exclamation marks; avoid words like "unique", "innovative", "turnkey". Reply in English, briefly (2-4 sentences), to the point.
+Tone: calm expert confidence, about money and people, not technology. No exclamation marks; avoid words like "unique", "innovative", "turnkey". Reply in the user's language (English or Russian), briefly (2-4 sentences), to the point.
 Your job: understand where the person is losing money, suggest the fitting product, then gently steer toward the express diagnostic (3-5 days, fixed price, credited toward the solution).
 Products (state price only if asked or relevant):
-- B1 Sales Assistant 24/7 - catches evening/night inquiries, qualifies, books meetings, writes to CRM. From $2,500 + from $300/mo.
+- B1 Sales Assistant 24/7 - catches evening/night inquiries, qualifies, books meetings, writes to CRM. From $2,500 + from $500/mo.
 - B2 AI Intake System - triages the request stream, routes complex cases to a person. From $10,000 + from $1,000/mo. Case: insurer +30% speed.
-- B3 Knowledge Base - answers from internal docs in seconds with a source link. From $6,000 + from $500/mo.
+- B3 Knowledge Base - answers from internal docs in seconds with a source link. From $8,000 + from $500/mo.
 - B4 Proposal Generator - a technical proposal draft in a minute. From $5,000 + from $500/mo.
 Flagship program - for companies of 50+ employees, implementation priced at 10-30% of the annual value of the leak closed.
 Don't invent numbers or cases beyond these. If unsure, offer a call. Say honestly if Rakurs isn't a fit.`;
 
   pickReply(t) {
     const s = t.toLowerCase();
-    if (/night|even|lead|inquir|sale/.test(s)) return 'Sounds like the "leads go cold overnight" leak - that’s our B1, Sales Assistant 24/7 (from $2,500). It catches evening inquiries and books the meeting. Start the improvement plan and we’ll estimate payback on your volume.';
+    if (/[А-Яа-яЁё]/.test(t)) {
+      if (/ноч|вечер|заявк|лид|прода/.test(s)) return 'Похоже на утечку «заявки остывают за ночь» — это наш B1, Sales-ассистент 24/7 (от $2 500 + от $500/мес). Он ловит вечерние заявки, сам квалифицирует и назначает встречу. Оставьте заявку в форме — посчитаем окупаемость на вашем объёме.';
+      if (/кп|коммерческ|предложени/.test(s)) return 'Это Генератор КП (B4, от $5 000 + от $500/мес): черновик за минуту вместо дней ожидания. Лучше начать с экспресс-диагностики — её стоимость зачитывается в цену решения.';
+      if (/документ|регламент|база знаний|поиск|знани/.test(s)) return 'Похоже на задачу для Базы знаний (B3, от $8 000 + от $500/мес): ответ обычным языком за секунды, со ссылкой на первоисточник. Показать механику на созвоне?';
+      if (/оператор|поток|обращени|очеред|штат|приёмн|приемн/.test(s)) return 'Это ИИ-приёмная (B2, от $10 000 + от $1 000/мес): типовое уходит без оператора, штат не растёт вместе с потоком. Кейс: страховая — +30% к скорости.';
+      if (/срок|быстро|когда|недел|долго/.test(s)) return 'Готовое решение запускаем за 1–3 недели, цена фиксируется до старта. Перед этим — экспресс-диагностика за 3–5 дней ($1 500–3 000, фикс, зачитывается в цену решения).';
+      if (/цен|сколько|стоимост|бюджет|прайс/.test(s)) return 'Ориентиры: B1 — от $2 500 + от $500/мес; B4 — от $5 000; B3 — от $8 000; B2 — от $10 000. Точную цену фиксируем до старта — после экспресс-диагностики ($1 500–3 000, зачитывается в цену решения).';
+      if (/что вы|чем занима|кто вы|о вас|о компании/.test(s)) return 'Мы находим, где бизнес теряет деньги, и закрываем это готовыми ИИ-решениями с фиксированной ценой: ассистент продаж 24/7, ИИ-приёмная, база знаний, генератор КП и другие. Начинаем с экспресс-диагностики за 3–5 дней.';
+      return 'Понял вас. Точнее всего это покажет экспресс-диагностика: 3–5 дней, фикс-цена, зачитывается в цену решения. Оставьте заявку в форме на этой странице — и уже на 20-минутном созвоне подскажем, где искать потери.';
+    }
+    if (/night|even|lead|inquir|sale/.test(s)) return 'Sounds like the "leads go cold overnight" leak - that’s our B1, Sales Assistant 24/7 (from $2,500 + from $500/mo). It catches evening inquiries and books the meeting. Start the improvement plan and we’ll estimate payback on your volume.';
     if (/proposal|quote|estimate|engineer/.test(s)) return 'That’s the Proposal Generator (B4, from $5,000): a draft in a minute instead of days waiting on engineers. Best to start with the express diagnostic - its cost is credited toward the solution.';
-    if (/search|doc|regulat|knowledge|manual/.test(s)) return 'Sounds like a job for the Knowledge Base (B3, from $6,000): plain-language answers in seconds, with a link to the source. Want me to show the mechanics on a call?';
+    if (/search|doc|regulat|knowledge|manual/.test(s)) return 'Sounds like a job for the Knowledge Base (B3, from $8,000): plain-language answers in seconds, with a link to the source. Want me to show the mechanics on a call?';
     if (/operator|volume|request|queue|staff|intake/.test(s)) return 'That’s the AI Intake System (B2, from $10,000): routine cases run without a human, headcount doesn’t grow with volume. An insurer got +30% speed this way.';
     return 'Got it. An express diagnostic shows it best: 3-5 days, fixed price, credited toward the solution. Add a couple of lines in the improvement plan - and on a 20-minute call I’ll point to where the losses are.';
-  
   }
 }
 </script>
