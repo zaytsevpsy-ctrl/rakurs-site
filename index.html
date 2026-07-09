@@ -154,8 +154,18 @@ html,body{overflow-x:hidden!important;max-width:100%}
 [data-nav-menu]{position:fixed;top:0;left:0;right:0;z-index:899;background:rgba(249,245,236,.97);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid #E4DBCD;padding:84px 24px 22px;display:none;flex-direction:column;box-shadow:0 24px 48px -24px rgba(36,31,27,.25)}
 [data-nav-menu].open{display:flex}
 [data-nav-menu] a{font-family:'Manrope';font-weight:600;font-size:17px;color:#241F1B;padding:13px 2px;border-bottom:1px solid #EDE4D6}
-[data-nav-menu] a[href="#form"]{margin-top:16px;border-bottom:none;background:#E37722;color:#F9F5EC;text-align:center;border-radius:10px;padding:14px}
+[data-nav-menu] a:last-child{border-bottom:none}
 [data-navlink].active{color:#B35F17!important}
+@media(max-width:620px){
+  .rk-wordmark{display:none}
+  [data-nav-burger]{width:34px;height:34px;flex:0 0 34px}
+  nav > div{min-width:0}
+}
+/* cases: horizontal swipe row, scales to any number of cases */
+.rk-case-tabs{display:flex;flex-wrap:nowrap!important;gap:10px;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;scrollbar-width:none;padding-bottom:6px}
+.rk-case-tabs::-webkit-scrollbar{display:none}
+.rk-case-tabs>button{flex:0 0 auto;scroll-snap-align:center;white-space:nowrap}
+@media(max-width:620px){.rk-case-tabs{margin-left:-20px!important;margin-right:-20px!important;padding-left:20px;padding-right:20px}}
 @media(max-width:768px){
   .rk-holes{display:flex!important;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;gap:12px!important;margin:0 -20px;padding:0 20px 10px;scrollbar-width:none}
   .rk-holes::-webkit-scrollbar{display:none}
@@ -244,7 +254,7 @@ html,body{overflow-x:hidden!important;max-width:100%}
         <rect x="20" y="72" width="26" height="8" rx="2" fill="#241F1B"/><rect x="20" y="54" width="8" height="26" rx="2" fill="#241F1B"/>
         <rect x="54" y="72" width="26" height="8" rx="2" fill="#241F1B"/><rect x="72" y="54" width="8" height="26" rx="2" fill="#241F1B"/>
       </svg>
-      <span style="font-family: 'Manrope'; font-weight: 700; font-size: 22px; letter-spacing: -.02em;">rakurs</span>
+      <span class="rk-wordmark" style="font-family: 'Manrope'; font-weight: 700; font-size: 22px; letter-spacing: -.02em;">rakurs</span>
     </a>
     <div style="display: flex; align-items: center; gap: clamp(14px,2.4vw,34px);">
       <a href="#storefront" data-lens="target" data-navlink style="font-size: 14px; color: #6E6259;" class="rk-navlink">Решения</a>
@@ -262,7 +272,6 @@ html,body{overflow-x:hidden!important;max-width:100%}
     <a href="#how">Как работаем</a>
     <a href="#cases">Кейсы</a>
     <a href="#founders">Основатели</a>
-    <a href="#form">Улучшить бизнес</a>
   </div>
 
   <!-- HERO -->
@@ -732,7 +741,7 @@ html,body{overflow-x:hidden!important;max-width:100%}
       <h2 data-reveal style="font-family: 'Manrope'; font-weight: 700; font-size: clamp(28px,3.4vw,46px); line-height: 1.1; letter-spacing: -.02em; margin: 0 0 16px;">Что меняется после нас</h2>
       <p data-reveal style="font-family: 'Inter'; font-weight: 300; font-size: clamp(16px,1.3vw,19px); line-height: 1.6; color: #4A423B; max-width: 700px; margin: 0 0 24px;">Выберите дело — и проявите, что было до и что стало после.</p>
 
-      <div data-reveal style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px;">
+      <div data-reveal class="rk-case-tabs" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px;">
         <sc-for list="{{ caseTabs }}" as="t" hint-placeholder-count="6">
           <button onClick="{{ t.select }}" data-lens="target" style="font-family: 'Inter'; font-weight: 500; font-size: 14px; padding: 9px 16px; border-radius: 20px; cursor: pointer; border: 1px solid {{ t.borderColor }}; background: {{ t.bg }}; color: {{ t.fg }}; transition: all .18s;">{{ t.tab }}</button>
         </sc-for>
@@ -1171,6 +1180,13 @@ class Component extends DCLogic {
       burger.addEventListener('click', () => set(!menu.classList.contains('open')));
       menu.addEventListener('click', (e) => { if (e.target.closest('a')) set(false); });
     }
+    const tabs = root.querySelector('.rk-case-tabs');
+    if (tabs) tabs.addEventListener('click', (e) => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      const left = b.offsetLeft - (tabs.clientWidth - b.offsetWidth) / 2;
+      tabs.scrollTo({ left: Math.max(0, left), behavior: 'smooth' });
+    });
   }
 
   setupScrub() {
