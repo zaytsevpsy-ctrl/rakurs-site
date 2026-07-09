@@ -1,4 +1,11 @@
 window.__RAKURS_EN = {
+"КЛИЕНТЫ ПЛАТЯТ":"CLIENTS PAY",
+"ДОХОДИТ ДО ВАС":"REACHES YOU",
+"Лид":"Lead",
+"выгорание, текучка":"burnout, churn",
+"заявки теряются":"requests get lost",
+"инженер как оператор":"engineer as operator",
+"Деньги заходят — и утекают через дыры. Мы их закрываем.":"Money comes in — and leaks out through the holes. We close them.",
 "ГОТОВО":"READY",
 "Тяните за кружок ← дашборд покажет реальные цифры.":"Drag the circle ← the dashboard shows the real numbers.",
 "02:47 · ночь":"02:47 · night",
