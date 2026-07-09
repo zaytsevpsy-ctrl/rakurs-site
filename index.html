@@ -148,6 +148,19 @@ html,body{overflow-x:hidden!important;max-width:100%}
   .rk-spot-cta{width:100%;justify-content:center}
   .rk-spot-foot{gap:14px}
 }
+/* ===== v4: compact + nav ===== */
+[data-nav-burger]{display:none;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid #C9BEAC;border-radius:8px;background:transparent;cursor:pointer;padding:0;flex:0 0 auto}
+@media(max-width:900px){.rk-navlink{display:none!important}[data-nav-burger]{display:flex!important}.rk-hero-pipe>div{max-width:330px!important}}
+[data-nav-menu]{position:fixed;top:0;left:0;right:0;z-index:899;background:rgba(249,245,236,.97);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid #E4DBCD;padding:84px 24px 22px;display:none;flex-direction:column;box-shadow:0 24px 48px -24px rgba(36,31,27,.25)}
+[data-nav-menu].open{display:flex}
+[data-nav-menu] a{font-family:'Manrope';font-weight:600;font-size:17px;color:#241F1B;padding:13px 2px;border-bottom:1px solid #EDE4D6}
+[data-nav-menu] a[href="#form"]{margin-top:16px;border-bottom:none;background:#E37722;color:#F9F5EC;text-align:center;border-radius:10px;padding:14px}
+[data-navlink].active{color:#B35F17!important}
+@media(max-width:768px){
+  .rk-holes{display:flex!important;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;gap:12px!important;margin:0 -20px;padding:0 20px 10px;scrollbar-width:none}
+  .rk-holes::-webkit-scrollbar{display:none}
+  .rk-holes>div{flex:0 0 80%;scroll-snap-align:center;min-width:0}
+}
 </style>
 </head>
 <body>
@@ -222,6 +235,7 @@ html,body{overflow-x:hidden!important;max-width:100%}
 
   <!-- NAV -->
   <nav style="position: fixed; top: 0; left: 0; right: 0; z-index: 900; padding: 16px clamp(20px,5vw,64px); background: rgba(249,245,236,.82); backdrop-filter: blur(10px); border-bottom: 1px solid #E4DBCD;">
+    <div data-navprog style="position:absolute;left:0;right:0;bottom:-1px;height:2px;background:#E37722;transform:scaleX(0);transform-origin:left;pointer-events:none;"></div>
     <div style="max-width: 1080px; margin: 0 auto; width: 100%; display: flex; align-items: center; justify-content: space-between;">
     <a href="#top" style="display: flex; align-items: center; gap: 12px; color: #241F1B;">
       <svg viewBox="0 0 100 100" width="30" height="30" aria-hidden="true">
@@ -233,22 +247,31 @@ html,body{overflow-x:hidden!important;max-width:100%}
       <span style="font-family: 'Manrope'; font-weight: 700; font-size: 22px; letter-spacing: -.02em;">rakurs</span>
     </a>
     <div style="display: flex; align-items: center; gap: clamp(14px,2.4vw,34px);">
-      <a href="#storefront" data-lens="target" style="font-size: 14px; color: #6E6259; display: none;" class="rk-navlink">Решения</a>
-      <a href="#cases" data-lens="target" style="font-size: 14px; color: #6E6259;" class="rk-navlink">Кейсы</a>
-      <a href="#founders" data-lens="target" style="font-size: 14px; color: #6E6259;" class="rk-navlink">Основатели</a>
+      <a href="#storefront" data-lens="target" data-navlink style="font-size: 14px; color: #6E6259;" class="rk-navlink">Решения</a>
+      <a href="#how" data-lens="target" data-navlink style="font-size: 14px; color: #6E6259;" class="rk-navlink">Как работаем</a>
+      <a href="#cases" data-lens="target" data-navlink style="font-size: 14px; color: #6E6259;" class="rk-navlink">Кейсы</a>
+      <a href="#founders" data-lens="target" data-navlink style="font-size: 14px; color: #6E6259;" class="rk-navlink">Основатели</a>
       <button data-lang-toggle type="button" data-lens="target" data-i18n-skip style="font-family: 'JetBrains Mono'; font-weight: 500; font-size: 12px; letter-spacing: .04em; color: #6E6259; background: transparent; border: 1px solid #C9BEAC; padding: 8px 12px; border-radius: 8px; cursor: pointer; transition: all .15s;">RU · <span data-lang-alt style="color: #B35F17;">EN</span></button>
       <a href="#form" data-lens="target" style="font-family: 'Manrope'; font-weight: 600; font-size: 14px; color: #F9F5EC; background: #E37722; padding: 10px 18px; border-radius: 8px;">Улучшить бизнес</a>
+      <button data-nav-burger type="button" aria-label="Меню" aria-expanded="false" data-i18n-skip><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#241F1B" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     </div>
     </div>
   </nav>
+  <div data-nav-menu data-lens="off">
+    <a href="#storefront">Решения</a>
+    <a href="#how">Как работаем</a>
+    <a href="#cases">Кейсы</a>
+    <a href="#founders">Основатели</a>
+    <a href="#form">Улучшить бизнес</a>
+  </div>
 
   <!-- HERO -->
-  <section id="top" style="padding: clamp(112px,13vh,152px) clamp(20px,5vw,64px) clamp(52px,7vh,88px);">
+  <section id="top" style="padding: clamp(96px,11vh,124px) clamp(20px,5vw,64px) clamp(36px,5vh,56px);">
     <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: 1.04fr 0.96fr; gap: clamp(28px,4vw,60px); align-items: center;">
     <div>
       <div data-reveal style="font-family: 'JetBrains Mono'; font-size: 13px; letter-spacing: .04em; color: #6E6259; margin-bottom: 22px;">// диагностика операционных потерь и готовые ИИ‑решения</div>
       <h1 data-reveal style="font-family: 'Manrope'; font-weight: 700; font-size: clamp(34px,4.4vw,58px); line-height: 1.05; letter-spacing: -.025em; margin: 0 0 24px;">Находим, где ваш бизнес теряет <span style="position: relative; white-space: nowrap;"><span style="position: relative; z-index: 1;">деньги</span><span style="position: absolute; left: -2px; right: -2px; bottom: 4px; height: 12px; background: #E37722; opacity: .9; transform: rotate(-2.4deg); z-index: 0; border-radius: 2px;"></span></span>. И&nbsp;закрываем это готовыми ИИ‑решениями.</h1>
-      <p data-reveal style="font-family: 'Inter'; font-weight: 300; font-size: clamp(17px,1.4vw,20px); line-height: 1.6; color: #241F1B; max-width: 560px; margin: 0 0 32px;">Мы не продаём «внедрение ИИ». Мы закрываем дыры, в&nbsp;которые утекают деньги: проверенные решения с&nbsp;фиксированной ценой, запуск за&nbsp;одну–две недели, окупаемость считаем до&nbsp;старта. Никаких «ботов ради ботов».</p>
+      <p data-reveal style="font-family: 'Inter'; font-weight: 300; font-size: clamp(17px,1.4vw,20px); line-height: 1.6; color: #241F1B; max-width: 560px; margin: 0 0 32px;">Мы не продаём «внедрение ИИ» — мы закрываем дыры, в&nbsp;которые утекают деньги. Фиксированная цена, запуск за&nbsp;1–2 недели, окупаемость считаем до&nbsp;старта.</p>
       <div data-reveal style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px;">
         <a href="#storefront" data-lens="target" ref="{{ magnet }}" style="font-family: 'Manrope'; font-weight: 600; font-size: 16px; color: #F9F5EC; background: #E37722; padding: 15px 28px; border-radius: 10px; box-shadow: 0 8px 22px rgba(227,119,34,.28); transition: transform .15s;">Подобрать решение</a>
         <a href="#storefront" data-lens="target" style="font-family: 'Manrope'; font-weight: 600; font-size: 16px; color: #241F1B; padding: 15px 22px; border-radius: 10px; border: 1px solid #C9BEAC;">Смотреть витрину ↓</a>
@@ -257,8 +280,8 @@ html,body{overflow-x:hidden!important;max-width:100%}
     </div>
 
     <!-- MONEY-LEAK PIPE (auto-play) -->
-      <div data-reveal style="display:flex; flex-direction:column; align-items:center; width:100%; min-width:0;">
-        <div style="width:100%; max-width:460px;">
+      <div data-reveal class="rk-hero-pipe" style="display:flex; flex-direction:column; align-items:center; width:100%; min-width:0;">
+        <div style="width:100%; max-width:390px;">
 <svg viewBox="0 0 460 640" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" shape-rendering="crispEdges">
   <defs>
     <style>
@@ -388,20 +411,20 @@ html,body{overflow-x:hidden!important;max-width:100%}
   </g></g>
 </svg>
         </div>
-        <div style="width:100%; max-width:460px; margin-top:12px; font-family:'JetBrains Mono'; font-size:12px; line-height:1.5; color:#6E6259; text-align:center;">Деньги заходят — и утекают через дыры. Мы их закрываем.</div>
+        <div style="width:100%; max-width:390px; margin-top:10px; font-family:'JetBrains Mono'; font-size:12px; line-height:1.5; color:#6E6259; text-align:center;">Деньги заходят — и утекают через дыры. Мы их закрываем.</div>
       </div>
     </div>
   </section>
 
   <!-- PAIN (dark) -->
-  <section id="pain" style="background: #1B1815; color: #F1EAE0; padding: clamp(72px,11vh,128px) clamp(20px,5vw,64px);">
+  <section id="pain" style="background: #1B1815; color: #F1EAE0; padding: clamp(52px,7vh,80px) clamp(20px,5vw,64px);">
     <div style="max-width: 1080px; margin: 0 auto;">
       <div data-reveal style="font-family: 'JetBrains Mono'; font-size: 13px; letter-spacing: .04em; color: #A2968A; margin-bottom: 20px;">// почему утечек не видно в отчётах</div>
       <h2 data-reveal style="font-family: 'Manrope'; font-weight: 700; font-size: clamp(28px,3.4vw,46px); line-height: 1.1; letter-spacing: -.02em; margin: 0 0 20px; max-width: 900px;">В отчётах всё хорошо. Просто на них никто не смотрит под нужным углом.</h2>
-      <p data-reveal style="font-family: 'Inter'; font-weight: 300; font-size: clamp(16px,1.3vw,19px); line-height: 1.6; color: #CFC5B8; max-width: 720px; margin: 0 0 12px;">Все делают ИИ. Мы меняем ракурс: автоматизация «не туда» лишь ускоряет хаос — за ваши деньги. Настоящие потери прячутся там, куда красивые дашборды не заглядывают.</p>
+      <p data-reveal style="font-family: 'Inter'; font-weight: 300; font-size: clamp(16px,1.3vw,19px); line-height: 1.6; color: #CFC5B8; max-width: 720px; margin: 0 0 12px;">Все делают ИИ. Автоматизация «не туда» лишь ускоряет хаос — за ваши деньги. Настоящие потери прячутся там, куда дашборды не заглядывают.</p>
 
       <!-- report second-layer reveal -->
-      <div data-reveal style="margin: 40px 0 44px;">
+      <div data-reveal style="margin: 28px 0 30px;">
         <div data-report style="position: relative; border: 1px solid #35302B; border-radius: 16px; overflow: hidden; background: #211D19; cursor: none;">
           <!-- SURFACE (looks great) -->
           <div style="padding: 16px 20px;">
@@ -504,27 +527,27 @@ html,body{overflow-x:hidden!important;max-width:100%}
       <div class="rk-holes" style="display: grid; grid-template-columns: repeat(3,1fr); gap: 18px;">
         <div data-reveal style="background: #211D19; border: 1px solid #35302B; border-radius: 14px; padding: 24px;">
           <div style="font-family: 'JetBrains Mono'; font-size: 12px; color: #EDA05C; letter-spacing: .04em; margin-bottom: 14px;">дыра_01 · Люди</div>
-          <p style="font-size: 15px; line-height: 1.6; color: #CFC5B8; margin: 0 0 16px;">Выгорание, текучка и сломанные коммуникации не попадают ни в один дашборд — но каждый месяц превращают часть фонда оплаты труда в оплату простоя.</p>
+          <p style="font-size: 15px; line-height: 1.6; color: #CFC5B8; margin: 0 0 16px;">Выгорание, текучка и сломанные коммуникации превращают часть фонда оплаты труда в оплату простоя.</p>
           <div style="font-family: 'JetBrains Mono'; font-size: 11px; color: #7E7166; border-top: 1px solid #35302B; padding-top: 12px;">фонд оплаты труда → оплата простоя</div>
         </div>
         <div data-reveal style="background: #211D19; border: 1px solid #35302B; border-radius: 14px; padding: 24px;">
           <div style="font-family: 'JetBrains Mono'; font-size: 12px; color: #EDA05C; letter-spacing: .04em; margin-bottom: 14px;">дыра_02 · Стыки</div>
-          <p style="font-size: 15px; line-height: 1.6; color: #CFC5B8; margin: 0 0 16px;">Между отделами теряются заявки, дни и клиенты. Каждый отдел уверен, что виноват сосед, — а платит за всё компания.</p>
+          <p style="font-size: 15px; line-height: 1.6; color: #CFC5B8; margin: 0 0 16px;">Между отделами теряются заявки, дни и клиенты. Виноват всегда сосед — платит компания.</p>
           <div style="font-family: 'JetBrains Mono'; font-size: 11px; color: #7E7166; border-top: 1px solid #35302B; padding-top: 12px;">заявки и клиенты → мимо кассы</div>
         </div>
         <div data-reveal style="background: #211D19; border: 1px solid #35302B; border-radius: 14px; padding: 24px;">
           <div style="font-family: 'JetBrains Mono'; font-size: 12px; color: #EDA05C; letter-spacing: .04em; margin-bottom: 14px;">дыра_03 · Рутина</div>
-          <p style="font-size: 15px; line-height: 1.6; color: #CFC5B8; margin: 0 0 16px;">Дорогие специалисты часами делают работу, которую давно должен выполнять алгоритм. Вы платите инженеру, а получаете оператора.</p>
+          <p style="font-size: 15px; line-height: 1.6; color: #CFC5B8; margin: 0 0 16px;">Дорогие специалисты часами делают работу алгоритма. Вы платите инженеру, а получаете оператора.</p>
           <div style="font-family: 'JetBrains Mono'; font-size: 11px; color: #7E7166; border-top: 1px solid #35302B; padding-top: 12px;">инженер по цене оператора</div>
         </div>
       </div>
 
-      <p data-reveal style="font-family: 'Inter'; font-size: clamp(17px,1.5vw,21px); line-height: 1.55; margin: 44px 0 0; max-width: 820px;">Поэтому каждое наше решение начинается с вопроса <span style="color: #EDA05C; font-weight: 500;">«какую дыру в деньгах оно закрывает»</span>, а экспресс‑диагностика показывает, что окупится первым.</p>
+      <p data-reveal style="font-family: 'Inter'; font-size: clamp(17px,1.5vw,21px); line-height: 1.55; margin: 30px 0 0; max-width: 820px;">Поэтому каждое наше решение начинается с вопроса <span style="color: #EDA05C; font-weight: 500;">«какую дыру в деньгах оно закрывает»</span>, а экспресс‑диагностика показывает, что окупится первым.</p>
     </div>
   </section>
 
   <!-- STOREFRONT -->
-  <section id="storefront" style="padding: clamp(72px,11vh,128px) clamp(20px,5vw,64px);">
+  <section id="storefront" style="padding: clamp(52px,7vh,80px) clamp(20px,5vw,64px);">
     <div style="max-width: 1080px; margin: 0 auto;">
       <div data-reveal style="font-family: 'JetBrains Mono'; font-size: 13px; letter-spacing: .04em; color: #6E6259; margin-bottom: 18px;">// витрина решений — наведите кадр на любое, и оно заработает</div>
       <h2 data-reveal style="font-family: 'Manrope'; font-weight: 700; font-size: clamp(28px,3.4vw,46px); line-height: 1.1; letter-spacing: -.02em; margin: 0 0 18px; max-width: 900px;">Готовые решения с фиксированной ценой. Запуск за одну–три недели.</h2>
@@ -598,10 +621,10 @@ html,body{overflow-x:hidden!important;max-width:100%}
     </div>
   </section>
   <!-- HOW WE WORK -->
-  <section id="how" style="padding: clamp(72px,11vh,120px) clamp(20px,5vw,64px); background: #F3EEE3;">
+  <section id="how" style="padding: clamp(52px,7vh,80px) clamp(20px,5vw,64px); background: #F3EEE3;">
     <div style="max-width: 1080px; margin: 0 auto;">
       <div data-reveal style="font-family: 'JetBrains Mono'; font-size: 13px; letter-spacing: .04em; color: #6E6259; margin-bottom: 18px;">// маршрут: из-под угла — к ровной картине</div>
-      <h2 data-reveal style="font-family: 'Manrope'; font-weight: 700; font-size: clamp(28px,3.4vw,44px); line-height: 1.1; letter-spacing: -.02em; margin: 0 0 54px; max-width: 820px;">Три шага — от «где теряем» до «эффект не откатывается»</h2>
+      <h2 data-reveal style="font-family: 'Manrope'; font-weight: 700; font-size: clamp(28px,3.4vw,44px); line-height: 1.1; letter-spacing: -.02em; margin: 0 0 36px; max-width: 820px;">Три шага — от «где теряем» до «эффект не откатывается»</h2>
 
       <div data-route style="position: relative; display: grid; grid-template-columns: repeat(3,1fr); gap: 22px;">
 
@@ -610,7 +633,7 @@ html,body{overflow-x:hidden!important;max-width:100%}
           <div data-node style="position: relative; z-index: 2; width: 54px; height: 54px; border-radius: 50%; background: #F3EEE3; border: 2px solid #241F1B; display: flex; align-items: center; justify-content: center; font-family: 'Manrope'; font-weight: 700; font-size: 18px; margin-bottom: 22px; transition: background .4s, color .4s, border-color .4s;">01</div>
           <div style="font-family: 'JetBrains Mono'; font-size: 11px; color: #6E6259; letter-spacing: .05em; margin-bottom: 8px;">3–5 ДНЕЙ · ФИКС</div>
           <h3 style="font-family: 'Manrope'; font-weight: 700; font-size: 21px; margin: 0 0 10px;">Экспресс-диагностика</h3>
-          <p style="font-size: 15px; line-height: 1.6; color: #4A423B; margin: 0;">Короткая серия интервью и разбор процессов под своим углом. На выходе — топ-3 дыры в деньгах и какое решение закроет самую дорогую. Стоимость зачтём в цену решения.</p>
+          <p style="font-size: 15px; line-height: 1.6; color: #4A423B; margin: 0;">Короткая серия интервью и разбор процессов под своим углом. На выходе — топ-3 дыры в деньгах и какое решение закроет самую дорогую.</p>
           <div style="font-family: 'Manrope'; font-weight: 700; font-size: 15px; color: #241F1B; margin-top: 12px;">$1 500–3 000 · фикс, зачитывается в цену решения</div>
         </div>
 
@@ -619,7 +642,7 @@ html,body{overflow-x:hidden!important;max-width:100%}
           <div data-node style="position: relative; z-index: 2; width: 54px; height: 54px; border-radius: 50%; background: #F3EEE3; border: 2px solid #241F1B; display: flex; align-items: center; justify-content: center; font-family: 'Manrope'; font-weight: 700; font-size: 18px; margin-bottom: 22px; transition: background .4s, color .4s, border-color .4s;">02</div>
           <div style="font-family: 'JetBrains Mono'; font-size: 11px; color: #6E6259; letter-spacing: .05em; margin-bottom: 8px;">1–2 НЕДЕЛИ · ФИКС</div>
           <h3 style="font-family: 'Manrope'; font-weight: 700; font-size: 21px; margin: 0 0 10px;">Запуск решения</h3>
-          <p style="font-size: 15px; line-height: 1.6; color: #4A423B; margin: 0;">Собираем из проверенных шаблонов, настраиваем под ваши данные, интегрируем с вашими системами. Цена зафиксирована заранее — в счёте не будет сюрпризов.</p>
+          <p style="font-size: 15px; line-height: 1.6; color: #4A423B; margin: 0;">Собираем из проверенных шаблонов, настраиваем под ваши данные и системы. Цена зафиксирована заранее — в счёте не будет сюрпризов.</p>
         </div>
 
         <div data-reveal data-step="2" style="position: relative; z-index: 1; transition: transform .2s;" style-hover="transform: translateY(-4px);">
@@ -628,18 +651,18 @@ html,body{overflow-x:hidden!important;max-width:100%}
           </div>
           <div style="font-family: 'JetBrains Mono'; font-size: 11px; color: #B35F17; letter-spacing: .05em; margin-bottom: 8px;">ЕЖЕМЕСЯЧНО · ПОДПИСКА</div>
           <h3 style="font-family: 'Manrope'; font-weight: 700; font-size: 21px; margin: 0 0 10px;">Сопровождение</h3>
-          <p style="font-size: 15px; line-height: 1.6; color: #4A423B; margin: 0;">Хостинг, поддержка, дообучение и отчёты об эффекте. Решение закрепляется в процессах, продолжает умнеть — и эффект не откатывается.</p>
+          <p style="font-size: 15px; line-height: 1.6; color: #4A423B; margin: 0;">Хостинг, поддержка, дообучение и отчёты об эффекте — решение продолжает умнеть, эффект не откатывается.</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- FLAGSHIP (dark) -->
-  <section id="flagship" style="background: #1B1815; color: #F1EAE0; padding: clamp(72px,11vh,128px) clamp(20px,5vw,64px);">
+  <section id="flagship" style="background: #1B1815; color: #F1EAE0; padding: clamp(52px,7vh,80px) clamp(20px,5vw,64px);">
     <div style="max-width: 1080px; margin: 0 auto;">
       <div data-reveal style="font-family: 'JetBrains Mono'; font-size: 13px; letter-spacing: .04em; color: #A2968A; margin-bottom: 20px;">// для компаний от 50 сотрудников — идём вглубь</div>
       <h2 data-reveal style="font-family: 'Manrope'; font-weight: 700; font-size: clamp(27px,3.3vw,44px); line-height: 1.12; letter-spacing: -.02em; margin: 0 0 18px; max-width: 900px;">Когда дыра больше готового решения, мы разворачиваем полную программу</h2>
-      <p data-reveal style="font-family: 'Inter'; font-weight: 300; font-size: clamp(16px,1.3vw,19px); line-height: 1.6; color: #CFC5B8; max-width: 760px; margin: 0 0 52px;">Не коробка, а операция под масштаб: находим самые дорогие потери, закрываем их под ключ и остаёмся, пока эффект не станет частью процессов.</p>
+      <p data-reveal style="font-family: 'Inter'; font-weight: 300; font-size: clamp(16px,1.3vw,19px); line-height: 1.6; color: #CFC5B8; max-width: 760px; margin: 0 0 32px;">Не коробка, а операция под масштаб: находим самые дорогие потери, закрываем их под ключ и остаёмся, пока эффект не станет частью процессов.</p>
 
       <div class="rk-flag-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px,4vw,56px); align-items: start;">
         <!-- depths -->
@@ -647,7 +670,7 @@ html,body{overflow-x:hidden!important;max-width:100%}
           <div data-reveal style="border-left: 2px solid #35302B; padding: 4px 0 4px 22px;">
             <div style="font-family: 'JetBrains Mono'; font-size: 11px; color: #A2968A; letter-spacing: .04em; margin-bottom: 6px;">Глубина 1 · поверхность</div>
             <h3 style="font-family: 'Manrope'; font-weight: 700; font-size: 19px; margin: 0 0 7px;">Глубокая диагностика</h3>
-            <p style="font-size: 14.5px; line-height: 1.6; color: #CFC5B8; margin: 0;">Интервью с командой, опросники, анализ процессов и коммуникаций. Итог — отчёт, где каждая найденная дыра оценена в деньгах за год.</p>
+            <p style="font-size: 14.5px; line-height: 1.6; color: #CFC5B8; margin: 0;">Интервью, опросники, анализ процессов и коммуникаций. Итог — отчёт, где каждая дыра оценена в деньгах за год.</p>
           </div>
           <div data-reveal style="border-left: 2px solid #35302B; padding: 4px 0 4px 22px;">
             <div style="font-family: 'JetBrains Mono'; font-size: 11px; color: #A2968A; letter-spacing: .04em; margin-bottom: 6px;">Глубина 2 · внутри процессов</div>
@@ -697,19 +720,19 @@ html,body{overflow-x:hidden!important;max-width:100%}
       </div>
 
       <div data-reveal style="margin-top: 28px; display: flex; flex-wrap: wrap; gap: 24px; align-items: center; justify-content: space-between;">
-        <p style="position: relative; font-size: 15.5px; line-height: 1.6; color: #E4DBCD; margin: 0; max-width: 640px; padding-left: 20px; border-left: 3px solid #E37722;">Если после отчёта вы решите не продолжать — отчёт останется у&nbsp;вас. Вы будете точно знать, где и сколько теряете: одно это окупает диагностику.</p>
+        <p style="position: relative; font-size: 15.5px; line-height: 1.6; color: #E4DBCD; margin: 0; max-width: 640px; padding-left: 20px; border-left: 3px solid #E37722;">Если решите не продолжать — отчёт останется у&nbsp;вас: вы будете точно знать, где и сколько теряете.</p>
         <a href="#form" data-lens="target" style="font-family: 'Manrope'; font-weight: 600; font-size: 16px; color: #1B1815; background: #EDA05C; padding: 15px 28px; border-radius: 10px; white-space: nowrap;">Обсудить программу</a>
       </div>
     </div>
   </section>
   <!-- CASES -->
-  <section id="cases" style="padding: clamp(72px,11vh,128px) clamp(20px,5vw,64px);">
+  <section id="cases" style="padding: clamp(52px,7vh,80px) clamp(20px,5vw,64px);">
     <div style="max-width: 1080px; margin: 0 auto;">
       <div data-reveal style="font-family: 'JetBrains Mono'; font-size: 13px; letter-spacing: .04em; color: #6E6259; margin-bottom: 18px;">// архив снимков — потяните скобку, чтобы проявить «после»</div>
       <h2 data-reveal style="font-family: 'Manrope'; font-weight: 700; font-size: clamp(28px,3.4vw,46px); line-height: 1.1; letter-spacing: -.02em; margin: 0 0 16px;">Что меняется после нас</h2>
-      <p data-reveal style="font-family: 'Inter'; font-weight: 300; font-size: clamp(16px,1.3vw,19px); line-height: 1.6; color: #4A423B; max-width: 700px; margin: 0 0 34px;">Шесть снимков из портфеля. Выберите дело — и проявите, что было до и что стало после.</p>
+      <p data-reveal style="font-family: 'Inter'; font-weight: 300; font-size: clamp(16px,1.3vw,19px); line-height: 1.6; color: #4A423B; max-width: 700px; margin: 0 0 24px;">Выберите дело — и проявите, что было до и что стало после.</p>
 
-      <div data-reveal style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px;">
+      <div data-reveal style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px;">
         <sc-for list="{{ caseTabs }}" as="t" hint-placeholder-count="6">
           <button onClick="{{ t.select }}" data-lens="target" style="font-family: 'Inter'; font-weight: 500; font-size: 14px; padding: 9px 16px; border-radius: 20px; cursor: pointer; border: 1px solid {{ t.borderColor }}; background: {{ t.bg }}; color: {{ t.fg }}; transition: all .18s;">{{ t.tab }}</button>
         </sc-for>
@@ -747,24 +770,24 @@ html,body{overflow-x:hidden!important;max-width:100%}
         <p style="font-size: 14.5px; line-height: 1.6; color: #4A423B; margin: 16px 0 0;">{{ curCase.note }}</p>
       </div>
 
-      <p data-reveal style="font-size: 13px; line-height: 1.6; color: #6E6259; margin: 26px 0 0; max-width: 780px;">Подробные метрики клиентов защищены NDA — на созвоне показываем механику каждого решения. Всего в портфеле 12 проектов: банки, страхование, госсектор, маркетплейсы, enterprise.</p>
+      <p data-reveal style="font-size: 13px; line-height: 1.6; color: #6E6259; margin: 26px 0 0; max-width: 780px;">Метрики клиентов под NDA — механику показываем на созвоне. В портфеле 12 проектов: банки, страхование, госсектор, маркетплейсы, enterprise.</p>
     </div>
   </section>
 
   <!-- FOUNDERS -->
-  <section id="founders" style="padding: clamp(72px,11vh,128px) clamp(20px,5vw,64px); background: #F3EEE3;">
+  <section id="founders" style="padding: clamp(52px,7vh,80px) clamp(20px,5vw,64px); background: #F3EEE3;">
     <div style="max-width: 1080px; margin: 0 auto;">
       <div data-reveal style="font-family: 'JetBrains Mono'; font-size: 13px; letter-spacing: .04em; color: #6E6259; margin-bottom: 18px;">// основатели Rakurs</div>
-      <h2 data-reveal style="font-family: 'Manrope'; font-weight: 700; font-size: clamp(28px,3.4vw,46px); line-height: 1.1; letter-spacing: -.02em; margin: 0 0 40px;">Двое, кто отвечает за результат лично</h2>
+      <h2 data-reveal style="font-family: 'Manrope'; font-weight: 700; font-size: clamp(28px,3.4vw,46px); line-height: 1.1; letter-spacing: -.02em; margin: 0 0 28px;">Двое, кто отвечает за результат лично</h2>
 
       <!-- intro + shared photo -->
-      <div class="rk-founder-intro" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(28px,4vw,56px); align-items: stretch; margin-bottom: clamp(28px,4vw,48px);">
+      <div class="rk-founder-intro" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(28px,4vw,56px); align-items: stretch; margin-bottom: clamp(20px,3vw,32px);">
         <div data-reveal data-lens="off" style="position: relative; border-radius: 18px; overflow: hidden; min-height: 300px;">
           <img src="rakurs-team.jpg" alt="Андрей и Егор, основатели Rakurs" style="display: block; width: 100%; height: 100%; object-fit: cover;"/>
           <div style="position: absolute; left: 14px; bottom: 14px; font-family: 'JetBrains Mono'; font-size: 10px; color: #F9F5EC; background: rgba(27,24,21,.55); padding: 5px 11px; border-radius: 20px; backdrop-filter: blur(4px);">Андрей и Егор · основатели Rakurs</div>
         </div>
         <div style="display: flex; flex-direction: column; justify-content: center;">
-          <p data-reveal style="font-family: 'Inter'; font-weight: 300; font-size: clamp(17px,1.5vw,21px); line-height: 1.55; color: #241F1B; margin: 0 0 22px;">Мы делаем это не потому, что «на ИИ сейчас спрос». Мы годами смотрели, как хорошие компании тихо теряют деньги на выгорании, на стыках отделов, на рутине — и как красивые внедрения умирают через три месяца.</p>
+          <p data-reveal style="font-family: 'Inter'; font-weight: 300; font-size: clamp(17px,1.5vw,21px); line-height: 1.55; color: #241F1B; margin: 0 0 22px;">Мы годами смотрели, как хорошие компании тихо теряют деньги — на выгорании, стыках отделов и рутине — и как красивые внедрения умирают через три месяца.</p>
           <p data-reveal style="font-family: 'Manrope'; font-weight: 600; font-size: clamp(18px,1.6vw,22px); line-height: 1.35; color: #241F1B; margin: 0;">Rakurs — чтобы так <span style="color: #B35F17;">больше не было</span>.</p>
         </div>
       </div>
@@ -797,17 +820,17 @@ html,body{overflow-x:hidden!important;max-width:100%}
         </div>
       </div>
 
-      <p data-reveal style="font-size: 14.5px; line-height: 1.6; color: #4A423B; margin: 0 0 40px; max-width: 940px;">Основатели ведут каждый проект лично. За производством стоит наша команда — инженеры, аналитики и дизайн: вы работаете с теми, кто принимает решения, а масштаб тянет команда.</p>
+      <p data-reveal style="font-size: 14.5px; line-height: 1.6; color: #4A423B; margin: 0 0 28px; max-width: 940px;">Каждый проект основатели ведут лично, а масштаб тянет команда: инженеры, аналитики, дизайн.</p>
 
-      <p data-reveal style="position: relative; font-family: 'Inter'; font-size: clamp(17px,1.6vw,22px); line-height: 1.5; color: #241F1B; margin: 0; max-width: 940px; text-wrap: pretty; padding-left: 22px; border-left: 3px solid #E37722;">Агентство продаст вам бота и уйдёт. Консультант найдёт проблему — и тоже уйдёт. <span style="color: #B35F17; font-weight: 500;">Мы находим дыру, оцениваем её в деньгах, закрываем проверенным решением и остаёмся рядом по подписке, чтобы эффект не откатился.</span> Это то, во что мы правда верим — и умеем доводить до сильного результата.</p>
+      <p data-reveal style="position: relative; font-family: 'Inter'; font-size: clamp(17px,1.6vw,22px); line-height: 1.5; color: #241F1B; margin: 0; max-width: 940px; text-wrap: pretty; padding-left: 22px; border-left: 3px solid #E37722;">Агентство продаст вам бота и уйдёт. Консультант найдёт проблему — и тоже уйдёт. <span style="color: #B35F17; font-weight: 500;">Мы находим дыру, оцениваем её в деньгах, закрываем проверенным решением и остаёмся рядом по подписке, чтобы эффект не откатился.</span> </p>
     </div>
   </section>
   <!-- FORM (dark) -->
-  <section id="form" style="background: #1B1815; color: #F1EAE0; padding: clamp(72px,11vh,128px) clamp(20px,5vw,64px);">
+  <section id="form" style="background: #1B1815; color: #F1EAE0; padding: clamp(52px,7vh,80px) clamp(20px,5vw,64px);">
     <div style="max-width: 1080px; margin: 0 auto;">
       <div data-reveal style="font-family: 'JetBrains Mono'; font-size: 13px; letter-spacing: .04em; color: #A2968A; margin-bottom: 20px;">// с чего начать улучшать бизнес</div>
       <h2 data-reveal style="font-family: 'Manrope'; font-weight: 700; font-size: clamp(27px,3.3vw,44px); line-height: 1.12; letter-spacing: -.02em; margin: 0 0 18px; max-width: 900px;">Первый шаг — и первые деньги, которые перестанут утекать</h2>
-      <p data-reveal style="font-family: 'Inter'; font-weight: 300; font-size: clamp(16px,1.3vw,19px); line-height: 1.6; color: #CFC5B8; max-width: 760px; margin: 0 0 48px;">Отметьте, что болит. Это соберётся в короткий план улучшений — вводные для экспресс‑диагностики. Дальше 20 минут голосом, и уже на них подскажем, где искать потери.</p>
+      <p data-reveal style="font-family: 'Inter'; font-weight: 300; font-size: clamp(16px,1.3vw,19px); line-height: 1.6; color: #CFC5B8; max-width: 760px; margin: 0 0 32px;">Отметьте, что болит, — это вводные для экспресс‑диагностики. Дальше 20 минут голосом: уже на них подскажем, где искать потери.</p>
 
       <sc-if value="{{ formSubmitted }}" hint-placeholder-val="{{ false }}">
         <div data-lens="grid" style="background: #211D19; border: 1px solid #35302B; border-radius: 18px; padding: clamp(32px,5vw,56px); text-align: center; max-width: 640px; margin: 0 auto;">
@@ -894,7 +917,7 @@ html,body{overflow-x:hidden!important;max-width:100%}
   </section>
 
   <!-- FOOTER -->
-  <footer style="background: #17140F; color: #A2968A; padding: 40px clamp(20px,5vw,64px);">
+  <footer style="background: #17140F; color: #A2968A; padding: 30px clamp(20px,5vw,64px);">
     <div style="max-width: 1080px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between;">
       <div style="display: flex; align-items: center; gap: 12px;">
         <svg viewBox="0 0 100 100" width="26" height="26" aria-hidden="true">
@@ -998,6 +1021,7 @@ class Component extends DCLogic {
     this.setupRoute();
     this.setupScrub();
     this.setupLang();
+    this.setupNav();
   }
 
   setupLang() {
@@ -1106,6 +1130,46 @@ class Component extends DCLogic {
       applyEN();
       setBtn('EN · <span style="color:#B35F17">RU</span>');
       document.documentElement.lang = 'en';
+    }
+  }
+
+  setupNav() {
+    const root = this.el.root; if (!root) return;
+    const nav = root.querySelector('nav'); if (!nav) return;
+    const prog = nav.querySelector('[data-navprog]');
+    const links = [...root.querySelectorAll('[data-navlink]')];
+    const secs = links.map((a) => root.querySelector(a.getAttribute('href'))).filter(Boolean);
+    const getSc = () => {
+      const b = document.body, d = document.documentElement;
+      if (b && b.scrollHeight > b.clientHeight + 4 && /(auto|scroll|overlay)/.test(getComputedStyle(b).overflowY)) return b;
+      return document.scrollingElement || d;
+    };
+    const onScroll = () => {
+      const sc = getSc();
+      if (prog) {
+        const max = (sc.scrollHeight - sc.clientHeight) || 1;
+        prog.style.transform = 'scaleX(' + Math.min(1, Math.max(0, sc.scrollTop / max)) + ')';
+      }
+      const vh = window.innerHeight;
+      let cur = null;
+      secs.forEach((sec) => { if (sec.getBoundingClientRect().top <= vh * 0.35) cur = '#' + sec.id; });
+      links.forEach((a) => a.classList.toggle('active', a.getAttribute('href') === cur));
+    };
+    document.addEventListener('scroll', onScroll, { capture: true, passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    onScroll();
+    const burger = nav.querySelector('[data-nav-burger]');
+    const menu = root.querySelector('[data-nav-menu]');
+    if (burger && menu) {
+      const ICO_OPEN = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#241F1B" stroke-width="2.2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>';
+      const ICO_BURGER = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#241F1B" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+      const set = (open) => {
+        menu.classList.toggle('open', open);
+        burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+        burger.innerHTML = open ? ICO_OPEN : ICO_BURGER;
+      };
+      burger.addEventListener('click', () => set(!menu.classList.contains('open')));
+      menu.addEventListener('click', (e) => { if (e.target.closest('a')) set(false); });
     }
   }
 
