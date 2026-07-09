@@ -1,4 +1,10 @@
 window.__RAKURS_EN = {
+"вручную · долго":"by hand · slow",
+"если КП собираются вручную и по дням.":"if proposals get assembled by hand, for days.",
+"// дыра: КП собирают вручную, теряя сделки":"// leak: proposals built by hand, deals slip",
+"Черновик КП — за минуту":"Proposal draft — in a minute",
+"Генератор собирает черновик по вашей техбазе и прайсу: подбирает позиции, характеристики и условия — менеджеру остаётся проверить. Сборка перестаёт быть ручной и долгой.":"The generator drafts from your tech catalog and price list — items, specs, and terms; the manager just reviews. Assembly stops being manual and slow.",
+"менеджер не ждёт неделями":"the manager doesn't wait weeks",
 "КЛИЕНТЫ ПЛАТЯТ":"CLIENTS PAY",
 "ДОХОДИТ ДО ВАС":"REACHES YOU",
 "Лид":"Lead",
