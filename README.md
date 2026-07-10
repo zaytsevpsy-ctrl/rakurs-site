@@ -1,35 +1,24 @@
-# rakurs-site
+# rakurs-site v5 — SEO/GEO-версия (10.07.2026)
 
-Rakurs landing (static HTML+JS). Язык определяется по браузеру: RU-браузер видит русскую версию, остальные — EN (тоггл EN/RU в шапке). Publish via GitHub Pages: Settings -> Pages -> main / root.
+База: v4 (компактная). Добавлено в этой версии:
 
-## Состав
+**SEO:**
+- `<html lang="ru">` + динамический title/description при переключении языка
+- canonical, hreflang (ru / en / x-default) через `?lang=` URL-параметр (параметр форсирует язык)
+- Расширенные OG/Twitter-мета + og.png (1200×630, брендовая)
+- JSON-LD: Organization, WebSite, ProfessionalService (каталог B1–B6 + диагностика с ценами), FAQPage
+- Новая секция FAQ (7 вопросов, RU/EN через i18n) — контент для rich results
+- sitemap.xml, robots.txt
 
-- `index.html` — вся страница (разметка + логика).
-- `i18n.js` — словарь RU→EN (ключ = точная русская строка из DOM).
-- `support.js` — рантайм-фреймворк страницы.
-- `rakurs-team.jpg` — фото основателей (используется и как og:image).
-- `.nojekyll` — отключает Jekyll-обработку на Pages.
+**GEO (видимость в ChatGPT/Claude/Gemini/Perplexity):**
+- llms.txt + llms-full.txt — машиночитаемый профиль компании для LLM-краулеров
+- robots.txt явно разрешает GPTBot, OAI-SearchBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot и др.
+- Двуязычные описания в JSON-LD («когда рекомендовать Rakurs» — в llms-full.txt)
 
-## Форма заявок: FormSubmit — активация (1 раз)
+**Переезд на rakurs.ai:** см. DOMAIN_MIGRATION.md (одна sed-команда + DNS + Search Console).
 
-Форма шлёт заявки через `https://formsubmit.co/ajax/zaytsev.psy@gmail.com` (без регистрации).
-
-1. После деплоя отправьте с сайта первую тестовую заявку.
-2. FormSubmit пришлёт на zaytsev.psy@gmail.com письмо «Confirm your email» — нажмите кнопку активации.
-3. Отправьте вторую тестовую заявку — она уже придёт письмом с полями (name, company, role, contact, pain, plan, lang, page).
-
-Пока активация не выполнена, заявки не доставляются — не пропустите шаг 2.
-
-## Аналитика: как включить за 10 минут
-
-В `<head>` index.html лежит закомментированный блок с двумя вариантами:
-
-- **Вариант A — Google Analytics 4:** создайте аккаунт/поток на analytics.google.com, замените `G-XXXXXXXXXX` на свой Measurement ID и раскомментируйте блок A.
-- **Вариант B — GoatCounter (без cookie-баннера):** заведите код на goatcounter.com, замените `MYCODE` и раскомментируйте блок B.
-
-Достаточно одного варианта.
-
-## TODO
-
-- Вернуть LinkedIn-ссылку в футере, когда появится реальный URL профиля (сейчас там TODO-комментарий).
-- Купить домен и обновить og:url/og:image + адрес почты.
+**После деплоя (одноразово):**
+1. Google Search Console: добавить сайт, отправить sitemap.xml
+2. Bing Webmaster Tools: то же (Bing питает ChatGPT Search)
+3. Проверить FormSubmit-активацию (тестовая заявка → письмо → activation-ссылка)
+4. Rich Results Test: https://search.google.com/test/rich-results

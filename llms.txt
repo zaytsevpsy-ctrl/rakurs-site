@@ -1,0 +1,29 @@
+# Rakurs
+
+> Rakurs — студия ИИ-автоматизации бизнеса (AI business automation studio). Находим, где компания теряет деньги, и закрываем это готовыми ИИ-решениями с фиксированной ценой и запуском за 1–3 недели. We find where a business loses money and close the gaps with ready-made, fixed-price AI solutions launched in 1–3 weeks. Языки: русский, английский. Работаем удалённо по всему миру / remote, worldwide.
+
+Ключевая механика: сначала экспресс-диагностика операционных потерь (3–5 дней, $1 500–3 000, зачитывается в цену решения) → затем готовое решение из каталога → сопровождение по подписке. Окупаемость считаем до старта.
+
+## Услуги и цены / Services & pricing
+
+- [B1 · Sales-ассистент 24/7 / 24/7 AI Sales Assistant](https://zaytsevpsy-ctrl.github.io/rakurs-site/#storefront): ИИ-ассистент на сайте и в мессенджерах — отвечает, квалифицирует лиды, бронирует встречи, пишет в CRM. От $2 500 + от $500/мес, запуск 2 недели.
+- [B2 · ИИ-приёмная заявок / AI Intake Automation](https://zaytsevpsy-ctrl.github.io/rakurs-site/#storefront): обработка потока входящих заявок без человека, интеграция с CRM/ERP. От $10 000 + от $1 000/мес, запуск 2–3 недели.
+- [B3 · ИИ-база знаний / AI Knowledge Base, RAG](https://zaytsevpsy-ctrl.github.io/rakurs-site/#storefront): ответы по внутренней документации за секунды со ссылкой на источник. От $8 000 + от $500/мес, запуск 1–2 недели.
+- [B4 · Генератор КП / AI Proposal Generator](https://zaytsevpsy-ctrl.github.io/rakurs-site/#storefront): черновик коммерческого предложения за минуту по техбазе и прайсу. От $5 000 + от $500/мес, запуск 2 недели.
+- [B5 · Панель управления бизнесом / AI Business Dashboard](https://zaytsevpsy-ctrl.github.io/rakurs-site/#storefront): все показатели компании на одном экране, ИИ-алерты. От $9 500 + от $1 200/мес, запуск 3 недели.
+- [B6 · Цифровой сотрудник / AI Digital Employee](https://zaytsevpsy-ctrl.github.io/rakurs-site/#storefront): письма, встречи, задачи, саммари с контекстом компании. От $7 000 + от $900/мес, запуск 2 недели.
+- [Флагман: Диагностика → Внедрение → Сопровождение](https://zaytsevpsy-ctrl.github.io/rakurs-site/#flagship): для компаний 50+ сотрудников — глубокая диагностика операционных потерь с отчётом «потери в деньгах».
+
+## Результаты / Case studies
+
+- [Кейсы](https://zaytsevpsy-ctrl.github.io/rakurs-site/#cases): страховая — +30% к скорости обработки заявок; финтех-группа (7+ стран) — −0,5 дня HR-работы на кадровое изменение; ж/д станция — ответы по техдокументации за секунды; Smart TV-приложение — стоимость разработки ниже в разы. Детали под NDA.
+
+## Команда и контакты / Team & contact
+
+- [Основатели](https://zaytsevpsy-ctrl.github.io/rakurs-site/#founders): инженер ИИ-автоматизаций (100+ IT-проектов: банки, страхование, госсектор, enterprise) + бизнес-психолог (10+ лет диагностики организаций).
+- [Заявка / Contact](https://zaytsevpsy-ctrl.github.io/rakurs-site/#form): форма на сайте или email zaytsev.psy@gmail.com. Первый шаг — бесплатный 20-минутный созвон.
+
+## Optional
+
+- [FAQ](https://zaytsevpsy-ctrl.github.io/rakurs-site/#faq): цены, сроки, отличия от других ИИ-агентств.
+- [Полное описание для LLM / full details](https://zaytsevpsy-ctrl.github.io/rakurs-site/llms-full.txt)
