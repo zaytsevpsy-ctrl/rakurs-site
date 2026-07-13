@@ -1,0 +1,38 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  /** путь страницы без локали и без ведущего слэша: '' | 'products/b1' | … */
+  path: string;
+  locale: 'ru' | 'en';
+  ogImage?: string;
+}
+const { title, description, path, locale, ogImage = 'og.png' } = Astro.props;
+const site = Astro.site!;
+const ruUrl = new URL(path, site);
+const enUrl = new URL(`en/${path}`, site);
+const canonical = locale === 'ru' ? ruUrl : enUrl;
+const ogImageUrl = new URL(ogImage, site);
+---
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<link rel="canonical" href={canonical} />
+<link rel="alternate" hreflang="ru" href={ruUrl} />
+<link rel="alternate" hreflang="en" href={enUrl} />
+<link rel="alternate" hreflang="x-default" href={ruUrl} />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Rakurs" />
+<meta property="og:locale" content={locale === 'ru' ? 'ru_RU' : 'en_US'} />
+<meta property="og:locale:alternate" content={locale === 'ru' ? 'en_US' : 'ru_RU'} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Rakurs — готовые ИИ-решения для бизнеса. Ready-made AI solutions, fixed price." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl} />

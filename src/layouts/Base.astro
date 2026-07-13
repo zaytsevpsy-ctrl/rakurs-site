@@ -1,0 +1,33 @@
+---
+import Seo from '../components/Seo.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  locale: 'ru' | 'en';
+}
+const { title, description, path, locale } = Astro.props;
+const goatcounter = import.meta.env.PUBLIC_GOATCOUNTER_CODE;
+---
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <Seo {title} {description} {path} {locale} />
+    <meta name="author" content="Rakurs — Andrey Zaytsev, Egor" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23E37722'/%3E%3Ctext x='32' y='47' font-family='ui-monospace,SFMono-Regular,Menlo,Consolas,monospace' font-size='42' font-weight='700' text-anchor='middle' fill='%23F9F5EC'%3Er%3C/text%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    {goatcounter && (
+      <script is:inline data-goatcounter={`https://${goatcounter}.goatcounter.com/count`} async src="https://gc.zgo.at/count.js"></script>
+    )}
+    <slot name="head" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
