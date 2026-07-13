@@ -1,0 +1,27 @@
+:root {
+  /* фон/поверхности */
+  --bg: #F9F5EC;
+  --bg-alt: #F3EEE3;
+  --bg-card: #FBF7EF;
+  --bg-dark: #1B1815;
+  --bg-footer: #17140F;
+  --surface-white: #fff;
+  /* текст */
+  --ink: #241F1B;
+  --ink-on-dark: #F1EAE0;
+  --ink-muted-dark: #A2968A;
+  /* акценты */
+  --accent: #E37722;
+  --accent-link: #B35F17;
+  --accent-soft: #E9C7A3;
+  /* границы */
+  --border: #E4DBCD;
+  --border-hover: #D8CDBB;
+  /* шрифты */
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-head: 'Manrope', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  /* повторяющиеся размеры */
+  --pad-x: clamp(20px, 5vw, 64px);
+  --section-pad-y: clamp(52px, 7vh, 80px);
+}
