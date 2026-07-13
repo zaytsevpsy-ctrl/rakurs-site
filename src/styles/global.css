@@ -1,3 +1,4 @@
+/* Портировано 1:1 из index.html:258–306 (легаси-монолит) — файл-артефакт миграции, не редактировать без сверки с исходником. Отклонение от 1:1: overflow-x:hidden перенесён с body на html,body и добавлен max-width:100% (слияние с rk-fixes, index.html:46) — осознанно. */
 @import './tokens.css';
 
 * { box-sizing: border-box; }
@@ -19,6 +20,7 @@ a:hover { color: var(--accent); }
 
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
 
+/* Легаси-адаптив, портирован дословно: селекторы ниже (#top, .rk-flag-grid, .rk-founder-*, .rk-form-*, .rk-holes, .rk-incl-grid, [data-route], .rk-spot, .rk-navlink, nav, #cases) принадлежат компонентам Hero/Storefront/Founders/LeadForm/Nav/Cases (Tasks 8–12). Многие правила с !important — они перебивают scoped-стили компонентов. Не переименовывать эти классы в компонентах без правки здесь. */
 @media (max-width: 900px) {
   #top { padding-top: clamp(96px,12vh,120px) !important; }
   #top > div { grid-template-columns: minmax(0,1fr) !important; gap: 30px !important; max-width: 100% !important; }
