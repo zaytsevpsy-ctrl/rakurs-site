@@ -1,5 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
+import { getLocalized } from '../lib/content';
+
+// Task 4 schema smoke-check — Task 7 rewires this page and removes this block.
+const products = await getLocalized('products', 'ru');
+if (products.length !== 6) throw new Error(`products ru: ${products.length} != 6`);
 ---
 <Base
   title="Rakurs — ИИ-автоматизация бизнеса: готовые ИИ-решения и диагностика операционных потерь | AI Automation Agency"
