@@ -9,7 +9,7 @@ export default defineConfig({
   site: SITE,
   // GitHub Pages project page => сайт живёт под /rakurs-site/. Меняется вместе с SITE.
   base: '/rakurs-site/',
-  trailingSlash: 'ignore',
+  trailingSlash: 'always',
   i18n: {
     defaultLocale: 'ru',
     locales: ['ru', 'en'],

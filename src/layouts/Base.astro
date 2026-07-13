@@ -7,8 +7,9 @@ interface Props {
   description: string;
   path: string;
   locale: 'ru' | 'en';
+  ogImage?: string;
 }
-const { title, description, path, locale } = Astro.props;
+const { title, description, path, locale, ogImage } = Astro.props;
 const goatcounter = import.meta.env.PUBLIC_GOATCOUNTER_CODE;
 ---
 <!doctype html>
@@ -16,7 +17,7 @@ const goatcounter = import.meta.env.PUBLIC_GOATCOUNTER_CODE;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <Seo {title} {description} {path} {locale} />
+    <Seo {title} {description} {path} {locale} ogImage={ogImage} />
     <meta name="author" content="Rakurs — Andrey Zaytsev, Egor" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23E37722'/%3E%3Ctext x='32' y='47' font-family='ui-monospace,SFMono-Regular,Menlo,Consolas,monospace' font-size='42' font-weight='700' text-anchor='middle' fill='%23F9F5EC'%3Er%3C/text%3E%3C/svg%3E" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />

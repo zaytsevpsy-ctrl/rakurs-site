@@ -8,9 +8,11 @@ interface Props {
   ogImage?: string;
 }
 const { title, description, path, locale, ogImage = 'og.png' } = Astro.props;
+if (path.startsWith('/')) throw new Error(`Seo: path must be relative (no leading slash), got: ${path}`);
 const site = Astro.site!;
-const ruUrl = new URL(path, site);
-const enUrl = new URL(`en/${path}`, site);
+const norm = (p: string) => (p === '' ? '' : p.replace(/\/?$/, '/'));
+const ruUrl = new URL(norm(path), site);
+const enUrl = new URL(`en/${norm(path)}`, site);
 const canonical = locale === 'ru' ? ruUrl : enUrl;
 const ogImageUrl = new URL(ogImage, site);
 ---
