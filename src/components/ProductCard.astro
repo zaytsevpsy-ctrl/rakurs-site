@@ -1,0 +1,113 @@
+---
+// Одна карточка витрины продуктов — портировано из index.html:649–681
+// (`<sc-for list="{{ products }}" as="p">` внутри x-dc Component, .rk-spot-card
+// template). Раньше карточки рендерились в рантайме из PRODUCTS[] (index.html:
+// 1115–1121); теперь — статически из content collection `products`
+// (src/content/products/*.md, см. src/content.config.ts + src/lib/content.ts).
+//
+// Поля карточки 1:1 из легаси-шаблона: code, tag (опционально — sc-if в
+// index.html:661), hole, title, desc, demo (ключ сцены), gets[] (sc-for,
+// index.html:665–667), price (дважды — хедер и футер, как в оригинале), launch,
+// cta, note (опционально — sc-if, index.html:670–672).
+//
+// Ссылка на страницу товара (Task 19 создаёт /products/<slug>/): по правилам
+// задачи оборачиваем в <a> ЗАГОЛОВОК (h3.rk-spot-title), а не всю карточку —
+// вся голова карточки (.rk-spot-head) уже является кликабельным тоггл-элементом
+// аккордеона (см. контроллер index.html:1789–1844, toggle() дергается по клику
+// на [data-spot-head]), и обернуть в <a> ВЕСЬ .rk-spot-head означало бы вложить
+// интерактивный toggle-блок (с фокусируемой кнопкой-шевроном по факту роли) и
+// CTA-ссылку в подвале в один <a> — невалидная вложенность intractive-in-interactive
+// и потенциальный конфликт двух кликабельных назначений на одном элементе.
+// Заголовок как отдельная ссылка — рабочий компромисс: заметно, кликабельно,
+// не мешает тогглу (клик по остальной части .rk-spot-head по-прежнему сворачивает/
+// разворачивает карточку).
+//
+// data-* хуки для Task 17 (JS оживление, см. контроллер index.html:1789–1844):
+//   [data-spot-card]  — карточка; JS переключает класс .is-open
+//   [data-spot-head]  — кликабельная шапка; JS вешает click/keydown, ставит
+//                       role="button"/tabindex="0"/aria-expanded динамически —
+//                       здесь эти атрибуты уже проставлены статически (JS-код
+//                       идемпотентен: `if(h && !h.getAttribute('role'))`), чтобы
+//                       разметка была доступной и до появления Task 17
+//   [data-spot-body]  — сворачиваемое тело; JS выставляет inline style.height
+//   [data-scene]      — контейнер демо-сцены; JS (Task 17, отдельный скрипт
+//                       index.html:1845–1956) заполняет innerHTML по значению
+//                       атрибута (chat/intake/kb/kp/panel/employee) — здесь
+//                       рендерится ТОЛЬКО пустой контейнер с этим атрибутом,
+//                       контент сцены не портируется (Task 17)
+//
+// Начальное состояние (is-open на первой карточке) — см. Storefront.astro:
+// легаси decorate() (index.html:1837) разворачивает card[0], если ни одна
+// карточка не открыта; здесь это состояние воспроизведено статически через
+// проп isOpen, вычисляемый родителем по индексу.
+import type { LocalizedEntry, Locale } from '../lib/content';
+
+interface Props {
+  product: LocalizedEntry<'products'>;
+  locale: Locale;
+  isOpen: boolean;
+}
+const { product, locale, isOpen } = Astro.props;
+const { code, tag, hole, title, desc, demo, gets, price, launch, cta, note } = product.data;
+
+const base = import.meta.env.BASE_URL; // заканчивается на '/'
+const productHref = `${base}${locale === 'en' ? 'en/' : ''}products/${product.slug}/`;
+---
+
+<div class="rk-spot-card" class:list={{ 'is-open': isOpen }} data-spot-card>
+  <div
+    class="rk-spot-head"
+    data-spot-head
+    role="button"
+    tabindex="0"
+    aria-expanded={isOpen ? 'true' : 'false'}
+  >
+    <div class="rk-spot-num"></div>
+    <div class="rk-spot-headmid">
+      <div class="rk-spot-hole">{hole}</div>
+      <h3 class="rk-spot-title"><a href={productHref} class="rk-spot-title-link">{title}</a></h3>
+    </div>
+    <div class="rk-spot-headside">
+      <span class="rk-spot-price">{price}</span>
+      <span class="rk-spot-chev">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#241F1B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+      </span>
+    </div>
+  </div>
+  <div class="rk-spot-body" data-spot-body>
+    <div class="rk-spot-body-in">
+      <div class="rk-spot-tagrow">
+        <span class="rk-spot-code">{code}</span>
+        {tag && <span class="rk-spot-tag">{tag}</span>}
+      </div>
+      <p class="rk-spot-desc">{desc}</p>
+      <div class="rk-spot-demo"><div class="rk-scene" data-scene={demo}></div></div>
+      <ul class="rk-spot-gets">
+        {gets.map((g) => (
+          <li><span class="b">·</span><span>{g}</span></li>
+        ))}
+      </ul>
+      {note && <div class="rk-spot-note">{note}</div>}
+      <div class="rk-spot-foot">
+        <div class="rk-spot-priceblock">
+          <span class="rk-spot-pricebig">{price}</span>
+          <span class="rk-spot-launch">{launch}</span>
+        </div>
+        <a href="#form" data-lens="target" class="rk-spot-cta">{cta} →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Заголовок-ссылка на страницу товара: визуальный сброс до вида обычного
+     заголовка карточки (title и так уже стилизован через .rk-spot-title —
+     здесь только нейтрализуем поведение <a>). */
+  .rk-spot-title-link {
+    color: inherit;
+    text-decoration: none;
+  }
+  .rk-spot-title-link:hover {
+    color: inherit;
+  }
+</style>

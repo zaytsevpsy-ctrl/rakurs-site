@@ -1,0 +1,901 @@
+---
+// Портировано из index.html:634–707 (section#storefront). В легаси карточки
+// рендерились в рантайме x-dc Component'ом из массива PRODUCTS[] (index.html:
+// 1115–1121) через `<sc-for list="{{ products }}" as="p">` — шаблон карточки
+// (index.html:649–681, .rk-spot/.rk-spot-card, "spotlight showcase") перенесён
+// в ProductCard.astro и рендерится здесь статически из content collection
+// `products` (src/content/products/*.md), уже отсортированной по `order` и
+// отфильтрованной по локали хелпером getLocalized (src/lib/content.ts).
+//
+// ВЕРИФИЦИРОВАНО И СОЗНАТЕЛЬНО НЕ ПОРТИРОВАНО: drag-scroll grid `.rk-store-grid`
+// и prev/next-стрелки `.rk-store-nav`/`.rk-arrow` (создавались в рантайме
+// index.html:1761–1788). Это МЁРТВЫЙ КОД по отношению к текущей вёрстке:
+//  - в статической разметке (634–707) и в шаблоне карточки Component'а нигде
+//    нет элемента с классом `rk-store-grid` — скрипт ищет
+//    `document.querySelector('.rk-store-grid')` и в текущем HTML он всегда
+//    возвращает null (grep по всему index.html подтверждает единственные два
+//    вхождения `rk-store-grid`/`rk-store-nav` — обе внутри самого этого скрипта);
+//  - в <style id="rk-fixes"> НЕТ ни одного правила `.rk-arrow`/`.rk-store-nav`/
+//    `.rk-store-grid` — то есть даже если бы скрипт что-то нашёл и создал
+//    кнопки, они отрисовались бы без единого стиля (голый `<button>` с текстом
+//    ‹/›);
+//  - витрина продуктов физически не является горизontal-scroll гридом: это
+//    вертикальный список аккордеон-карточек (.rk-spot, counter-based
+//    нумерация), с которым «prev/next по ширине карточки» структурно
+//    несовместим.
+// Похоже, это остаток более ранней (до "spotlight"-редизайна) версии витрины
+// и давно отвалился от реальной разметки — оставлять как «протащенный по
+// спецификации» контракт для Task 17 значило бы попросить будущую задачу
+// оживить кнопки, которые ничего не скроллят и никак не выглядят. Помечено в
+// отчёте по задаче как DONE_WITH_CONCERNS-находка; при необходимости
+// реализовать реальный горизонтальный скролл витрины — это отдельное
+// решение (новый компонент), не 1:1 порт мёртвого скрипта.
+//
+// Начальное состояние аккордеона: легаси decorate() (index.html:1837)
+// разворачивает card[0], если после рендера ни одна карточка не .is-open.
+// Здесь это воспроизведено статически — первому продукту (order:1, B1)
+// передаётся isOpen={true}, остальным — false; контейнер .rk-spot получает
+// класс has-open с самого начала (см. разметку ниже).
+//
+// CSS-решение (правила "Spotlight showcase" + "Immersive product scenes" из
+// <style id="rk-fixes">, index.html:51–167, минус блок "Report KPI cards"
+// (83–85) — тот принадлежит Pain.astro, см. его комментарий) — ВСЕ перенесены
+// сюда как <style is:global>, а не в обычный scoped <style>. Причина одна на
+// все правила: scoped-стили Astro работают, добавляя каждому элементу свой
+// файловый data-astro-cid-* атрибут и переписывая селекторы под него. Здесь
+// это ломается для ДВУХ независимых причин сразу:
+//   1. `.rk-spot-card` и всё, что внутри карточки, рендерится ДОЧЕРНИМ
+//      компонентом ProductCard.astro — у него СВОЙ data-astro-cid, отличный
+//      от Storefront.astro. Правило вроде `.rk-spot.has-open .rk-spot-card
+//      :not(.is-open)`, будь оно scoped-стилем в этом файле, требовало бы от
+//      `.rk-spot-card` нести cid ИМЕННО Storefront.astro — а он несёт cid
+//      ProductCard.astro. Никогда не совпадёт.
+//   2. Всё, что относится к `.rk-scene` (`.stage`, `.out`, `.cap`, `.rk-px`,
+//      `.rk-eye`, `.rk-row`, `.rk-tag`, `.rk-line`, `.rk-bub`, `.rk-chip`,
+//      `.rk-bar`, `.rk-glow`, `.rk-sweep`, `.rk-cyc`, `.rk-night`, `.rk-moon`,
+//      `.rk-star`, `.rk-pill-flip`, `.rk-belt`, `.rk-tk`, `.rk-trackbar`,
+//      `.rk-clock`, `.rk-uline`, `.rk-stampd`, `.rk-gauge`, `.rk-spark`,
+//      `.rk-tickpop`, `.rk-paper` и т.д.) описывает DOM, которого при сборке
+//      ещё не существует — эти узлы вставляются в `[data-scene]` через
+//      innerHTML рантайм-скриптом сцен (index.html:1845–1956, оживление —
+//      Task 17). Такие узлы НИКОГДА не получат data-astro-cid ни от какого
+//      компонента — scoped-версия этих правил была бы мертворождённой.
+// Поэтому: единое `<style is:global>` ниже для ВСЕХ .rk-spot*/.rk-scene*
+// правил, чтобы гарантированно матчиться и через границу компонента, и через
+// рантайм-инъекцию контента. Токены (var(--accent) и т.п.) применены только
+// там, где значение совпадает 1:1 с tokens.css — остальные точечные оттенки
+// сцен оставлены литералами, как и в Pain.astro/Flagship.astro.
+import { t } from '../i18n/ui';
+import type { Locale, LocalizedEntry } from '../lib/content';
+import ProductCard from './ProductCard.astro';
+
+interface Props {
+  products: LocalizedEntry<'products'>[];
+  locale: Locale;
+}
+const { products, locale } = Astro.props;
+const dict = t(locale).storefront;
+---
+
+<section id="storefront">
+  <div class="rk-storefront-inner">
+    <div data-reveal class="rk-storefront-eyebrow">{dict.eyebrow}</div>
+    <h2 data-reveal class="rk-storefront-heading">{dict.heading}</h2>
+    <p data-reveal class="rk-storefront-lead">{dict.lead}</p>
+
+    <div data-reveal class="rk-spot-hint"><b>↕</b><span>{dict.hint}</span></div>
+
+    <div class="rk-spot has-open" data-spot data-reveal>
+      {products.map((product, i) => (
+        <ProductCard product={product} locale={locale} isOpen={i === 0} />
+      ))}
+    </div>
+
+    <div data-reveal class="rk-storefront-incl">
+      <div class="rk-incl-grid">
+        <div>
+          <div class="rk-incl-label">{dict.inclPriceLabel}</div>
+          <p class="rk-incl-desc">{dict.inclPriceDesc}</p>
+        </div>
+        <div>
+          <div class="rk-incl-label">{dict.inclSubLabel}</div>
+          <p class="rk-incl-desc">{dict.inclSubDesc}</p>
+        </div>
+        <div>
+          <div class="rk-incl-label">{dict.inclUnsureLabel}</div>
+          <p class="rk-incl-desc">{dict.inclUnsureDesc}</p>
+        </div>
+      </div>
+      <div class="rk-storefront-inclfoot">
+        <p class="rk-storefront-inclfoot-text">{dict.inclFootText}</p>
+        <a href="#form" data-lens="target" class="rk-storefront-inclfoot-cta">{dict.inclFootCta}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #storefront {
+    padding: clamp(52px, 7vh, 80px) clamp(20px, 5vw, 64px);
+  }
+  .rk-storefront-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .rk-storefront-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: #6e6259;
+    margin-bottom: 18px;
+  }
+  .rk-storefront-heading {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(28px, 3.4vw, 46px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0 0 18px;
+    max-width: 900px;
+  }
+  .rk-storefront-lead {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: clamp(16px, 1.3vw, 19px);
+    line-height: 1.6;
+    color: #4a423b;
+    max-width: 720px;
+    margin: 0 0 22px;
+  }
+
+  /* index.html:692 — "в цене решения / в подписке / если не уверены" блок */
+  .rk-storefront-incl {
+    margin-top: 34px;
+    background: var(--bg-alt);
+    border-radius: 16px;
+    padding: clamp(24px, 3vw, 32px) clamp(22px, 3vw, 34px);
+  }
+  .rk-incl-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-bottom: 24px;
+  }
+  .rk-incl-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    color: var(--accent-link);
+    margin-bottom: 8px;
+  }
+  .rk-incl-desc {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: #4a423b;
+    margin: 0;
+  }
+  .rk-storefront-inclfoot {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--border-hover);
+    padding-top: 20px;
+  }
+  .rk-storefront-inclfoot-text {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: clamp(16px, 1.6vw, 19px);
+    color: var(--ink);
+    margin: 0;
+    max-width: 560px;
+  }
+  .rk-storefront-inclfoot-cta {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--bg);
+    background: var(--ink);
+    padding: 14px 26px;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+</style>
+
+<style is:global>
+  /* ===== Spotlight showcase (index.html:52–82, 146–167) =====
+     Живёт здесь как global — см. причину (1) в комментарии шапки файла:
+     .rk-spot-card и всё внутри рендерится дочерним компонентом ProductCard. */
+  .rk-spot {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    counter-reset: spot;
+    max-width: 1080px;
+  }
+  .rk-spot-card {
+    counter-increment: spot;
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: background 0.3s, border-color 0.3s, box-shadow 0.35s, opacity 0.35s, filter 0.35s;
+  }
+  .rk-spot-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--accent);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .rk-spot-card:hover {
+    background: #fff;
+    border-color: var(--border-hover);
+  }
+  .rk-spot-card.is-open {
+    background: #fff;
+    border-color: var(--accent-soft);
+    box-shadow: 0 28px 64px -24px rgba(36, 31, 27, 0.34);
+  }
+  .rk-spot-card.is-open::before {
+    transform: scaleY(1);
+  }
+  .rk-spot.has-open .rk-spot-card:not(.is-open) {
+    opacity: 0.5;
+    filter: saturate(0.65);
+  }
+  .rk-spot.has-open .rk-spot-card:not(.is-open):hover {
+    opacity: 1;
+    filter: none;
+  }
+  .rk-spot-head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 20px;
+    padding: 22px 26px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .rk-spot-num {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 26px;
+    color: #cdbfa9;
+    line-height: 1;
+    transition: color 0.3s;
+    font-variant-numeric: tabular-nums;
+  }
+  .rk-spot-num::before {
+    content: counter(spot, decimal-leading-zero);
+  }
+  .rk-spot-card.is-open .rk-spot-num,
+  .rk-spot-card:hover .rk-spot-num {
+    color: var(--accent);
+  }
+  .rk-spot-headmid {
+    min-width: 0;
+  }
+  .rk-spot-hole {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.03em;
+    color: var(--accent-link);
+    margin-bottom: 6px;
+  }
+  .rk-spot-title {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(18px, 1.9vw, 23px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin: 0;
+    transition: transform 0.3s;
+  }
+  .rk-spot-card:hover .rk-spot-title {
+    transform: translateX(3px);
+  }
+  .rk-spot-headside {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    white-space: nowrap;
+  }
+  .rk-spot-price {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .rk-spot-chev {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1.5px solid #c9beac;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), background 0.25s, border-color 0.25s;
+    flex: 0 0 auto;
+  }
+  .rk-spot-chev svg {
+    transition: stroke 0.25s;
+  }
+  .rk-spot-card:hover .rk-spot-chev {
+    border-color: var(--accent);
+  }
+  .rk-spot-card.is-open .rk-spot-chev {
+    transform: rotate(180deg);
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .rk-spot-card.is-open .rk-spot-chev svg {
+    stroke: var(--bg);
+  }
+  .rk-spot-body {
+    height: 0;
+    overflow: hidden;
+    transition: height 0.44s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  /* Дополнение к 1:1 порту (в легаси это состояние выставлял инлайново JS
+     после измерения scrollHeight, см. expand()/decorate() в контроллере
+     index.html:1789–1844): без JS (эта задача — чисто статический рендер)
+     начальная открытая карточка должна быть видна раскрытой уже при первой
+     отрисовке, а не появляться дёрганно после гидратации в Task 17. */
+  .rk-spot-card.is-open .rk-spot-body {
+    height: auto;
+  }
+  .rk-spot-body-in {
+    padding: 2px 26px 26px 26px;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.42s 0.05s, transform 0.42s 0.05s;
+  }
+  .rk-spot-card.is-open .rk-spot-body-in {
+    opacity: 1;
+    transform: none;
+  }
+  .rk-spot-tagrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .rk-spot-code {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: #6e6259;
+  }
+  .rk-spot-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent-link);
+    background: #fbefe2;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+  .rk-spot-desc {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #4a423b;
+    margin: 0 0 18px;
+    max-width: 760px;
+  }
+  .rk-spot-demo {
+    background: #f5f0e6;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 18px;
+    min-height: 120px;
+  }
+  .rk-spot-gets {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .rk-spot-gets li {
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--ink);
+    display: flex;
+    gap: 9px;
+    align-items: flex-start;
+    padding-top: 12px;
+    border-top: 2px solid #ede4d6;
+  }
+  .rk-spot-gets li .b {
+    color: var(--accent);
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .rk-spot-note {
+    font-size: 12.5px;
+    color: #6e6259;
+    font-style: italic;
+    margin-bottom: 16px;
+  }
+  .rk-spot-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--border);
+    padding-top: 18px;
+  }
+  .rk-spot-priceblock {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .rk-spot-pricebig {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--ink);
+  }
+  .rk-spot-launch {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #6e6259;
+  }
+  .rk-spot-cta {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 14.5px;
+    color: var(--bg);
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 13px 24px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.18s, transform 0.15s;
+  }
+  .rk-spot-cta:hover {
+    background: #c9611a;
+    color: var(--bg);
+    transform: translateY(-1px);
+  }
+  .rk-spot-hint {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: #8a7e71;
+    margin: 2px 2px 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .rk-spot-hint b {
+    color: var(--accent-link);
+    font-weight: 500;
+  }
+  @media (max-width: 760px) {
+    .rk-spot-head {
+      gap: 14px;
+      padding: 18px 16px;
+    }
+    .rk-spot-price {
+      display: none;
+    }
+    .rk-spot-gets {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .rk-spot-gets li {
+      border-top: none;
+      padding-top: 0;
+      margin-top: 9px;
+    }
+    .rk-spot-body-in {
+      padding: 2px 16px 20px;
+    }
+    .rk-spot-num {
+      font-size: 22px;
+    }
+    .rk-spot-cta {
+      width: 100%;
+      justify-content: center;
+    }
+    .rk-spot-foot {
+      gap: 14px;
+    }
+  }
+
+  /* ===== Immersive product scenes (index.html:86–145) =====
+     Global — см. причину (2) в комментарии шапки файла: этот DOM вставляется
+     innerHTML-скриптом сцен (Task 17) внутрь [data-scene] и никогда не несёт
+     data-astro-cid ни одного компонента. Контент сцен НЕ портируется здесь —
+     только контейнер [data-scene] (см. ProductCard.astro); классы/keyframes
+     ниже перенесены целиком 1:1, чтобы Task 17 могла просто вставлять готовый
+     innerHTML без каких-либо изменений в CSS. */
+  .rk-scene {
+    display: grid;
+    grid-template-columns: 1.02fr 0.98fr;
+    gap: 12px;
+    min-height: 158px;
+    font-family: var(--font-mono);
+  }
+  .rk-scene .stage {
+    position: relative;
+    background: #efe7d8;
+    border: 1px solid #e1d6c4;
+    border-radius: 10px;
+    padding: 12px 13px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .rk-scene .out {
+    position: relative;
+    background: #211d19;
+    border-radius: 10px;
+    padding: 12px 13px;
+    color: #efe7d8;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    justify-content: center;
+  }
+  .rk-scene .cap {
+    grid-column: 1 / -1;
+    font-size: 11.5px;
+    color: #8a7e71;
+    line-height: 1.45;
+    margin-top: 1px;
+  }
+  .rk-scene .cap b {
+    color: var(--accent-link);
+    font-weight: 600;
+  }
+  .rk-px {
+    image-rendering: pixelated;
+    flex: 0 0 auto;
+    filter: drop-shadow(0 2px 3px rgba(36, 31, 27, 0.18));
+  }
+  .rk-eye {
+    animation: rk-blink 3.4s infinite;
+  }
+  .rk-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .rk-tag {
+    font-size: 9.5px;
+    letter-spacing: 0.03em;
+    color: #8a7e71;
+  }
+  .rk-line {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  .rk-ok {
+    color: #8fd08a;
+  }
+  .rk-warn {
+    color: #f0653f;
+  }
+  .rk-amber {
+    color: var(--accent);
+  }
+  .rk-mut {
+    color: #8a7e71;
+  }
+  .rk-bub {
+    background: var(--ink);
+    color: #f1eae0;
+    font-size: 10.5px;
+    padding: 5px 9px;
+    border-radius: 9px;
+    display: inline-block;
+    max-width: 190px;
+  }
+  .rk-bub.me {
+    background: #fff;
+    color: var(--ink);
+    border: 1px solid #dbcfbb;
+  }
+  .rk-chip {
+    font-size: 9px;
+    padding: 3px 7px;
+    border-radius: 5px;
+    background: #fff;
+    border: 1px solid #dbcfbb;
+    color: #4a423b;
+    display: inline-block;
+  }
+  .rk-bar {
+    height: 7px;
+    border-radius: 4px;
+    background: #dbcfbb;
+    overflow: hidden;
+    position: relative;
+  }
+  .rk-bar > i {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: var(--accent);
+    border-radius: 4px;
+    animation: rk-fillw 1.4s cubic-bezier(0.3, 1, 0.4, 1) forwards;
+  }
+  .rk-glow {
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    box-shadow: 0 0 18px 4px rgba(227, 119, 34, 0.34);
+    animation: rk-pulse 2.4s infinite;
+  }
+  .rk-sweep {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, rgba(227, 119, 34, 0.14), transparent);
+    animation: rk-sweepx 3.2s linear infinite;
+  }
+  @keyframes rk-slidein {
+    0% { transform: translateX(-12px); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+  }
+  @keyframes rk-pop {
+    0% { transform: scale(0.6); opacity: 0; }
+    70% { transform: scale(1.07); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes rk-fillw {
+    0% { width: 0; }
+    100% { width: var(--w, 100%); }
+  }
+  @keyframes rk-sweepx {
+    0% { left: -45%; }
+    100% { left: 130%; }
+  }
+  @keyframes rk-bobble {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+  /* scene: looping arcs, setting & motion */
+  .rk-spot-card:not(.is-open) .rk-scene * {
+    animation-play-state: paused !important;
+  }
+  .rk-cyc {
+    animation: rk-fadecycle var(--d, 5s) linear infinite both;
+  }
+  .rk-night {
+    background: linear-gradient(164deg, #212a3d 0%, #2b3448 46%, #efe7d8 46%, #efe7d8 100%) !important;
+    border-color: #2b3448 !important;
+  }
+  .rk-moon {
+    position: absolute;
+    top: 9px;
+    right: 14px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #efd9a8;
+    box-shadow: 0 0 12px rgba(239, 217, 168, 0.6);
+    z-index: 1;
+  }
+  .rk-star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: #efd9a8;
+    animation: rk-twinkle 2.6s infinite;
+    z-index: 1;
+  }
+  .rk-pill-flip {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 6px;
+    animation: rk-flipcold 4.6s infinite;
+  }
+  .rk-belt {
+    position: absolute;
+    left: 0;
+    right: 40px;
+    top: 50%;
+    height: 2px;
+    background: repeating-linear-gradient(90deg, #c9beac 0 7px, transparent 7px 14px);
+    animation: rk-belt 1s linear infinite;
+    opacity: 0.7;
+  }
+  .rk-chip.rk-tk {
+    position: absolute;
+    left: 0;
+    animation: rk-conveyor 3.2s linear infinite;
+  }
+  .rk-trackbar {
+    flex: 1;
+    min-width: 36px;
+    height: 6px;
+    border-radius: 4px;
+    background: #2c2721;
+    overflow: hidden;
+  }
+  .rk-trackbar > i {
+    display: block;
+    height: 100%;
+    border-radius: 4px;
+    animation: rk-fillw 2.4s cubic-bezier(0.3, 1, 0.4, 1) infinite;
+  }
+  .rk-ok-bar {
+    background: #6fb56a;
+  }
+  .rk-amber-bar {
+    background: var(--accent);
+  }
+  .rk-clock {
+    display: inline-block;
+    animation: rk-spinfast 1.1s linear infinite;
+  }
+  .rk-uline {
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    height: 2px;
+    width: 100%;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: rk-uline 5s infinite;
+  }
+  .rk-stampd {
+    position: absolute;
+    top: -3px;
+    right: 4px;
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 13px;
+    color: #6fb56a;
+    border: 2px solid #6fb56a;
+    border-radius: 6px;
+    padding: 1px 6px;
+    transform: rotate(-13deg);
+    animation: rk-stamp 3s infinite;
+  }
+  .rk-bar > i.rk-loopfill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: var(--accent);
+    border-radius: 4px;
+    animation: rk-fillw 3s cubic-bezier(0.3, 1, 0.4, 1) infinite;
+  }
+  .rk-gauge {
+    background: #17140f;
+    border: 1px solid #2c2721;
+    border-radius: 8px;
+    padding: 6px 7px;
+    text-align: center;
+  }
+  .rk-gauge.rk-alert {
+    border-color: #f0653f;
+    animation: rk-pulse 1.6s infinite;
+  }
+  .rk-spark {
+    margin-top: 3px;
+    display: block;
+  }
+  .rk-spark polyline {
+    stroke-dasharray: 84;
+    stroke-dashoffset: 84;
+    animation: rk-spark 2.6s ease-in-out infinite;
+  }
+  .rk-tickpop {
+    display: inline-block;
+    animation: rk-tick 5s infinite;
+  }
+  .rk-paper {
+    position: absolute;
+    left: 30px;
+    top: 8px;
+    width: 9px;
+    height: 11px;
+    background: #fff;
+    border: 1px solid #dbcfbb;
+    border-radius: 1px;
+    animation: rk-fly 3.4s ease-in infinite;
+    z-index: 0;
+  }
+  @keyframes rk-fadecycle {
+    0% { opacity: 0; transform: translateY(7px); }
+    9% { opacity: 1; transform: none; }
+    86% { opacity: 1; transform: none; }
+    100% { opacity: 0; transform: translateY(-3px); }
+  }
+  @keyframes rk-twinkle {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 1; }
+  }
+  @keyframes rk-buzz {
+    0%, 14%, 100% { transform: translate(0, 0) rotate(0); }
+    3% { transform: translate(-1px, 1px) rotate(-4deg); }
+    6% { transform: translate(1px, -1px) rotate(4deg); }
+    9% { transform: translate(-1px, 0) rotate(-3deg); }
+    12% { transform: translate(1px, 0) rotate(2deg); }
+  }
+  @keyframes rk-flipcold {
+    0%, 42% { background: #cdbfa9; color: #6e6259; }
+    54%, 100% { background: var(--accent); color: var(--bg); }
+  }
+  @keyframes rk-belt {
+    to { background-position: 14px 0; }
+  }
+  @keyframes rk-conveyor {
+    0% { left: -16%; opacity: 0; }
+    12% { opacity: 1; }
+    66% { left: 64%; opacity: 1; }
+    80%, 100% { left: 64%; opacity: 0; }
+  }
+  @keyframes rk-spinfast {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes rk-uline {
+    0%, 22% { transform: scaleX(0); }
+    46%, 86% { transform: scaleX(1); }
+    100% { transform: scaleX(0); }
+  }
+  @keyframes rk-stamp {
+    0%, 52% { transform: scale(2.4) rotate(-13deg); opacity: 0; }
+    66% { transform: scale(0.86) rotate(-13deg); opacity: 1; }
+    78%, 92% { transform: scale(1) rotate(-13deg); opacity: 1; }
+    100% { opacity: 0; }
+  }
+  @keyframes rk-spark {
+    0% { stroke-dashoffset: 84; }
+    55%, 100% { stroke-dashoffset: 0; }
+  }
+  @keyframes rk-tick {
+    0%, 48% { transform: scale(0); opacity: 0; }
+    62% { transform: scale(1.35); opacity: 1; }
+    80%, 92% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.85; }
+  }
+  @keyframes rk-shuffle {
+    0%, 100% { transform: translateY(0) rotate(-1.5deg); }
+    50% { transform: translateY(-2px) rotate(1.5deg); }
+  }
+  @keyframes rk-nudge {
+    0%, 100% { transform: translate(-50%, -50%); }
+    50% { transform: translate(calc(-50% - 6px), -50%); }
+  }
+  @media (max-width: 760px) {
+    .rk-scene {
+      grid-template-columns: 1fr;
+      min-height: 0;
+      gap: 10px;
+    }
+    .rk-scene .stage {
+      min-height: 118px;
+    }
+    .rk-bub {
+      max-width: none;
+    }
+  }
+</style>

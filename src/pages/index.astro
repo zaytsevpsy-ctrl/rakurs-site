@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
 import Hero from '../components/Hero.astro';
 import Pain from '../components/Pain.astro';
+import Storefront from '../components/Storefront.astro';
 import How from '../components/How.astro';
 import Flagship from '../components/Flagship.astro';
 import Founders from '../components/Founders.astro';
@@ -41,7 +42,7 @@ const ld = [
   <main>
     <Hero locale={locale} />
     <Pain locale={locale} />
-    <!-- STOREFRONT (Task 10) -->
+    <Storefront products={products} locale={locale} />
     <How locale={locale} />
     <Flagship locale={locale} />
     <!-- CASES (Task 11) -->

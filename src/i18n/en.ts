@@ -150,7 +150,23 @@ export const en: Dict = {
     quoteBefore: 'An agency sells you a bot and leaves. A consultant finds the problem—and also leaves. ',
     quoteHighlight: "We find the leak, price it in dollars, close it with a proven solution, and stay on by subscription so the gains don't reverse.",
   },
-  storefront: {}, // Task 10
+  storefront: {
+    // из i18n.js (легаси runtime-переводчик) — строки существуют там 1:1,
+    // отмечены построчно ниже; см. комментарий в ru.ts про мёртвый
+    // .rk-store-nav/.rk-arrow код (aria-label для стрелок не понадобился).
+    eyebrow: '// solution showcase—hover over any one and it goes to work', // i18n.js:222
+    heading: 'Fixed-price ready solutions. Launch in one to three weeks.', // i18n.js:223
+    lead: 'Six ready-made products from proven templates. Under each: a specific money leak, a live demo, and a price with no fine print.', // i18n.js:125
+    hint: 'Expand any solution — the demo comes alive right inside the card.', // i18n.js:126
+    inclPriceLabel: 'IN THE SOLUTION PRICE', // i18n.js:274
+    inclPriceDesc: 'Setup to your data and workflows, integrations, and launch. Fixed price—no surprises on the invoice.', // i18n.js:275
+    inclSubLabel: 'IN THE SUBSCRIPTION', // i18n.js:276
+    inclSubDesc: 'Hosting, quality control, and continuous learning. The solution keeps getting smarter after launch.', // i18n.js:277
+    inclUnsureLabel: 'UNSURE WHERE TO START?', // i18n.js:278
+    inclUnsureDesc: "Start with an express diagnostic—we'll credit the cost toward your chosen solution.", // i18n.js:279
+    inclFootText: "Not sure what to tackle first? In 20 minutes, we'll show you what pays back fastest.", // i18n.js:280
+    inclFootCta: 'Start with a diagnostic', // i18n.js:281
+  },
   cases: {}, // Task 11
   faq: {}, // Task 11
   form: {}, // Task 12
