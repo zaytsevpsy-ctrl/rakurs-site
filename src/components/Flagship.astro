@@ -3,24 +3,30 @@
 // программы + калькулятор потерь).
 //
 // Калькулятор (index.html:772–803: {{ lossFmt }}/{{ loss }}/{{ shareOpts }}/
-// {{ sharePct }}/{{ buildFmt }}/{{ keepFmt }}) в легаси управляется не support.js,
-// а render-циклом компонент-класса (renderVals(), index.html:1599–1649) —
+// {{ sharePct }}/{{ buildFmt }}/{{ keepFmt }}) в легаси управлялся не support.js,
+// а render-циклом компонент-класса (renderVals()/fmt(), index.html:1595–1649) —
 // собственного мини-фреймворка легаси-монолита (state → onInput/onClick →
-// setState → re-render), для которого в этом Astro-переписывании нет аналога.
-// Это ЧИСТО СТАТИЧНЫЙ порт (задача Task 9 — "static markup ports"): рендерятся
-// значения дефолтного состояния state.loss=200000, state.share=0.2
-// (index.html:1138–1139) по формуле из renderVals() (index.html:1600–1648):
+// setState → re-render). Начальная разметка ниже — статичный порт значений
+// дефолтного состояния state.loss=200000, state.share=0.2 (index.html:1138–1139)
+// по формуле из renderVals():
 //   build = round(loss*share) = round(200000*0.2)   = 40 000  → "$40,000"
 //   keep  = loss - build      = 200000 - 40000       = 160 000 → "$160,000"
 //   sharePct = round(share*100)+'%'                            = "20%"
 //   fmt(n) = '$' + n.toLocaleString('en-US')
-// Слайдер (<input type="range">) и кнопки долей (10%/20%/30%) оставлены в
-// разметке БЕЗ onInput/onClick (не из чего портировать — там был вызов
-// this.setState(...) легаси-класса) — как и в Hero.astro (труба-скраббер),
-// оживление — отдельная будущая задача, не автопорт. data-lens="target"/"grid"
-// (index.html:772,783,808) сохранены 1:1 как реальные хуки глобального
-// курсора-лупы (setupLens(), index.html:1516–1551 — компонент этой лупы вне
-// скоупа Task 9, добавляется в другой задаче).
+// Интерактив (Task 16, src/scripts/calculator.ts → initCalculator(),
+// подключён ниже) реимплементирует onInput/onClick+renderVals императивно —
+// НЕ легаси-верифицированный vanilla-код (в легаси такого отдельного скрипта
+// не было, всё жило в реактивном x-dc), формулы/форматирование выше портированы
+// 1:1. Новые (не легаси) data-* хуки, контракт для initCalculator():
+//   [data-calc-range]     — <input type=range>, source of truth для loss
+//   [data-calc-loss]      — текст "$200,000" (fmt(loss))
+//   [data-calc-share]     — кнопка доли; [data-calc-share-value] = 0.1/0.2/0.3
+//   [data-calc-sharepct]  — вложенный span с "20%" внутри строки-лейбла build
+//   [data-calc-build]     — текст "−$40,000"
+//   [data-calc-barfill]   — ширина полосы = sharePct
+//   [data-calc-keep]      — текст "+$160,000"
+// data-lens="target"/"grid" (index.html:772,783,808) сохранены 1:1 как реальные
+// хуки глобального курсора-лупы (setupLens(), index.html:1516–1551).
 import { t } from '../i18n/ui';
 import type { Locale } from '../lib/content';
 
@@ -37,9 +43,9 @@ const buildFmt = '$40,000';
 const keepFmt = '$160,000';
 const sharePct = '20%';
 const shareOpts = [
-  { label: '10%', active: false },
-  { label: '20%', active: true },
-  { label: '30%', active: false },
+  { label: '10%', value: 0.1, active: false },
+  { label: '20%', value: 0.2, active: true },
+  { label: '30%', value: 0.3, active: false },
 ];
 ---
 
@@ -74,29 +80,29 @@ const shareOpts = [
         <div class="rk-calc-title">{dict.calcTitle}</div>
 
         <div class="rk-calc-step-label">{dict.calcStep1Label}</div>
-        <div class="rk-calc-loss">{lossFmt}</div>
-        <input type="range" min="20000" max="600000" step="10000" value={loss} class="rk-calc-range" />
+        <div class="rk-calc-loss" data-calc-loss>{lossFmt}</div>
+        <input type="range" min="20000" max="600000" step="10000" value={loss} class="rk-calc-range" data-calc-range />
         <div class="rk-calc-range-ends"><span>$20K</span><span>$600K</span></div>
 
         <div class="rk-calc-step-label rk-calc-step-label-2">{dict.calcStep2Label}</div>
         <div class="rk-calc-shares">
           {shareOpts.map((s) => (
-            <button type="button" data-lens="target" class:list={["rk-calc-share", { "rk-calc-share-active": s.active }]}>{s.label}</button>
+            <button type="button" data-lens="target" data-calc-share data-calc-share-value={s.value} class:list={["rk-calc-share", { "rk-calc-share-active": s.active }]}>{s.label}</button>
           ))}
         </div>
 
         <div class="rk-calc-divider">
           <div class="rk-calc-row">
-            <span class="rk-calc-row-label">{dict.calcBuildLabel} {sharePct}</span>
-            <span class="rk-calc-build">−{buildFmt}</span>
+            <span class="rk-calc-row-label">{dict.calcBuildLabel} <span data-calc-sharepct>{sharePct}</span></span>
+            <span class="rk-calc-build" data-calc-build>−{buildFmt}</span>
           </div>
           <div class="rk-calc-bar">
-            <div class="rk-calc-bar-fill" style={`width:${sharePct}`}></div>
+            <div class="rk-calc-bar-fill" data-calc-barfill style={`width:${sharePct}`}></div>
             <div class="rk-calc-bar-rest"></div>
           </div>
           <div class="rk-calc-row">
             <span class="rk-calc-row-label">{dict.calcKeepLabel}</span>
-            <span class="rk-calc-keep">+{keepFmt}</span>
+            <span class="rk-calc-keep" data-calc-keep>+{keepFmt}</span>
           </div>
         </div>
 
@@ -337,3 +343,8 @@ const shareOpts = [
     white-space: nowrap;
   }
 </style>
+
+<script>
+  import { initCalculator } from '../scripts/calculator';
+  initCalculator();
+</script>
