@@ -235,4 +235,10 @@ export const en: Dict = {
     tagline: 'ready-made AI solutions and operational loss diagnostics',
     email: 'zaytsev.psy@gmail.com',
   },
+  detail: {
+    // Task 19 — product/case detail pages. Not in legacy i18n.js (these pages
+    // didn't exist there) — translated manually.
+    back: '← Back',
+    getsHeading: "What's included",
+  },
 };

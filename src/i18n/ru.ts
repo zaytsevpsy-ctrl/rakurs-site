@@ -258,6 +258,14 @@ export const ru = {
     tagline: 'готовые ИИ‑решения и диагностика операционных потерь',
     email: 'zaytsev.psy@gmail.com',
   },
+  detail: {
+    // Task 19 — страницы /products/<slug> и /cases/<slug>. Новые UI-строки,
+    // не портированные из легаси (в index.html эти страницы не существовали):
+    // ссылка возврата в витрину/архив кейсов и заголовок блока "что входит"
+    // на странице продукта (сам список берётся из content collection, gets[]).
+    back: '← назад',
+    getsHeading: 'Что входит',
+  },
 };
 
 export type Dict = typeof ru;

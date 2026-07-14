@@ -1,0 +1,263 @@
+---
+// Task 19 — заголовочный блок страницы /products/<slug> (и её en/-пары).
+// Новая разметка (в легаси таких страниц не было), но переиспользует визуальный
+// язык карточки витрины (ProductCard.astro / .rk-spot-*): код, тег, "дыра",
+// заголовок, описание, gets[], цена, срок запуска, CTA на форму (#form).
+// Тело статьи (<slot />, из render(entry) в src/pages/products/[slug].astro)
+// оборачивается в .rk-article — минимальная типографика для сырого HTML из
+// markdown-тела (Task 19 наполняет тела всех 12 *.md продуктов/6 кейсов×2 локали).
+//
+// .rk-detail-page несёт top-padding под фиксированный nav — те же три брейкпоинта
+// (900px/620px), что #top в Hero.astro/global.css, но НЕ переиспользует #top
+// (это была бы вторая секция с тем же id на странице — невалидно, и в
+// global.css #top привязаны ещё и посторонние grid-правила hero-сетки).
+import { t } from '../i18n/ui';
+import type { Locale, LocalizedEntry } from '../lib/content';
+
+interface Props {
+  product: LocalizedEntry<'products'>;
+  locale: Locale;
+  backHref: string;
+}
+const { product, locale, backHref } = Astro.props;
+const { code, tag, hole, title, desc, gets, price, launch, cta, note } = product.data;
+const dict = t(locale).detail;
+---
+
+<article class="rk-detail-page">
+  <a href={backHref} class="rk-detail-back" data-lens="target">{dict.back}</a>
+
+  <div class="rk-detail-tagrow">
+    <span class="rk-detail-code">{code}</span>
+    {tag && <span class="rk-detail-tag">{tag}</span>}
+  </div>
+  <div class="rk-detail-hole">{hole}</div>
+  <h1 class="rk-detail-title">{title}</h1>
+  <p class="rk-detail-desc">{desc}</p>
+
+  <div class="rk-detail-getswrap">
+    <div class="rk-detail-getsheading">{dict.getsHeading}</div>
+    <ul class="rk-detail-gets">
+      {gets.map((g) => (
+        <li><span class="b">·</span><span>{g}</span></li>
+      ))}
+    </ul>
+  </div>
+
+  {note && <p class="rk-detail-note">{note}</p>}
+
+  <div class="rk-detail-foot">
+    <div class="rk-detail-priceblock">
+      <span class="rk-detail-price">{price}</span>
+      <span class="rk-detail-launch">{launch}</span>
+    </div>
+    <a href="#form" data-lens="target" class="rk-detail-cta">{cta} →</a>
+  </div>
+
+  <div class="rk-article">
+    <slot />
+  </div>
+</article>
+
+<style>
+  .rk-detail-page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: clamp(96px, 11vh, 124px) clamp(20px, 5vw, 64px) clamp(36px, 5vh, 56px);
+  }
+  @media (max-width: 900px) {
+    .rk-detail-page { padding-top: clamp(96px, 12vh, 120px); }
+  }
+  @media (max-width: 620px) {
+    .rk-detail-page { padding-top: 116px; }
+  }
+
+  .rk-detail-back {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.03em;
+    color: #6e6259;
+    margin-bottom: 26px;
+  }
+  .rk-detail-back:hover {
+    color: var(--accent-link);
+  }
+
+  .rk-detail-tagrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .rk-detail-code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: #6e6259;
+  }
+  .rk-detail-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent-link);
+    background: #fbefe2;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+  .rk-detail-hole {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    color: var(--accent-link);
+    margin-bottom: 10px;
+  }
+  .rk-detail-title {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin: 0 0 18px;
+  }
+  .rk-detail-desc {
+    font-size: clamp(16px, 1.5vw, 18px);
+    line-height: 1.6;
+    color: #4a423b;
+    margin: 0 0 32px;
+    max-width: 640px;
+  }
+
+  .rk-detail-getswrap {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px 26px;
+    margin-bottom: 22px;
+  }
+  .rk-detail-getsheading {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    color: var(--accent-link);
+    margin-bottom: 14px;
+  }
+  .rk-detail-gets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 12px;
+  }
+  .rk-detail-gets li {
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: var(--ink);
+    display: flex;
+    gap: 9px;
+    align-items: flex-start;
+  }
+  .rk-detail-gets li .b {
+    color: var(--accent);
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  .rk-detail-note {
+    font-size: 13px;
+    color: #6e6259;
+    font-style: italic;
+    margin: 0 0 22px;
+  }
+
+  .rk-detail-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 22px 0;
+    margin-bottom: 40px;
+  }
+  .rk-detail-priceblock {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .rk-detail-price {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 24px;
+    color: var(--ink);
+  }
+  .rk-detail-launch {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #6e6259;
+  }
+  .rk-detail-cta {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 14.5px;
+    color: var(--bg);
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 13px 24px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.18s, transform 0.15s;
+  }
+  .rk-detail-cta:hover {
+    background: #c9611a;
+    color: var(--bg);
+    transform: translateY(-1px);
+  }
+
+  /* Минимальная типографика для сырого HTML markdown-тела (Task 19). */
+  .rk-article {
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: #4a423b;
+  }
+  .rk-article :global(h2) {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(20px, 2.2vw, 26px);
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin: 34px 0 14px;
+  }
+  .rk-article :global(h3) {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: clamp(17px, 1.8vw, 20px);
+    color: var(--ink);
+    margin: 26px 0 10px;
+  }
+  .rk-article :global(p) {
+    margin: 0 0 16px;
+  }
+  .rk-article :global(ul),
+  .rk-article :global(ol) {
+    margin: 0 0 16px;
+    padding-left: 22px;
+  }
+  .rk-article :global(li) {
+    margin-bottom: 8px;
+  }
+  .rk-article :global(a) {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .rk-article :global(em) {
+    color: #6e6259;
+  }
+  .rk-article :global(strong) {
+    color: var(--ink);
+  }
+</style>

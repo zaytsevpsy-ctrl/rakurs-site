@@ -1,0 +1,38 @@
+---
+// Task 19 — EN-версия детальной страницы кейса: /en/cases/<slug>/. Та же
+// структура, что и src/pages/cases/[slug].astro, locale='en', контент из
+// *.en.md.
+import { render } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Nav from '../../../components/Nav.astro';
+import Footer from '../../../components/Footer.astro';
+import LeadForm from '../../../components/LeadForm.astro';
+import CaseDetail from '../../../components/CaseDetail.astro';
+import { getLocalized } from '../../../lib/content';
+
+export async function getStaticPaths() {
+  const cases = await getLocalized('cases', 'en');
+  return cases.map((c) => ({ params: { slug: c.slug }, props: { entry: c } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const locale = 'en' as const;
+const backHref = `${import.meta.env.BASE_URL}en/#cases`;
+---
+<Base
+  title={`${d.tab}: ${d.after} | Rakurs`}
+  description={`${d.before} → ${d.after}. ${d.note}`}
+  path={`cases/${entry.slug}`}
+  locale={locale}
+>
+  <Nav locale={locale} path={`cases/${entry.slug}`} />
+  <main>
+    <CaseDetail kase={entry} locale={locale} backHref={backHref}>
+      <Content />
+    </CaseDetail>
+    <LeadForm locale={locale} />
+  </main>
+  <Footer locale={locale} />
+</Base>

@@ -1,0 +1,39 @@
+---
+// Task 19 — RU-версия детальной страницы кейса: /cases/<slug>/. Заголовок из
+// content collection `cases` (см. CaseDetail.astro), тело — из
+// src/content/cases/<slug>.ru.md. Никакого Service JSON-LD здесь — это не
+// продукт с ценой/офером, а кейс (см. бриф задачи).
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import CaseDetail from '../../components/CaseDetail.astro';
+import { getLocalized } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const cases = await getLocalized('cases', 'ru');
+  return cases.map((c) => ({ params: { slug: c.slug }, props: { entry: c } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const locale = 'ru' as const;
+const backHref = `${import.meta.env.BASE_URL}#cases`;
+---
+<Base
+  title={`${d.tab}: ${d.after} | Rakurs`}
+  description={`${d.before} → ${d.after}. ${d.note}`}
+  path={`cases/${entry.slug}`}
+  locale={locale}
+>
+  <Nav locale={locale} path={`cases/${entry.slug}`} />
+  <main>
+    <CaseDetail kase={entry} locale={locale} backHref={backHref}>
+      <Content />
+    </CaseDetail>
+    <LeadForm locale={locale} />
+  </main>
+  <Footer locale={locale} />
+</Base>

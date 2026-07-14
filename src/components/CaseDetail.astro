@@ -1,0 +1,208 @@
+---
+// Task 19 — заголовочный блок страницы /cases/<slug> (и её en/-пары). Новая
+// разметка (в легаси таких страниц не было), переиспользует визуальный язык
+// панели кейса из Cases.astro (.rk-case-*: num/metric/before/after/note), но
+// как статичный (не scrub-able) блок — на детальной странице кейса нет соседних
+// кейсов, чтобы листать шторкой между ними. beforeLabel/afterLabel берутся из
+// того же словаря, что и Cases.astro (t(locale).cases), чтобы не заводить
+// дублирующиеся ключи. Тело статьи (<slot />) — тот же .rk-article, что и в
+// ProductDetail.astro (общая типографика для markdown-тела).
+import { t } from '../i18n/ui';
+import type { Locale, LocalizedEntry } from '../lib/content';
+
+interface Props {
+  kase: LocalizedEntry<'cases'>;
+  locale: Locale;
+  backHref: string;
+}
+const { kase, locale, backHref } = Astro.props;
+const { num, tab, before, after, metric, metricLabel, note } = kase.data;
+const detailDict = t(locale).detail;
+const casesDict = t(locale).cases;
+---
+
+<article class="rk-detail-page">
+  <a href={backHref} class="rk-detail-back" data-lens="target">{detailDict.back}</a>
+
+  <div class="rk-detail-hole">{num}</div>
+  <h1 class="rk-detail-title">{tab}</h1>
+
+  <div class="rk-case-detail-metricblock">
+    <span class="rk-case-detail-metric">{metric}</span>
+    <span class="rk-case-detail-metriclabel">{metricLabel}</span>
+  </div>
+
+  <div class="rk-case-detail-ba">
+    <div class="rk-case-detail-before">
+      <div class="rk-case-detail-balabel">{casesDict.beforeLabel}</div>
+      <p>{before}</p>
+    </div>
+    <div class="rk-case-detail-after">
+      <div class="rk-case-detail-balabel">{casesDict.afterLabel}</div>
+      <p>{after}</p>
+    </div>
+  </div>
+
+  <p class="rk-detail-note">{note}</p>
+
+  <div class="rk-article">
+    <slot />
+  </div>
+</article>
+
+<style>
+  .rk-detail-page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: clamp(96px, 11vh, 124px) clamp(20px, 5vw, 64px) clamp(36px, 5vh, 56px);
+  }
+  @media (max-width: 900px) {
+    .rk-detail-page { padding-top: clamp(96px, 12vh, 120px); }
+  }
+  @media (max-width: 620px) {
+    .rk-detail-page { padding-top: 116px; }
+  }
+
+  .rk-detail-back {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.03em;
+    color: #6e6259;
+    margin-bottom: 26px;
+  }
+  .rk-detail-back:hover {
+    color: var(--accent-link);
+  }
+
+  .rk-detail-hole {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: #6e6259;
+    margin-bottom: 10px;
+  }
+  .rk-detail-title {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin: 0 0 22px;
+  }
+
+  .rk-case-detail-metricblock {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 26px;
+  }
+  .rk-case-detail-metric {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(30px, 4vw, 44px);
+    color: var(--accent);
+  }
+  .rk-case-detail-metriclabel {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: #6e6259;
+  }
+
+  .rk-case-detail-ba {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 22px;
+  }
+  .rk-case-detail-before,
+  .rk-case-detail-after {
+    padding: 22px 24px;
+  }
+  .rk-case-detail-before {
+    background: var(--border);
+  }
+  .rk-case-detail-after {
+    background: var(--ink);
+    color: var(--ink-on-dark);
+  }
+  .rk-case-detail-balabel {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+    color: #6e6259;
+  }
+  .rk-case-detail-after .rk-case-detail-balabel {
+    color: #eda05c;
+  }
+  .rk-case-detail-before p,
+  .rk-case-detail-after p {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: clamp(16px, 1.8vw, 20px);
+    line-height: 1.3;
+    margin: 0;
+  }
+  .rk-case-detail-after p {
+    font-weight: 700;
+  }
+  @media (max-width: 620px) {
+    .rk-case-detail-ba {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .rk-detail-note {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: #4a423b;
+    margin: 0 0 32px;
+  }
+
+  /* Та же типографика markdown-тела, что и в ProductDetail.astro. */
+  .rk-article {
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: #4a423b;
+  }
+  .rk-article :global(h2) {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(20px, 2.2vw, 26px);
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin: 34px 0 14px;
+  }
+  .rk-article :global(h3) {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: clamp(17px, 1.8vw, 20px);
+    color: var(--ink);
+    margin: 26px 0 10px;
+  }
+  .rk-article :global(p) {
+    margin: 0 0 16px;
+  }
+  .rk-article :global(ul),
+  .rk-article :global(ol) {
+    margin: 0 0 16px;
+    padding-left: 22px;
+  }
+  .rk-article :global(li) {
+    margin-bottom: 8px;
+  }
+  .rk-article :global(a) {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .rk-article :global(em) {
+    color: #6e6259;
+  }
+  .rk-article :global(strong) {
+    color: var(--ink);
+  }
+</style>
