@@ -1,0 +1,387 @@
+---
+// Портировано из index.html:813–861 (section#cases). В легаси карточка кейса
+// рендерилась в рантайме x-dc Component'ом из массива CASES[] (index.html:
+// 1123–1130; ваша content collection `cases`, src/content/cases/*.md,
+// src/lib/content.ts) через `<sc-for list="{{ caseTabs }}" as="t">` (табы,
+// index.html:820–822) и один реактивный `curCase`-блок (index.html:825–855),
+// который перерисовывался при клике по табу (onClick вызывал
+// `setState({caseIndex:i, scrub:0.28})`, index.html:1636).
+//
+// Что реально в диапазоне 813–861: (1) заголовок/эйброу/лид, (2) горизонтальный
+// ряд табов-чипов (все 6 кейсов, activeTab подсвечен), (3) ОДНА
+// before/after-«шторка» (curtain) для текущего кейса — не отдельная секция
+// "scrub-дашборд", это тот же блок, что и в заголовке задачи назван
+// "дашборд-панелью" — с num/metric в шапке и note снизу, (4) футноут про NDA
+// и 50+ проектов. Никакого отдельного "scrub dashboard panel" вне этого блока
+// нет — это одна и та же разметка (825–855).
+//
+// Поскольку у нас нет больше реактивного стейта (caseIndex), здесь СТАТИЧЕСКИ
+// рендерятся ВСЕ 6 панелей кейсов (полный набор before/after/metric/note —
+// как и предписано задачей), но видна только первая (class `is-active`,
+// остальные `display:none` в scoped-стиле ниже). Переключение по клику на таб —
+// задача Task 16/17 (см. data-* контракт ниже).
+//
+// ВЕРИФИЦИРОВАНО КАК ЖИВОЙ JS (переносится 1:1, без выдумывания):
+//   setupScrub() (index.html:1339–1360, вызывается из componentDidMount) ищет
+//   `[data-scrub-panel]` → `[data-scrub-hint]`, вешает mousedown/mousemove/
+//   mouseup + touchstart/touchmove/touchend и на drag двигает `state.scrub`
+//   (реактивно меняя clip-path/left и пряча hint). `[data-scrub-handle]`
+//   упоминается в разметке, но JS его не query'ит отдельно — оставлен 1:1 как
+//   визуальный узел внутри панели.
+//   Т.к. Task 16/17 будет переписывать это на ванильный JS без реактивного
+//   стейта, здесь `data-scrub-panel`/`data-scrub-handle`/`data-scrub-hint`
+//   сохранены НА ПЕРВОЙ (активной) панели — как и раньше, в моменте существует
+//   ровно одна интерактивная шторка. Остальные 5 панелей несут те же классы
+//   визуально, но БЕЗ data-scrub-* (они скрыты и неинтерактивны, пока не
+//   станут активными — Task 16/17, переключая .is-active, должен также
+//   переносить data-scrub-* атрибуты на новую активную панель или обобщить
+//   селектор до class-based, что бы ни оказалось удобнее на месте).
+//
+// НОВЫЕ (не легаси-верифицированные) data-* хуки — по аналогии с
+// data-spot-card/data-spot-head в ProductCard.astro — контракт для Task 16/17:
+//   [data-case-tab="i"]   — таб-кнопка; клик должен выставлять .is-active на
+//                           соответствующий таб и на data-case-panel той же i
+//   [data-case-panel="i"] — панель кейса; переключается класс .is-active
+// Реальное переключение табов в легаси не было отдельным vanilla-скриптом —
+// целиком жило в реактивном onClick x-dc, поэтому 1:1 "живого" контракта для
+// него нет; имена атрибутов придуманы для будущей задачи, а не портированы.
+//
+// `.rk-case-tabs` — класс СОХРАНЁН как реальный live-хук: setupNav()
+// (index.html:1330–1336) делает `root.querySelector('.rk-case-tabs')` и на
+// клик по любой кнопке внутри центрирует её скроллом
+// (`tabs.scrollTo({left, behavior:'smooth'})`) — это НЕ переключение кейса,
+// а скролл строки чипов; работает независимо от переключения и уже
+// возвращает интерактивность до Task 16/17.
+//
+// CSS `.rk-case-tabs`/`::-webkit-scrollbar`/`>button` — в легаси было ДВА
+// слоя: инлайн flex-wrap:wrap (819) и патч в <style id="rk-fixes">
+// (index.html:137–141), который !important-но переопределял его в
+// nowrap-скролл-ряд ("cases: horizontal swipe row, scales to any number of
+// cases" — так в самом источнике, коммит "cases as swipeable one-row chips").
+// Патч побеждает всегда, поэтому здесь портирован сразу финальный эффективный
+// стиль (nowrap + overflow-x scroll + scroll-snap), без промежуточного
+// wrap-состояния, которое ни при какой ширине экрана не видно.
+// Все правила этого класса — обычный CSS без пересечения границ компонентов,
+// поэтому — как исключение относительно Storefront.astro — обычный scoped
+// <style> (не is:global): все затрагиваемые узлы (.rk-case-tabs и его
+// <button>) рендерятся в этом же файле, никакой рантайм-инъекции извне.
+//
+// data-lens="grid"/"target" (index.html:825, 821) — реальный хук глобальной
+// лупы-курсора setupLens() (index.html:1516–1551, вне скоупа этой задачи) —
+// перенесены 1:1: "grid" на активную панель кейса, "target" на каждый таб.
+//
+// Начальное состояние scrub = 0.28 (state.scrub, index.html:1131) →
+// scrubPct = Math.round(0.28*100)+'%' = '28%' (index.html:1639,
+// curCase.scrubPct формула) — зашито статически в scoped-стиль ниже
+// (clip-path: inset(0 0 0 28%), divider/handle left:28%) вместо инлайн-стиля,
+// т.к. это одно и то же значение для всех кейсов при первой отрисовке.
+import { t } from '../i18n/ui';
+import type { Locale, LocalizedEntry } from '../lib/content';
+
+interface Props {
+  cases: LocalizedEntry<'cases'>[];
+  locale: Locale;
+}
+const { cases, locale } = Astro.props;
+const dict = t(locale).cases;
+---
+
+<section id="cases">
+  <div class="rk-cases-inner">
+    <div data-reveal class="rk-cases-eyebrow">{dict.eyebrow}</div>
+    <h2 data-reveal class="rk-cases-heading">{dict.heading}</h2>
+    <p data-reveal class="rk-cases-lead">{dict.lead}</p>
+
+    <div data-reveal class="rk-case-tabs">
+      {cases.map((c, i) => (
+        <button
+          type="button"
+          class="rk-case-tab"
+          class:list={{ 'is-active': i === 0 }}
+          data-case-tab={i}
+          data-lens="target"
+          aria-pressed={i === 0 ? 'true' : 'false'}
+        >
+          {c.data.tab}
+        </button>
+      ))}
+    </div>
+
+    <div data-reveal class="rk-case-panels">
+      {cases.map((c, i) => (
+        <div
+          class="rk-case-panel"
+          class:list={{ 'is-active': i === 0 }}
+          data-case-panel={i}
+          data-lens="grid"
+        >
+          <div class="rk-case-toprow">
+            <span class="rk-case-num">{c.data.num}</span>
+            <div class="rk-case-metricblock">
+              <span class="rk-case-metric">{c.data.metric}</span>
+              <span class="rk-case-metriclabel">{c.data.metricLabel}</span>
+            </div>
+          </div>
+
+          <div class="rk-case-curtain" data-scrub-panel={i === 0 ? true : undefined}>
+            <div class="rk-case-before">
+              <div class="rk-case-beforelabel">{dict.beforeLabel}</div>
+              <div class="rk-case-beforetext">{c.data.before}</div>
+            </div>
+            <div class="rk-case-after">
+              <div class="rk-case-afterlabel">{dict.afterLabel}</div>
+              <div class="rk-case-aftertext">{c.data.after}</div>
+            </div>
+            <div class="rk-case-divider">
+              <div class="rk-case-handle" data-scrub-handle={i === 0 ? true : undefined}>
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#F9F5EC" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 L4 12 L9 18 M15 6 L20 12 L15 18"/></svg>
+              </div>
+            </div>
+            <div class="rk-case-hint" data-scrub-hint={i === 0 ? true : undefined}>{dict.scrubHint}</div>
+          </div>
+          <p class="rk-case-note">{c.data.note}</p>
+        </div>
+      ))}
+    </div>
+
+    <p data-reveal class="rk-cases-footnote">{dict.footnote}</p>
+  </div>
+</section>
+
+<style>
+  #cases {
+    padding: clamp(52px, 7vh, 80px) clamp(20px, 5vw, 64px);
+  }
+  .rk-cases-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .rk-cases-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: #6e6259;
+    margin-bottom: 18px;
+  }
+  .rk-cases-heading {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(28px, 3.4vw, 46px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0 0 16px;
+  }
+  .rk-cases-lead {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: clamp(16px, 1.3vw, 19px);
+    line-height: 1.6;
+    color: #4a423b;
+    max-width: 700px;
+    margin: 0 0 24px;
+  }
+
+  /* index.html:137–141 (rk-fixes) — эффективный (post-!important) вид ряда
+     табов: горизонтальная swipe-строка чипов, см. комментарий в шапке файла. */
+  .rk-case-tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    margin-bottom: 22px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    padding-bottom: 6px;
+  }
+  .rk-case-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .rk-case-tabs > button {
+    flex: 0 0 auto;
+    scroll-snap-align: center;
+    white-space: nowrap;
+  }
+  @media (max-width: 620px) {
+    .rk-case-tabs {
+      margin-left: -20px;
+      margin-right: -20px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+
+  .rk-case-tab {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 14px;
+    padding: 9px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    border: 1px solid var(--border-hover);
+    background: var(--bg);
+    color: #4a423b;
+    transition: all 0.18s;
+  }
+  .rk-case-tab.is-active {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+
+  .rk-case-panel {
+    display: none;
+    background: #efe8da;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: clamp(22px, 3vw, 34px);
+  }
+  .rk-case-panel.is-active {
+    display: block;
+  }
+  .rk-case-toprow {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+  .rk-case-num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: #6e6259;
+  }
+  .rk-case-metricblock {
+    text-align: right;
+  }
+  .rk-case-metric {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(26px, 3vw, 38px);
+    color: var(--accent);
+  }
+  .rk-case-metriclabel {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #6e6259;
+    margin-left: 8px;
+  }
+
+  .rk-case-curtain {
+    position: relative;
+    height: 190px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    cursor: ew-resize;
+    touch-action: none;
+    user-select: none;
+  }
+  .rk-case-before {
+    position: absolute;
+    inset: 0;
+    background: var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 30px;
+  }
+  .rk-case-beforelabel {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #6e6259;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+  .rk-case-beforetext {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: clamp(17px, 2vw, 23px);
+    color: #6e6259;
+    max-width: 58%;
+    line-height: 1.25;
+  }
+  .rk-case-after {
+    position: absolute;
+    inset: 0;
+    background: var(--ink);
+    color: var(--ink-on-dark);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 30px;
+    align-items: flex-end;
+    text-align: right;
+    /* state.scrub = 0.28 (index.html:1131) — статический эквивалент
+       начального clip-path, см. комментарий в шапке файла */
+    clip-path: inset(0 0 0 28%);
+  }
+  .rk-case-afterlabel {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #eda05c;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+  .rk-case-aftertext {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(17px, 2vw, 23px);
+    max-width: 58%;
+    line-height: 1.25;
+  }
+  .rk-case-divider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 28%;
+    width: 3px;
+    background: var(--accent);
+    transform: translateX(-1.5px);
+    z-index: 3;
+  }
+  .rk-case-handle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 6px 18px rgba(227, 119, 34, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .rk-case-hint {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #6e6259;
+    background: rgba(249, 245, 236, 0.85);
+    padding: 4px 12px;
+    border-radius: 20px;
+    z-index: 4;
+    transition: opacity 0.3s;
+  }
+  .rk-case-note {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: #4a423b;
+    margin: 16px 0 0;
+  }
+
+  .rk-cases-footnote {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #6e6259;
+    margin: 26px 0 0;
+    max-width: 780px;
+  }
+</style>

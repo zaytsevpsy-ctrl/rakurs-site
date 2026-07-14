@@ -7,13 +7,17 @@ import Storefront from '../components/Storefront.astro';
 import How from '../components/How.astro';
 import Flagship from '../components/Flagship.astro';
 import Founders from '../components/Founders.astro';
+import Cases from '../components/Cases.astro';
+import Faq from '../components/Faq.astro';
 import Footer from '../components/Footer.astro';
-import { organization, website, professionalService } from '../lib/jsonld';
+import { organization, website, professionalService, faqPage } from '../lib/jsonld';
 import { getLocalized } from '../lib/content';
 
 const locale = 'ru';
 const site = Astro.site!.href;
 const products = await getLocalized('products', locale);
+const cases = await getLocalized('cases', locale);
+const faqItems = await getLocalized('faq', locale);
 const ld = [
   organization(site),
   website(site),
@@ -23,6 +27,12 @@ const ld = [
       jsonldName: p.data.jsonldName,
       jsonldDesc: p.data.jsonldDesc,
       priceFrom: p.data.priceFrom,
+    })),
+  ),
+  faqPage(
+    faqItems.map((f) => ({
+      question: f.data.question,
+      answer: f.data.answer,
     })),
   ),
 ];
@@ -45,9 +55,10 @@ const ld = [
     <Storefront products={products} locale={locale} />
     <How locale={locale} />
     <Flagship locale={locale} />
-    <!-- CASES (Task 11) -->
+    <Cases cases={cases} locale={locale} />
     <Founders locale={locale} />
-    <!-- FAQ / LEAD FORM / CHAT (Task 11–12) -->
+    <Faq faqItems={faqItems} locale={locale} />
+    <!-- LEAD FORM / CHAT (Task 12) -->
   </main>
   <Footer locale={locale} />
 </Base>

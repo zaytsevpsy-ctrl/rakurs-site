@@ -167,8 +167,22 @@ export const en: Dict = {
     inclFootText: "Not sure what to tackle first? In 20 minutes, we'll show you what pays back fastest.", // i18n.js:280
     inclFootCta: 'Start with a diagnostic', // i18n.js:281
   },
-  cases: {}, // Task 11
-  faq: {}, // Task 11
+  cases: {
+    // источник переводов: i18n.js (window.__RAKURS_EN)
+    eyebrow: "// archive of snapshots — drag to reveal the 'after'",
+    heading: 'What changes after we work with you',
+    lead: 'Pick a case — and reveal what it was before and what it became after.',
+    beforeLabel: '◄ BEFORE',
+    afterLabel: 'BECAME ►',
+    scrubHint: "pull the curtain ↔ reveal the 'after'",
+    footnote:
+      'Client metrics are under NDA — we show the mechanics on a call. 50+ projects in the portfolio: banks, insurance, public sector, marketplaces, enterprise.',
+  },
+  faq: {
+    // источник переводов: i18n.js (window.__RAKURS_EN)
+    eyebrow: '// frequently asked questions',
+    heading: 'Questions we get before the first call',
+  },
   form: {}, // Task 12
   chat: {}, // Task 12
   footer: {

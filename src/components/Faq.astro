@@ -1,0 +1,101 @@
+---
+// Портировано из index.html:913–948 (section#faq, "FAQ (light) — контент для
+// людей, Google rich results и ИИ-поисковиков"). Легаси-контент был статичным
+// HTML (не x-dc-шаблоном — 7 обычных <details>/<summary> пар, без onClick и
+// sc-for) — здесь заменён на .map() по content collection `faq`
+// (src/content/faq/*.md, порядок — по `order`, см. src/lib/content.ts), тексты
+// вопрос/ответ которой сверены байт-в-байт с легаси при заполнении коллекции
+// в предыдущей задаче.
+//
+// Ответы (`answer`) в коллекции — обычный текст без разметки: в легаси теле
+// каждого <details><p> (913–948) нет ни одного <a>/<b>/<strong> — проверено
+// построчно (только текст с &nbsp;/тире), поэтому плоский рендер `{item.data.
+// answer}` ничего не теряет.
+//
+// <details> не нуждаются в JS: раскрытие/схлопывание — нативное поведение
+// браузера. Ни один <details> в легаси не был открыт по умолчанию (нет
+// атрибута `open`) — здесь то же самое.
+//
+// Легаси FAQPage JSON-LD (index.html:949–963) СОЗНАТЕЛЬНО НЕ портируется
+// как отдельный статический блок — его тексты (особенно 3 последних вопроса/
+// ответа) разошлись с текстом видимого <details>-контента. Вместо этого
+// index.astro строит FAQPage JSON-LD из ЭТОЙ ЖЕ коллекции `faq`
+// (src/lib/jsonld.ts:faqPage()) — структурированные данные гарантированно
+// совпадают с тем, что видит пользователь.
+import { t } from '../i18n/ui';
+import type { Locale, LocalizedEntry } from '../lib/content';
+
+interface Props {
+  faqItems: LocalizedEntry<'faq'>[];
+  locale: Locale;
+}
+const { faqItems, locale } = Astro.props;
+const dict = t(locale).faq;
+---
+
+<section id="faq">
+  <div class="rk-faq-inner">
+    <div data-reveal class="rk-faq-eyebrow">{dict.eyebrow}</div>
+    <h2 data-reveal class="rk-faq-heading">{dict.heading}</h2>
+    <div class="rk-faq-list">
+      {faqItems.map((item) => (
+        <details class="rk-faq-item">
+          <summary class="rk-faq-summary">{item.data.question}</summary>
+          <p class="rk-faq-answer">{item.data.answer}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  #faq {
+    padding: clamp(52px, 7vh, 80px) clamp(20px, 5vw, 64px);
+  }
+  .rk-faq-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .rk-faq-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: var(--accent-link);
+    margin-bottom: 20px;
+  }
+  .rk-faq-heading {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(27px, 3.3vw, 44px);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    margin: 0 0 28px;
+    max-width: 900px;
+  }
+  .rk-faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 940px;
+  }
+  .rk-faq-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 4px 22px;
+  }
+  .rk-faq-summary {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 16.5px;
+    color: var(--ink);
+    cursor: pointer;
+    padding: 16px 0;
+  }
+  .rk-faq-answer {
+    font-size: 15px;
+    line-height: 1.65;
+    color: #4a423b;
+    margin: 0 0 16px;
+  }
+</style>
