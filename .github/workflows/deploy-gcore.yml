@@ -1,0 +1,22 @@
+name: Deploy to Gcore
+on:
+  push: { branches: [main] }
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ vars.GCORE_ENABLED == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npm run build
+      - name: Sync to Gcore Object Storage
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.GCORE_S3_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.GCORE_S3_SECRET }}
+        run: |
+          aws s3 sync dist/ "s3://${{ vars.GCORE_BUCKET }}/" \
+            --endpoint-url "https://${{ vars.GCORE_S3_ENDPOINT }}" \
+            --delete
