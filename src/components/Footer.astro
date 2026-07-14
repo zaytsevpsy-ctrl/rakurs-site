@@ -1,0 +1,67 @@
+---
+// Портировано из index.html:1056–1108, БЕЗ плавающего чат-виджета (index.html:1073–1106,
+// строки "FLOATING CHAT" — тот блок относится к ChatWidget, Task 12).
+import { t } from '../i18n/ui';
+import type { Locale } from '../lib/content';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const dict = t(locale).footer;
+---
+<footer>
+  <div class="rk-footer-inner">
+    <div class="rk-footer-brand">
+      <svg viewBox="0 0 100 100" width="26" height="26" aria-hidden="true">
+        <rect x="20" y="20" width="26" height="8" rx="2" fill="#F1EAE0" /><rect x="20" y="20" width="8" height="26" rx="2" fill="#F1EAE0" />
+        <g transform="rotate(12 68 26)"><rect x="54" y="20" width="26" height="8" rx="2" fill="#EDA05C" /><rect x="72" y="20" width="8" height="26" rx="2" fill="#EDA05C" /></g>
+        <rect x="20" y="72" width="26" height="8" rx="2" fill="#F1EAE0" /><rect x="20" y="54" width="8" height="26" rx="2" fill="#F1EAE0" />
+        <rect x="54" y="72" width="26" height="8" rx="2" fill="#F1EAE0" /><rect x="72" y="54" width="8" height="26" rx="2" fill="#F1EAE0" />
+      </svg>
+      <span>{dict.brand}</span>
+    </div>
+    <div class="rk-footer-tagline">{dict.tagline}</div>
+    <div class="rk-footer-links"><a href={`mailto:${dict.email}`}>{dict.email}</a></div>
+  </div>
+</footer>
+
+<style>
+  footer {
+    background: var(--bg-footer);
+    color: var(--ink-muted-dark);
+    padding: 30px var(--pad-x);
+  }
+  .rk-footer-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .rk-footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .rk-footer-brand span {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--ink-on-dark);
+  }
+  .rk-footer-tagline {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .rk-footer-links {
+    display: flex;
+    gap: 20px;
+    font-size: 14px;
+  }
+  .rk-footer-links a {
+    color: #eda05c;
+  }
+</style>

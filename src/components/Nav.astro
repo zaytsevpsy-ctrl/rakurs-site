@@ -1,0 +1,203 @@
+---
+// Портировано из index.html:322–352 (nav + мобильное меню) плюс сопутствующие
+// CSS-правила из <style id="rk-fixes"> (index.html:169–180, .rk-navlink/.rk-wordmark/
+// data-nav-burger/data-nav-menu/data-navlink.active). Toggling бургера/подсветка
+// активного пункта — Task 15 (JS слушатели вешаются на data-nav-burger/data-nav-menu).
+//
+// ВНИМАНИЕ: элемент <nav> должен остаться прямым потомком без обёрток, а его прямые
+// дети — ровно два div'а (progress-bar + inner) — на это завязаны селекторы
+// `nav`, `nav > div`, `nav > div > div`, `nav [data-lang-toggle]`, `nav a[href="#form"]`,
+// `.rk-navlink` в src/styles/global.css (строки 38–50), которые перебивают эти
+// scoped-стили через !important на мобильных брейкпоинтах. Не менять вложенность.
+import { t } from '../i18n/ui';
+import type { Locale } from '../lib/content';
+
+interface Props {
+  locale: Locale;
+  /** путь страницы без локали и без ведущего слэша: '' | 'products/b1' | … */
+  path: string;
+}
+const { locale, path } = Astro.props;
+const dict = t(locale).nav;
+
+const base = import.meta.env.BASE_URL; // заканчивается на '/'
+const suffix = path ? `${path}/` : '';
+const switchHref = locale === 'ru' ? `${base}en/${suffix}` : `${base}${suffix}`;
+---
+<nav>
+  <div data-navprog></div>
+  <div class="rk-nav-inner">
+    <a href="#top" class="rk-nav-brand" data-lens="target">
+      <svg viewBox="0 0 100 100" width="30" height="30" aria-hidden="true">
+        <rect x="20" y="20" width="26" height="8" rx="2" fill="#241F1B" /><rect x="20" y="20" width="8" height="26" rx="2" fill="#241F1B" />
+        <g transform="rotate(12 68 26)"><rect x="54" y="20" width="26" height="8" rx="2" fill="#E37722" /><rect x="72" y="20" width="8" height="26" rx="2" fill="#E37722" /></g>
+        <rect x="20" y="72" width="26" height="8" rx="2" fill="#241F1B" /><rect x="20" y="54" width="8" height="26" rx="2" fill="#241F1B" />
+        <rect x="54" y="72" width="26" height="8" rx="2" fill="#241F1B" /><rect x="72" y="54" width="8" height="26" rx="2" fill="#241F1B" />
+      </svg>
+      <span class="rk-wordmark">{dict.brand}</span>
+    </a>
+    <div class="rk-nav-links">
+      <a href="#storefront" data-lens="target" data-navlink class="rk-navlink">{dict.solutions}</a>
+      <a href="#how" data-lens="target" data-navlink class="rk-navlink">{dict.how}</a>
+      <a href="#cases" data-lens="target" data-navlink class="rk-navlink">{dict.cases}</a>
+      <a href="#founders" data-lens="target" data-navlink class="rk-navlink">{dict.founders}</a>
+      <a data-lang-toggle href={switchHref} data-lens="target">{dict.langCurrent} · <span data-lang-alt>{dict.langAlt}</span></a>
+      <a href="#form" data-lens="target" class="rk-nav-cta">{dict.cta}</a>
+      <button data-nav-burger type="button" aria-label={dict.burgerLabel} aria-expanded="false">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#241F1B" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+<div data-nav-menu data-lens="off">
+  <a href="#storefront">{dict.solutions}</a>
+  <a href="#how">{dict.how}</a>
+  <a href="#cases">{dict.cases}</a>
+  <a href="#founders">{dict.founders}</a>
+</div>
+
+<style>
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 900;
+    padding: 16px var(--pad-x);
+    background: rgba(249, 245, 236, 0.82);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  [data-navprog] {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    pointer-events: none;
+  }
+  .rk-nav-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .rk-nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--ink);
+  }
+  .rk-wordmark {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+  }
+  .rk-nav-links {
+    display: flex;
+    align-items: center;
+    gap: clamp(14px, 2.4vw, 34px);
+  }
+  .rk-navlink {
+    font-size: 14px;
+    color: #6e6259;
+  }
+  .rk-navlink.active {
+    color: var(--accent-link) !important;
+  }
+  [data-lang-toggle] {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: #6e6259;
+    background: transparent;
+    border: 1px solid #c9beac;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  [data-lang-alt] {
+    color: var(--accent-link);
+  }
+  .rk-nav-cta {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--bg);
+    background: var(--accent);
+    padding: 10px 18px;
+    border-radius: 8px;
+  }
+  [data-nav-burger] {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border: 1px solid #c9beac;
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    flex: 0 0 auto;
+  }
+  [data-nav-menu] {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 899;
+    background: rgba(249, 245, 236, 0.97);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    padding: 84px 24px 22px;
+    display: none;
+    flex-direction: column;
+    box-shadow: 0 24px 48px -24px rgba(36, 31, 27, 0.25);
+  }
+  [data-nav-menu].open {
+    display: flex;
+  }
+  [data-nav-menu] a {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 17px;
+    color: var(--ink);
+    padding: 13px 2px;
+    border-bottom: 1px solid #ede4d6;
+  }
+  [data-nav-menu] a:last-child {
+    border-bottom: none;
+  }
+
+  @media (max-width: 900px) {
+    .rk-navlink {
+      display: none !important;
+    }
+    [data-nav-burger] {
+      display: flex !important;
+    }
+  }
+  @media (max-width: 620px) {
+    .rk-wordmark {
+      display: none;
+    }
+    [data-nav-burger] {
+      width: 34px;
+      height: 34px;
+      flex: 0 0 34px;
+    }
+    .rk-nav-inner {
+      min-width: 0;
+    }
+  }
+</style>
