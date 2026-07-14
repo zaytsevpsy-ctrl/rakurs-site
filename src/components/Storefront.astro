@@ -899,3 +899,18 @@ const dict = t(locale).storefront;
     }
   }
 </style>
+
+<script>
+  // Task 17 - оживление аккордеона витрины (index.html:1789-1844) и пиксельных
+  // демо-сцен продуктов (index.html:1845-1956). См. header-комментарии
+  // src/scripts/spotlight.ts и src/scripts/scenes.ts за портом и осознанными
+  // упрощениями/расхождениями с легаси. Порядок вызова не важен (сцены не
+  // зависят от состояния аккордеона - legacy заполняет [data-scene] во всех
+  // карточках, не только в открытой); ниже initSpotlight() вызывается раньше
+  // initScenes(), как и порядок самих скриптов в легаси (спотлайт - 1789,
+  // сцены - 1845).
+  import { initSpotlight } from '../scripts/spotlight';
+  import { initScenes } from '../scripts/scenes';
+  initSpotlight();
+  initScenes();
+</script>
