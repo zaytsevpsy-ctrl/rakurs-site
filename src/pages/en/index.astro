@@ -1,0 +1,71 @@
+---
+// EN-версия лендинга: тот же набор компонентов, что и src/pages/index.astro,
+// но locale='en' — контент приходит из *.en.md коллекций и en.ts словаря.
+// Title/description собраны из легаси EN-строк (twitter:title/description,
+// index.html:28–29, и EN-части legacy meta description, index.html:8).
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Hero from '../../components/Hero.astro';
+import Pain from '../../components/Pain.astro';
+import Storefront from '../../components/Storefront.astro';
+import How from '../../components/How.astro';
+import Flagship from '../../components/Flagship.astro';
+import Founders from '../../components/Founders.astro';
+import Cases from '../../components/Cases.astro';
+import Faq from '../../components/Faq.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import ChatWidget from '../../components/ChatWidget.astro';
+import Footer from '../../components/Footer.astro';
+import { organization, website, professionalService, faqPage } from '../../lib/jsonld';
+import { getLocalized } from '../../lib/content';
+
+const locale = 'en';
+const site = Astro.site!.href;
+const products = await getLocalized('products', locale);
+const cases = await getLocalized('cases', locale);
+const faqItems = await getLocalized('faq', locale);
+const ld = [
+  organization(site),
+  website(site),
+  professionalService(
+    site,
+    products.map((p) => ({
+      jsonldName: p.data.jsonldName,
+      jsonldDesc: p.data.jsonldDesc,
+      priceFrom: p.data.priceFrom,
+    })),
+  ),
+  faqPage(
+    faqItems.map((f) => ({
+      question: f.data.question,
+      answer: f.data.answer,
+    })),
+  ),
+];
+---
+<Base
+  title="Rakurs — AI solutions that close money leaks | AI Automation Agency"
+  description="We find where your business loses money and close the gaps with ready-made AI solutions: 24/7 AI sales assistant, request-processing automation, AI knowledge base, proposal generator. Fixed price, launch in 1–3 weeks."
+  path=""
+  locale={locale}
+>
+  <Fragment slot="head">
+    {ld.map((obj) => (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(obj)} />
+    ))}
+  </Fragment>
+  <Nav locale={locale} path="" />
+  <main>
+    <Hero locale={locale} />
+    <Pain locale={locale} />
+    <Storefront products={products} locale={locale} />
+    <How locale={locale} />
+    <Flagship locale={locale} />
+    <Cases cases={cases} locale={locale} />
+    <Founders locale={locale} />
+    <Faq faqItems={faqItems} locale={locale} />
+    <LeadForm locale={locale} />
+  </main>
+  <Footer locale={locale} />
+  <ChatWidget locale={locale} />
+</Base>
