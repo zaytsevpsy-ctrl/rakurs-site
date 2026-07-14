@@ -2,6 +2,10 @@
 import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
 import Hero from '../components/Hero.astro';
+import Pain from '../components/Pain.astro';
+import How from '../components/How.astro';
+import Flagship from '../components/Flagship.astro';
+import Founders from '../components/Founders.astro';
 import Footer from '../components/Footer.astro';
 import { organization, website, professionalService } from '../lib/jsonld';
 import { getLocalized } from '../lib/content';
@@ -36,7 +40,13 @@ const ld = [
   <Nav locale={locale} path="" />
   <main>
     <Hero locale={locale} />
-    <!-- остальные секции добавляются в Task 9–12 -->
+    <Pain locale={locale} />
+    <!-- STOREFRONT (Task 10) -->
+    <How locale={locale} />
+    <Flagship locale={locale} />
+    <!-- CASES (Task 11) -->
+    <Founders locale={locale} />
+    <!-- FAQ / LEAD FORM / CHAT (Task 11–12) -->
   </main>
   <Footer locale={locale} />
 </Base>

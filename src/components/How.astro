@@ -1,0 +1,178 @@
+---
+// Портировано из index.html:708–742 (section#how: заголовок + маршрут из 3 шагов).
+//
+// setupRoute() (index.html:1362–1389, вызывается из componentDidMount()) реально
+// ищет [data-route] / [data-step] / [data-node] / [data-seg-fill] — все четыре
+// присутствуют в разметке ниже, НЕ мёртвый код. Сохранены как live JS-хуки без
+// изменений. Контракт для Task 16: IntersectionObserver на [data-route] триггерит
+// activate(i) с задержкой i*900ms для каждого [data-step] — красит [data-node] в
+// акцентный цвет и растягивает [data-seg-fill] (scaleX 0→1). Шаг 2 (индекс 2,
+// последний) не имеет [data-seg]/[data-seg-fill] — соединительная линия рисуется
+// только между узлами (см. ниже).
+//
+// `[data-route] [data-seg]{display:none!important}` на ≤768px и раскладка в
+// одну колонку уже портированы в src/styles/global.css (index.html:258–306,
+// строки 32–34) — здесь не дублируется.
+//
+// Мелкая асимметрия легаси, воспроизведена 1:1: у шага 3 (индекс 2, "Сопровождение")
+// нет `transition: transform .2s` + `style-hover="transform: translateY(-4px)"`,
+// которые есть у шагов 1–2 (index.html:715,724 vs 732) — то есть только первые два
+// шага визуально приподнимаются при наведении. `style-hover="…"` — не настоящий
+// HTML-атрибут, а сахар билд-тулинга легаси-фреймворка (компилируется в реальное
+// CSS-правило :hover) — здесь просто выражен как обычный CSS-класс `.rk-step-hover`
+// с `:hover{transform:translateY(-4px)}`, эффект идентичен.
+import { t } from '../i18n/ui';
+import type { Locale } from '../lib/content';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const dict = t(locale).how;
+---
+
+<section id="how">
+  <div class="rk-how-inner">
+    <div data-reveal class="rk-how-eyebrow">{dict.eyebrow}</div>
+    <h2 data-reveal class="rk-how-heading">{dict.heading}</h2>
+
+    <div data-route class="rk-route">
+      <div data-reveal data-step="0" class="rk-step rk-step-hover">
+        <div data-seg class="rk-seg"><span data-seg-fill class="rk-seg-fill"></span></div>
+        <div data-node class="rk-node">01</div>
+        <div class="rk-step-label">{dict.step1Label}</div>
+        <h3 class="rk-step-title">{dict.step1Title}</h3>
+        <p class="rk-step-desc">{dict.step1Desc}</p>
+        <div class="rk-step-price">{dict.step1Price}</div>
+      </div>
+
+      <div data-reveal data-step="1" class="rk-step rk-step-hover">
+        <div data-seg class="rk-seg"><span data-seg-fill class="rk-seg-fill"></span></div>
+        <div data-node class="rk-node">02</div>
+        <div class="rk-step-label">{dict.step2Label}</div>
+        <h3 class="rk-step-title">{dict.step2Title}</h3>
+        <p class="rk-step-desc">{dict.step2Desc}</p>
+      </div>
+
+      <div data-reveal data-step="2" class="rk-step">
+        <div data-node class="rk-node rk-node-icon">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#241F1B" stroke-width="2" stroke-linecap="round"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg>
+        </div>
+        <div class="rk-step-label rk-step-label-accent">{dict.step3Label}</div>
+        <h3 class="rk-step-title">{dict.step3Title}</h3>
+        <p class="rk-step-desc">{dict.step3Desc}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #how {
+    padding: clamp(52px, 7vh, 80px) clamp(20px, 5vw, 64px);
+    background: var(--bg-alt);
+  }
+  .rk-how-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .rk-how-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: #6e6259;
+    margin-bottom: 18px;
+  }
+  .rk-how-heading {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(28px, 3.4vw, 44px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0 0 36px;
+    max-width: 820px;
+  }
+
+  .rk-route {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  .rk-step {
+    position: relative;
+    z-index: 1;
+  }
+  .rk-step-hover {
+    transition: transform 0.2s;
+  }
+  .rk-step-hover:hover {
+    transform: translateY(-4px);
+  }
+  .rk-seg {
+    position: absolute;
+    top: 26px;
+    left: 27px;
+    right: -49px;
+    height: 2px;
+    background: #d8cdbb;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .rk-seg-fill {
+    display: block;
+    height: 100%;
+    width: 100%;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 1s ease;
+  }
+  .rk-node {
+    position: relative;
+    z-index: 2;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: var(--bg-alt);
+    border: 2px solid var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 22px;
+    /* .rk-node-icon (шаг 3) в легаси не анимирует color (там иконка, а не текст) —
+       здесь просто не задействуется, разницы в рендере нет (см. комментарий в шапке файла) */
+    transition: background 0.4s, color 0.4s, border-color 0.4s;
+  }
+  .rk-step-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #6e6259;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+  .rk-step-label-accent {
+    color: var(--accent-link);
+  }
+  .rk-step-title {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 21px;
+    margin: 0 0 10px;
+  }
+  .rk-step-desc {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #4a423b;
+    margin: 0;
+  }
+  .rk-step-price {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--ink);
+    margin-top: 12px;
+  }
+</style>

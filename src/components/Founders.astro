@@ -1,0 +1,254 @@
+---
+// Портировано из index.html:862–911 (section#founders): интро с общим фото,
+// две карточки основателей, заключительная цитата.
+//
+// data-lens="off" на обёртке фото (index.html:869) — реальный хук глобального
+// курсора-лупы setupLens() (index.html:1516–1551, компонент лупы вне скоупа
+// Task 9, добавляется в другой задаче): "off" означает "погасить лупу над этим
+// элементом целиком". Сохранён 1:1, без изменений.
+//
+// Фото: скопировано из репозитория (rakurs-team.jpg лежит в корне legacy-сайта)
+// в public/, путь строится через import.meta.env.BASE_URL (см. Nav.astro) —
+// НЕ литеральный "/rakurs-team.jpg", т.к. прод-сайт живёт в подпути /rakurs-site/
+// (см. astro.config.mjs base). alt-текст оставлен 1:1 таким, как в legacy, и
+// ОДИНАКОВ в ru.ts/en.ts: setupLang() (index.html:1163–1290) — рантайм-переводчик
+// текстовых узлов — никогда не трогает атрибуты (его TreeWalker обходит только
+// SHOW_TEXT), поэтому alt="Андрей и Егор, основатели Rakurs" в legacy остаётся
+// русским независимо от языка страницы. Это не пропуск перевода с нашей стороны,
+// а точное воспроизведение существующего (пусть и небезупречного с точки зрения
+// a11y) поведения источника.
+//
+// .rk-founder-intro / .rk-founder-cards — раскладка в 1 колонку на ≤768px уже
+// портирована в src/styles/global.css (index.html:258–306, строки 32,35) —
+// здесь не дублируется.
+import { t } from '../i18n/ui';
+import type { Locale } from '../lib/content';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const dict = t(locale).founders;
+const photoSrc = `${import.meta.env.BASE_URL}rakurs-team.jpg`;
+---
+
+<section id="founders">
+  <div class="rk-founders-inner">
+    <div data-reveal class="rk-founders-eyebrow">{dict.eyebrow}</div>
+    <h2 data-reveal class="rk-founders-heading">{dict.heading}</h2>
+
+    <!-- intro + shared photo -->
+    <div class="rk-founder-intro">
+      <div data-reveal data-lens="off" class="rk-founder-photo-wrap">
+        <img src={photoSrc} alt={dict.photoAlt} class="rk-founder-photo" />
+        <div class="rk-founder-photo-caption">{dict.photoCaption}</div>
+      </div>
+      <div class="rk-founder-intro-text">
+        <p data-reveal class="rk-founder-intro-p1">{dict.introP1}</p>
+        <p data-reveal class="rk-founder-intro-p2">{dict.introBefore}<span class="rk-founder-intro-hl">{dict.introHighlight}</span>{dict.introAfter}</p>
+      </div>
+    </div>
+
+    <!-- founder cards -->
+    <div data-reveal class="rk-founder-cards">
+      <div class="rk-founder-card">
+        <div class="rk-founder-namerow">
+          <h3 class="rk-founder-name">{dict.andreyName}</h3>
+          <span class="rk-founder-role">{dict.andreyRole}</span>
+        </div>
+        <div class="rk-founder-tag">{dict.andreyTag}</div>
+        <p class="rk-founder-desc">{dict.andreyDesc}</p>
+        <div class="rk-founder-stats">
+          <div><div class="rk-founder-stat-value">{dict.andreyStat1Value}</div><div class="rk-founder-stat-label">{dict.andreyStat1Label}</div></div>
+          <div><div class="rk-founder-stat-value">{dict.andreyStat2Value}</div><div class="rk-founder-stat-label">{dict.andreyStat2Label}</div></div>
+        </div>
+      </div>
+      <div class="rk-founder-card">
+        <div class="rk-founder-namerow">
+          <h3 class="rk-founder-name">{dict.egorName}</h3>
+          <span class="rk-founder-role">{dict.egorRole}</span>
+        </div>
+        <div class="rk-founder-tag">{dict.egorTag}</div>
+        <p class="rk-founder-desc">{dict.egorDesc}</p>
+        <div class="rk-founder-stats">
+          <div><div class="rk-founder-stat-value">{dict.egorStat1Value}</div><div class="rk-founder-stat-label">{dict.egorStat1Label}</div></div>
+          <div><div class="rk-founder-stat-value">{dict.egorStat2Value}</div><div class="rk-founder-stat-label">{dict.egorStat2Label}</div></div>
+        </div>
+      </div>
+    </div>
+
+    <p data-reveal class="rk-founders-teamnote">{dict.teamNote}</p>
+
+    <p data-reveal class="rk-founders-quote">{dict.quoteBefore}<span class="rk-founders-quote-hl">{dict.quoteHighlight}</span></p>
+  </div>
+</section>
+
+<style>
+  #founders {
+    padding: clamp(52px, 7vh, 80px) clamp(20px, 5vw, 64px);
+    background: var(--bg-alt);
+  }
+  .rk-founders-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .rk-founders-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: #6e6259;
+    margin-bottom: 18px;
+  }
+  .rk-founders-heading {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(28px, 3.4vw, 46px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0 0 28px;
+  }
+
+  .rk-founder-intro {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: clamp(28px, 4vw, 56px);
+    align-items: stretch;
+    margin-bottom: clamp(20px, 3vw, 32px);
+  }
+  .rk-founder-photo-wrap {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    min-height: 300px;
+  }
+  .rk-founder-photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .rk-founder-photo-caption {
+    position: absolute;
+    left: 14px;
+    bottom: 14px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: #f9f5ec;
+    background: rgba(27, 24, 21, 0.55);
+    padding: 5px 11px;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+  }
+  .rk-founder-intro-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .rk-founder-intro-p1 {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: clamp(17px, 1.5vw, 21px);
+    line-height: 1.55;
+    color: var(--ink);
+    margin: 0 0 22px;
+  }
+  .rk-founder-intro-p2 {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: clamp(18px, 1.6vw, 22px);
+    line-height: 1.35;
+    color: var(--ink);
+    margin: 0;
+  }
+  .rk-founder-intro-hl {
+    color: var(--accent-link);
+  }
+
+  .rk-founder-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+  .rk-founder-card {
+    background: var(--surface-white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 26px 26px 24px;
+    display: flex;
+    flex-direction: column;
+  }
+  .rk-founder-namerow {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .rk-founder-name {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 22px;
+    margin: 0;
+  }
+  .rk-founder-role {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #6e6259;
+  }
+  .rk-founder-tag {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent-link);
+    margin-bottom: 16px;
+  }
+  .rk-founder-desc {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #4a423b;
+    margin: 0 0 18px;
+  }
+  .rk-founder-stats {
+    margin-top: auto;
+    display: flex;
+    gap: 22px;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+  }
+  .rk-founder-stat-value {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 26px;
+    color: var(--ink);
+  }
+  .rk-founder-stat-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: #6e6259;
+    letter-spacing: 0.04em;
+  }
+
+  .rk-founders-teamnote {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: #4a423b;
+    margin: 0 0 28px;
+    max-width: 940px;
+  }
+
+  .rk-founders-quote {
+    position: relative;
+    font-family: var(--font-body);
+    font-size: clamp(17px, 1.6vw, 22px);
+    line-height: 1.5;
+    color: var(--ink);
+    margin: 0;
+    max-width: 940px;
+    text-wrap: pretty;
+    padding-left: 22px;
+    border-left: 3px solid var(--accent);
+  }
+  .rk-founders-quote-hl {
+    color: var(--accent-link);
+    font-weight: 500;
+  }
+</style>

@@ -1,0 +1,339 @@
+---
+// Портировано из index.html:745–811 (section#flagship, тёмная секция: "3 глубины"
+// программы + калькулятор потерь).
+//
+// Калькулятор (index.html:772–803: {{ lossFmt }}/{{ loss }}/{{ shareOpts }}/
+// {{ sharePct }}/{{ buildFmt }}/{{ keepFmt }}) в легаси управляется не support.js,
+// а render-циклом компонент-класса (renderVals(), index.html:1599–1649) —
+// собственного мини-фреймворка легаси-монолита (state → onInput/onClick →
+// setState → re-render), для которого в этом Astro-переписывании нет аналога.
+// Это ЧИСТО СТАТИЧНЫЙ порт (задача Task 9 — "static markup ports"): рендерятся
+// значения дефолтного состояния state.loss=200000, state.share=0.2
+// (index.html:1138–1139) по формуле из renderVals() (index.html:1600–1648):
+//   build = round(loss*share) = round(200000*0.2)   = 40 000  → "$40,000"
+//   keep  = loss - build      = 200000 - 40000       = 160 000 → "$160,000"
+//   sharePct = round(share*100)+'%'                            = "20%"
+//   fmt(n) = '$' + n.toLocaleString('en-US')
+// Слайдер (<input type="range">) и кнопки долей (10%/20%/30%) оставлены в
+// разметке БЕЗ onInput/onClick (не из чего портировать — там был вызов
+// this.setState(...) легаси-класса) — как и в Hero.astro (труба-скраббер),
+// оживление — отдельная будущая задача, не автопорт. data-lens="target"/"grid"
+// (index.html:772,783,808) сохранены 1:1 как реальные хуки глобального
+// курсора-лупы (setupLens(), index.html:1516–1551 — компонент этой лупы вне
+// скоупа Task 9, добавляется в другой задаче).
+import { t } from '../i18n/ui';
+import type { Locale } from '../lib/content';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const dict = t(locale).flagship;
+
+// см. комментарий выше — статичные значения дефолтного state легаси-калькулятора
+const lossFmt = '$200,000';
+const loss = 200000;
+const buildFmt = '$40,000';
+const keepFmt = '$160,000';
+const sharePct = '20%';
+const shareOpts = [
+  { label: '10%', active: false },
+  { label: '20%', active: true },
+  { label: '30%', active: false },
+];
+---
+
+<section id="flagship">
+  <div class="rk-flagship-inner">
+    <div data-reveal class="rk-flagship-eyebrow">{dict.eyebrow}</div>
+    <h2 data-reveal class="rk-flagship-heading">{dict.heading}</h2>
+    <p data-reveal class="rk-flagship-lead">{dict.lead}</p>
+
+    <div class="rk-flag-grid">
+      <!-- depths -->
+      <div class="rk-depths">
+        <div data-reveal class="rk-depth">
+          <div class="rk-depth-label">{dict.depth1Label}</div>
+          <h3 class="rk-depth-title">{dict.depth1Title}</h3>
+          <p class="rk-depth-desc">{dict.depth1Desc}</p>
+        </div>
+        <div data-reveal class="rk-depth">
+          <div class="rk-depth-label">{dict.depth2Label}</div>
+          <h3 class="rk-depth-title">{dict.depth2Title}</h3>
+          <p class="rk-depth-desc">{dict.depth2Desc}</p>
+        </div>
+        <div data-reveal class="rk-depth rk-depth-accent">
+          <div class="rk-depth-label rk-depth-label-accent">{dict.depth3Label}</div>
+          <h3 class="rk-depth-title">{dict.depth3Title}</h3>
+          <p class="rk-depth-desc">{dict.depth3Desc}</p>
+        </div>
+      </div>
+
+      <!-- calculator (static — см. комментарий в шапке файла) -->
+      <div data-reveal data-lens="grid" class="rk-calc">
+        <div class="rk-calc-title">{dict.calcTitle}</div>
+
+        <div class="rk-calc-step-label">{dict.calcStep1Label}</div>
+        <div class="rk-calc-loss">{lossFmt}</div>
+        <input type="range" min="20000" max="600000" step="10000" value={loss} class="rk-calc-range" />
+        <div class="rk-calc-range-ends"><span>$20K</span><span>$600K</span></div>
+
+        <div class="rk-calc-step-label rk-calc-step-label-2">{dict.calcStep2Label}</div>
+        <div class="rk-calc-shares">
+          {shareOpts.map((s) => (
+            <button type="button" data-lens="target" class:list={["rk-calc-share", { "rk-calc-share-active": s.active }]}>{s.label}</button>
+          ))}
+        </div>
+
+        <div class="rk-calc-divider">
+          <div class="rk-calc-row">
+            <span class="rk-calc-row-label">{dict.calcBuildLabel} {sharePct}</span>
+            <span class="rk-calc-build">−{buildFmt}</span>
+          </div>
+          <div class="rk-calc-bar">
+            <div class="rk-calc-bar-fill" style={`width:${sharePct}`}></div>
+            <div class="rk-calc-bar-rest"></div>
+          </div>
+          <div class="rk-calc-row">
+            <span class="rk-calc-row-label">{dict.calcKeepLabel}</span>
+            <span class="rk-calc-keep">+{keepFmt}</span>
+          </div>
+        </div>
+
+        <p class="rk-calc-note">{dict.calcNote}</p>
+      </div>
+    </div>
+
+    <div data-reveal class="rk-flagship-footrow">
+      <p class="rk-flagship-quote">{dict.closing}</p>
+      <a href="#form" data-lens="target" class="rk-flagship-cta">{dict.cta}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  #flagship {
+    background: var(--bg-dark);
+    color: var(--ink-on-dark);
+    padding: clamp(52px, 7vh, 80px) clamp(20px, 5vw, 64px);
+  }
+  .rk-flagship-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .rk-flagship-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: var(--ink-muted-dark);
+    margin-bottom: 20px;
+  }
+  .rk-flagship-heading {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(27px, 3.3vw, 44px);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    margin: 0 0 18px;
+    max-width: 900px;
+  }
+  .rk-flagship-lead {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: clamp(16px, 1.3vw, 19px);
+    line-height: 1.6;
+    color: #cfc5b8;
+    max-width: 760px;
+    margin: 0 0 32px;
+  }
+
+  .rk-flag-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(28px, 4vw, 56px);
+    align-items: start;
+  }
+
+  .rk-depths {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .rk-depth {
+    border-left: 2px solid #35302b;
+    padding: 4px 0 4px 22px;
+  }
+  .rk-depth-accent {
+    border-left-color: var(--accent);
+  }
+  .rk-depth-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-muted-dark);
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+  }
+  .rk-depth-label-accent {
+    color: #eda05c;
+  }
+  .rk-depth-title {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 19px;
+    margin: 0 0 7px;
+  }
+  .rk-depth-desc {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: #cfc5b8;
+    margin: 0;
+  }
+
+  .rk-calc {
+    background: #211d19;
+    border: 1px solid #35302b;
+    border-radius: 18px;
+    padding: clamp(22px, 3vw, 32px);
+  }
+  .rk-calc-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted-dark);
+    margin-bottom: 22px;
+  }
+  .rk-calc-step-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #6e6259;
+    margin-bottom: 6px;
+  }
+  .rk-calc-step-label-2 {
+    margin-bottom: 10px;
+  }
+  .rk-calc-loss {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(30px, 4vw, 46px);
+    color: var(--ink-on-dark);
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .rk-calc-range {
+    width: 100%;
+    accent-color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .rk-calc-range-ends {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: #6e6259;
+    margin-bottom: 26px;
+  }
+
+  .rk-calc-shares {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 26px;
+  }
+  .rk-calc-share {
+    flex: 1;
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 11px 0;
+    border-radius: 9px;
+    cursor: pointer;
+    border: 1px solid #35302b;
+    background: #17140f;
+    color: #cfc5b8;
+    transition: all 0.15s;
+  }
+  .rk-calc-share-active {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--bg-dark);
+  }
+
+  .rk-calc-divider {
+    border-top: 1px solid #35302b;
+    padding-top: 20px;
+  }
+  .rk-calc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+  }
+  .rk-calc-row-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-muted-dark);
+  }
+  .rk-calc-build {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 22px;
+    color: #eda05c;
+  }
+  .rk-calc-bar {
+    height: 14px;
+    border-radius: 7px;
+    overflow: hidden;
+    display: flex;
+    background: #17140f;
+    margin-bottom: 14px;
+  }
+  .rk-calc-bar-fill {
+    background: var(--accent);
+    transition: width 0.3s;
+  }
+  .rk-calc-bar-rest {
+    flex: 1;
+    background: #3a4a3a;
+  }
+  .rk-calc-keep {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 28px;
+    color: #7e8c7c;
+  }
+
+  .rk-calc-note {
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: #7e7166;
+    margin: 20px 0 0;
+  }
+
+  .rk-flagship-footrow {
+    margin-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .rk-flagship-quote {
+    position: relative;
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: #e4dbcd;
+    margin: 0;
+    max-width: 640px;
+    padding-left: 20px;
+    border-left: 3px solid var(--accent);
+  }
+  .rk-flagship-cta {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--bg-dark);
+    background: #eda05c;
+    padding: 15px 28px;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+</style>
