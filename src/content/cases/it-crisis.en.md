@@ -9,7 +9,7 @@ metricLabel: "communication, repeat surveys"
 note: "Team diagnostics + a crisis-recovery program."
 ---
 
-An IT team was on the verge of collapse: conflicts at the seams between people and departments stalled any task, and the outcome depended less on skill than on who happened to be talking to whom that day.
+An IT team was on the verge of collapse: conflicts at the seams between people and departments stalled any task.
 
 We ran a team diagnostic and launched a crisis-recovery program — no AI involved, just work with people and processes. Repeat surveys showed +30% in communication quality: conflicts at the seams stopped being the norm, and tasks started moving again.
 
