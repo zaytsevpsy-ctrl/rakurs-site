@@ -8,3 +8,5 @@ metric: "seconds"
 metricLabel: "instead of manual search"
 note: "Chat across all the station's technical docs."
 ---
+
+<!-- Тело страницы /cases/railway заполняется в Task 19. -->

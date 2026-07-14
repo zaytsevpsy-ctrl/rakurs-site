@@ -8,3 +8,5 @@ metric: "daily"
 metricLabel: "insights, not spreadsheets"
 note: "The team thinks about decisions, not spreadsheets."
 ---
+
+<!-- Тело страницы /cases/marketplaces заполняется в Task 19. -->

@@ -8,3 +8,5 @@ metric: "+30%"
 metricLabel: "communication, repeat surveys"
 note: "Team diagnostics + a crisis-recovery program."
 ---
+
+<!-- Тело страницы /cases/it-crisis заполняется в Task 19. -->

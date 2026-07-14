@@ -8,3 +8,5 @@ metric: "+30%"
 metricLabel: "to processing speed"
 note: "AI request processing right inside the CRM; the operator team was reduced."
 ---
+
+<!-- Тело страницы /cases/insurance заполняется в Task 19. -->

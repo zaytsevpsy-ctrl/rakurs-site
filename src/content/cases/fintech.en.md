@@ -8,3 +8,5 @@ metric: "−0.5 day"
 metricLabel: "per change"
 note: "An international group across 7+ countries: updates roll out across systems with no manual HR work."
 ---
+
+<!-- Тело страницы /cases/fintech заполняется в Task 19. -->

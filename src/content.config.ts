@@ -26,7 +26,7 @@ const products = defineCollection({
     note: z.string().default(''),
     jsonldName: z.string(),
     jsonldDesc: z.string(),
-  }),
+  }).strict(),
 });
 
 const cases = defineCollection({
@@ -40,7 +40,7 @@ const cases = defineCollection({
     metric: z.string(),
     metricLabel: z.string(),
     note: z.string(),
-  }),
+  }).strict(),
 });
 
 const faq = defineCollection({
@@ -49,7 +49,7 @@ const faq = defineCollection({
     order: z.number(),
     question: z.string(),
     answer: z.string(),
-  }),
+  }).strict(),
 });
 
 export const collections = { products, cases, faq };

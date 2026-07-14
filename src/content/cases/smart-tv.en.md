@@ -8,3 +8,5 @@ metric: "×"
 metricLabel: "cost several times lower"
 note: "An AI dev environment on the product's own codebase."
 ---
+
+<!-- Тело страницы /cases/smart-tv заполняется в Task 19. -->
