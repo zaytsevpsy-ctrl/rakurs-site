@@ -1,0 +1,460 @@
+---
+// Портировано из index.html:965–1055 (section#form, "FORM (dark)"). В легаси
+// это был реактивный x-dc-блок: `<sc-if value="{{ formSubmitted }}">` (971–980,
+// «спасибо» вместо формы) и `<sc-if value="{{ hasForm }}">` (982–1051, сама
+// форма) переключались по state.formSubmitted; внутри — чипы боли из
+// CHIPS[] (index.html:1132, `<sc-for list="{{ chips }}">`, 1024–1027), поля
+// формы, biндинг value/onInput на state.form.{name,company,role,pain,contact,
+// consent} (setField()/toggleConsent(), index.html:1656–1657) и превью
+// выбранных чипов в "kadr"-рамке (`selectedChips`/`hasChips`/`noChips`/
+// `chipCount`, index.html:1005–1015, 1624–1627, 1654).
+//
+// ВЕРИФИЦИРОВАНО КАК ЖИВОЙ JS — submitForm() (index.html:1658–1675):
+//   e.preventDefault(); если !form.consent → setState({formError:true}) и
+//   return (никакого запроса не уходит); иначе:
+//     fetch('https://formsubmit.co/ajax/zaytsev.psy@gmail.com', {
+//       method: 'POST',
+//       headers: {'Content-Type':'application/json','Accept':'application/json'},
+//       body: JSON.stringify({
+//         name, company, role, contact, pain,       // из state.form
+//         plan: (state.chips||[]).join('; '),        // выбранные боли, объединены "; "
+//         lang: this._lang || 'ru',                   // текущий язык страницы
+//         page: location.href,
+//         _subject: 'Заявка с сайта Rakurs',
+//       }),
+//     }).then(()=>setState({formSubmitted:true,formError:false}))
+//       .catch(()=>setState({formSubmitted:true,formError:false})); // ошибка сети тоже "успех" в UI
+//   ЭТО ДЛЯ TASK 18 (сама логика сюда не переносится, только контракт ниже).
+//
+// Разметка ниже — статический эквивалент начального состояния: formSubmitted=
+// false → success-блок скрыт (`hidden`), форма показана; formError=false →
+// текст ошибки согласия скрыт; chips=[] → правая колонка "план улучшений"
+// показывает пустую подсказку, а не список чипов (hasChips=false/noChips=true,
+// index.html:1013–1015, 1625–1626); chipCount=0 (index.html:1005, 1654).
+//
+// data-* хуки для Task 18 (по аналогии с data-spot-card/data-case-tab):
+//   [data-lead-form]           — сама <form>; на ней же data-endpoint — см. выше
+//                                 (fetch-URL 1:1 из submitForm()); JS вешает
+//                                 submit-обработчик, читает FormData по name=
+//                                 полей ниже, POSTит на data-endpoint
+//   [data-form-wrap]           — обёртка формы (rk-form-grid); скрывается при успехе
+//   [data-form-success]        — блок "Спасибо! Заявка ушла" (изначально hidden)
+//   [data-form-error]          — текст "Отметьте согласие…" (изначально hidden)
+//   [data-chip]                — кнопка-чип боли (value = label чипа); toggle
+//                                 select/unselect + пересчёт data-chip-count/
+//                                 data-plan-selected/data-plan-empty — Task 18
+//   [data-chip-count]          — <span> с числом выбранных чипов (изначально "0")
+//   [data-plan-selected]       — контейнер превью выбранных чипов в "kadr"-рамке
+//                                 (изначально пуст и hidden — эквивалент hasChips=false)
+//   [data-plan-empty]          — подсказка "Отметьте боли справа…" (изначально видима —
+//                                 эквивалент noChips=true)
+//   name="name"/"company"/"role"/"contact"/"pain"/"consent" — поля формы,
+//                                 имена 1:1 из ключей state.form (index.html:1147)
+import { t } from '../i18n/ui';
+import type { Locale } from '../lib/content';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const dict = t(locale).form;
+const footerEmail = t(locale).footer.email;
+---
+
+<section id="form">
+  <div class="rk-form-inner">
+    <div data-reveal class="rk-form-eyebrow">{dict.eyebrow}</div>
+    <h2 data-reveal class="rk-form-heading">{dict.heading}</h2>
+    <p data-reveal class="rk-form-lead">{dict.lead}</p>
+
+    <div class="rk-form-success" data-form-success hidden>
+      <div class="rk-form-success-icon">
+        <svg viewBox="0 0 64 64" width="60" height="60"><rect x="10" y="10" width="16" height="4" rx="2" fill="#EDA05C"/><rect x="10" y="10" width="4" height="16" rx="2" fill="#EDA05C"/><g transform="rotate(12 50 16)"><rect x="38" y="10" width="16" height="4" rx="2" fill="#EDA05C"/><rect x="50" y="10" width="4" height="16" rx="2" fill="#EDA05C"/></g><rect x="10" y="50" width="16" height="4" rx="2" fill="#EDA05C"/><rect x="10" y="38" width="4" height="16" rx="2" fill="#EDA05C"/><rect x="38" y="50" width="16" height="4" rx="2" fill="#EDA05C"/><rect x="50" y="38" width="4" height="16" rx="2" fill="#EDA05C"/><path d="M24 33 l6 6 l12 -14" fill="none" stroke="#7E8C7C" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h3 class="rk-form-success-title">{dict.successTitle}</h3>
+      <p class="rk-form-success-text">{dict.successText}</p>
+      <p class="rk-form-success-footnote">{dict.successFootnoteBefore}<a href={`mailto:${footerEmail}`}>{footerEmail}</a></p>
+    </div>
+
+    <div class="rk-form-grid" data-form-wrap>
+      <!-- left: ticket + kadr frame -->
+      <div class="rk-form-left">
+        <div data-reveal class="rk-form-ticket">
+          <div class="rk-form-ticket-body">
+            <div class="rk-form-ticket-label">{dict.ticketLabel}</div>
+            <ul class="rk-form-ticket-list">
+              <li><span class="rk-form-ticket-dot">·</span>{dict.ticketItem1}</li>
+              <li><span class="rk-form-ticket-dot">·</span>{dict.ticketItem2}</li>
+              <li><span class="rk-form-ticket-dot">·</span>{dict.ticketItem3}</li>
+            </ul>
+            <p class="rk-form-ticket-note">{dict.ticketNote}</p>
+          </div>
+          <div class="rk-form-ticket-foot">{dict.ticketFooter}</div>
+        </div>
+
+        <!-- kadr viewfinder frame -->
+        <div data-reveal class="rk-form-kadr">
+          <span class="rk-form-corner rk-form-corner-tl"></span>
+          <span class="rk-form-corner rk-form-corner-tr"></span>
+          <span class="rk-form-corner rk-form-corner-bl"></span>
+          <span class="rk-form-corner rk-form-corner-br"></span>
+          <div class="rk-form-kadr-label">{dict.kadrLabel} <span data-chip-count>0</span></div>
+          <div class="rk-form-plan-selected" data-plan-selected hidden></div>
+          <div class="rk-form-plan-empty" data-plan-empty>{dict.kadrEmpty}</div>
+        </div>
+      </div>
+
+      <!-- right: chips + form -->
+      <form
+        class="rk-form-fieldsform"
+        data-lead-form
+        data-endpoint="https://formsubmit.co/ajax/zaytsev.psy@gmail.com"
+        id="lead-form"
+        name="lead-form"
+      >
+        <div data-reveal class="rk-form-chipswrap">
+          <div class="rk-form-chips-label">{dict.chipsLabel}</div>
+          <div class="rk-form-chips">
+            {dict.chips.map((label) => (
+              <button type="button" class="rk-form-chip" data-chip={label}>{label}</button>
+            ))}
+          </div>
+        </div>
+
+        <div data-reveal class="rk-form-fields">
+          <input type="text" name="name" id="lead-name" placeholder={dict.placeholderName} />
+          <input type="text" name="company" id="lead-company" placeholder={dict.placeholderCompany} />
+          <input type="text" name="role" id="lead-role" placeholder={dict.placeholderRole} />
+          <input type="text" name="contact" id="lead-contact" placeholder={dict.placeholderContact} />
+        </div>
+        <textarea name="pain" id="lead-pain" placeholder={dict.placeholderPain} data-reveal rows="3" class="rk-form-pain"></textarea>
+
+        <label data-reveal class="rk-form-consent">
+          <input type="checkbox" name="consent" id="lead-consent" />
+          <span>{dict.consentText}</span>
+        </label>
+
+        <div class="rk-form-error" data-form-error hidden>{dict.errorText}</div>
+
+        <button type="submit" data-reveal data-lens="target" class="rk-form-submit">{dict.submitCta}</button>
+        <div data-reveal class="rk-form-subnote">{dict.subnote}</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  #form {
+    background: var(--bg-dark);
+    color: var(--ink-on-dark);
+    padding: clamp(52px, 7vh, 80px) clamp(20px, 5vw, 64px);
+  }
+  .rk-form-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .rk-form-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: var(--ink-muted-dark);
+    margin-bottom: 20px;
+  }
+  .rk-form-heading {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(27px, 3.3vw, 44px);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    margin: 0 0 18px;
+    max-width: 900px;
+  }
+  .rk-form-lead {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: clamp(16px, 1.3vw, 19px);
+    line-height: 1.6;
+    color: #cfc5b8;
+    max-width: 760px;
+    margin: 0 0 32px;
+  }
+
+  .rk-form-success {
+    background: #211d19;
+    border: 1px solid #35302b;
+    border-radius: 18px;
+    padding: clamp(32px, 5vw, 56px);
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .rk-form-success-icon {
+    display: inline-flex;
+    margin-bottom: 20px;
+  }
+  .rk-form-success-title {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 26px;
+    margin: 0 0 12px;
+  }
+  .rk-form-success-text {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #cfc5b8;
+    margin: 0;
+  }
+  .rk-form-success-footnote {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-muted-dark);
+    margin: 14px 0 0;
+  }
+  .rk-form-success-footnote a {
+    color: #eda05c;
+  }
+
+  .rk-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.08fr;
+    gap: clamp(28px, 4vw, 52px);
+    align-items: stretch;
+  }
+  .rk-form-left {
+    display: flex;
+    flex-direction: column;
+  }
+  .rk-form-ticket {
+    background: #211d19;
+    border: 1px solid #35302b;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 22px;
+  }
+  .rk-form-ticket-body {
+    padding: 20px 22px;
+  }
+  .rk-form-ticket-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted-dark);
+    margin-bottom: 14px;
+  }
+  .rk-form-ticket-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .rk-form-ticket-list li {
+    font-size: 14.5px;
+    color: #e4dbcd;
+    display: flex;
+    gap: 10px;
+  }
+  .rk-form-ticket-dot {
+    color: #eda05c;
+  }
+  .rk-form-ticket-note {
+    font-size: 13px;
+    color: var(--ink-muted-dark);
+    margin: 16px 0 0;
+    font-style: italic;
+  }
+  .rk-form-ticket-foot {
+    border-top: 1px dashed #35302b;
+    padding: 12px 22px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #6e6259;
+    letter-spacing: 0.04em;
+  }
+
+  .rk-form-kadr {
+    position: relative;
+    min-height: 150px;
+    border-radius: 14px;
+    padding: 26px 22px;
+    background: var(--bg-footer);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .rk-form-corner {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+  }
+  .rk-form-corner-tl {
+    top: 12px;
+    left: 12px;
+    border-top: 2px solid var(--ink-on-dark);
+    border-left: 2px solid var(--ink-on-dark);
+  }
+  .rk-form-corner-tr {
+    top: 12px;
+    right: 12px;
+    border-top: 2px solid #eda05c;
+    border-right: 2px solid #eda05c;
+    transform: rotate(12deg);
+  }
+  .rk-form-corner-bl {
+    bottom: 12px;
+    left: 12px;
+    border-bottom: 2px solid var(--ink-on-dark);
+    border-left: 2px solid var(--ink-on-dark);
+  }
+  .rk-form-corner-br {
+    bottom: 12px;
+    right: 12px;
+    border-bottom: 2px solid var(--ink-on-dark);
+    border-right: 2px solid var(--ink-on-dark);
+  }
+  .rk-form-kadr-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-muted-dark);
+    letter-spacing: 0.06em;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  /* .rk-form-plan-selected{display:flex} ниже иначе перебивает UA-правило
+     [hidden]{display:none} по специфичности — этот блок изначально hidden
+     (chips=[] → hasChips=false), Task 18 снимает hidden при первом выборе чипа. */
+  .rk-form-plan-selected[hidden] {
+    display: none;
+  }
+  .rk-form-plan-selected {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+  .rk-form-plan-empty {
+    text-align: center;
+    font-size: 13px;
+    color: #6e6259;
+    padding: 10px 0;
+  }
+
+  .rk-form-fieldsform {
+    display: block;
+  }
+  .rk-form-chipswrap {
+    margin-bottom: 26px;
+  }
+  .rk-form-chips-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted-dark);
+    margin-bottom: 14px;
+  }
+  .rk-form-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .rk-form-chip {
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    padding: 9px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    border: 1px solid #35302b;
+    background: #211d19;
+    color: #cfc5b8;
+    transition: all 0.15s;
+  }
+  .rk-form-chip.is-selected {
+    border-color: #eda05c;
+    background: #eda05c;
+    color: var(--bg-dark);
+  }
+
+  .rk-form-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .rk-form-fields input,
+  .rk-form-pain {
+    font-family: var(--font-body);
+    font-size: 15px;
+    padding: 13px 15px;
+    border-radius: 10px;
+    border: 1px solid #35302b;
+    background: #211d19;
+    color: var(--ink-on-dark);
+  }
+  .rk-form-pain {
+    width: 100%;
+    resize: vertical;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+  }
+
+  .rk-form-consent {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 13px;
+    color: var(--ink-muted-dark);
+    line-height: 1.5;
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+  .rk-form-consent input {
+    margin-top: 2px;
+    accent-color: var(--accent);
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  .rk-form-error {
+    font-size: 13px;
+    color: #f0653f;
+    margin: -10px 0 16px;
+  }
+
+  .rk-form-submit {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--bg-dark);
+    background: var(--accent);
+    padding: 16px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.15s;
+  }
+  .rk-form-submit:hover {
+    background: #eda05c;
+  }
+  .rk-form-subnote {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #6e6259;
+    margin-top: 14px;
+  }
+
+  @media (max-width: 768px) {
+    .rk-form-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 620px) {
+    .rk-form-fields {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

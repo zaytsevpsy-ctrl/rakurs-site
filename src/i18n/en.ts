@@ -183,8 +183,53 @@ export const en: Dict = {
     eyebrow: '// frequently asked questions',
     heading: 'Questions we get before the first call',
   },
-  form: {}, // Task 12
-  chat: {}, // Task 12
+  form: {
+    // источник переводов: i18n.js (window.__RAKURS_EN)
+    eyebrow: '// where to start improving your business', // i18n.js:346
+    heading: "Your first step—and the first money that stops leaking", // i18n.js:347
+    lead: "Tick what hurts — that's the input for the express diagnostic. Then 20 minutes by voice: we'll already point to where to look for losses.", // i18n.js:170 (same string reused in this section)
+    successTitle: 'Thank you! Your request is in.', // i18n.js:376
+    successText: 'We reply within one business day—and usually point to where to look for losses right on the first call.', // i18n.js:377
+    successFootnoteBefore: "If you don’t hear back within 24 hours, email ", // i18n.js:373
+    ticketLabel: 'WHAT YOU GET', // i18n.js:349
+    ticketItem1: "top-3 money leaks—where and how much you're losing", // i18n.js:350
+    ticketItem2: 'which solution closes the costliest one first', // i18n.js:351
+    ticketItem3: 'fixed-price diagnostic, credited toward the solution', // i18n.js:352
+    ticketNote: "If it turns out you don't need us, we'll say so on the very first call.", // i18n.js:353
+    ticketFooter: '✂ express diagnostic request', // i18n.js:354
+    kadrLabel: 'IMPROVEMENT PLAN · IN FOCUS', // i18n.js:355
+    kadrEmpty: "Mark your pain points on the right—they'll gather here, into the improvement plan.", // i18n.js:356
+    chipsLabel: 'WHAT HURTS? (select any)', // i18n.js:357
+    chips: [
+      'inquiries get lost in the evenings and at night', // i18n.js:358
+      'proposals take days to prepare', // i18n.js:359
+      'operators drown in repetitive requests', // i18n.js:360
+      "knowledge locked in people's heads", // i18n.js:361
+      "I can't tell where we're losing money", // i18n.js:362
+      "something else—I'll explain on the call", // i18n.js:363
+    ],
+    // плейсхолдеров полей нет в i18n.js (легаси их не переводил) — переведены
+    // вручную для этого словаря
+    placeholderName: 'Name',
+    placeholderCompany: 'Company',
+    placeholderRole: 'Role at the company',
+    placeholderContact: 'Telegram / email / WhatsApp',
+    placeholderPain: "What hurts—in your own words (optional)",
+    consentText: 'I consent to the processing of personal data to respond to my request.', // i18n.js:364
+    errorText: 'Please check the consent box', // i18n.js:372
+    submitCta: 'Improve your business—start with a diagnostic', // i18n.js:365
+    subnote: '20 minutes · no obligation · we reply within one business day', // i18n.js:366
+  },
+  chat: {
+    // "Rakurs AI assistant" — не переводится ни в легаси RU, ни в EN разметке
+    // (идентично ru.ts). Greeting — EN-ветка тернарника state.chat
+    // (index.html:1144); остальное — из i18n.js
+    title: 'Rakurs AI assistant',
+    status: '● demo scenario · this is how product B1 works', // i18n.js:371
+    greeting: "Hi! I’m Rakurs’ AI assistant — a demo scenario of our B1 product. Tell me where you sense money is leaking and I’ll point you to where to start.", // index.html:1144 (EN ternary branch)
+    inputPlaceholder: 'Where do you sense money is leaking?', // placeholder не в i18n.js — переведено вручную
+    openCta: 'Ask the assistant', // i18n.js:368
+  },
   footer: {
     brand: 'rakurs',
     tagline: 'ready-made AI solutions and operational loss diagnostics',
