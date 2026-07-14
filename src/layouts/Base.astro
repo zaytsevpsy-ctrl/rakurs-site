@@ -29,6 +29,25 @@ const goatcounter = import.meta.env.PUBLIC_GOATCOUNTER_CODE;
     <slot name="head" />
   </head>
   <body>
+    <!-- Курсор-линза: в легаси (index.html:310–319) это статическая разметка внутри
+         рутового div, а не элемент, создаваемый JS-ом. setupLens() в
+         src/scripts/reveal.ts ищет её через [data-cursor-lens]/[data-cursor-lens-dot]. -->
+    <div
+      data-cursor-lens
+      style="position: fixed; left: 0; top: 0; width: 46px; height: 46px; z-index: 9998; pointer-events: none; opacity: 0; transform: translate(-100px,-100px); transition: opacity .25s, width .18s ease, height .18s ease;"
+    >
+      <svg viewBox="0 0 46 46" width="100%" height="100%" style="overflow: visible;">
+        <path d="M4 14 L4 4 L14 4" fill="none" stroke="#241F1B" stroke-width="3" stroke-linecap="round" />
+        <path d="M32 4 L42 4 L42 14" fill="none" stroke="#E37722" stroke-width="3" stroke-linecap="round" transform="rotate(12 37 9)" />
+        <path d="M4 32 L4 42 L14 42" fill="none" stroke="#241F1B" stroke-width="3" stroke-linecap="round" />
+        <path d="M42 32 L42 42 L32 42" fill="none" stroke="#241F1B" stroke-width="3" stroke-linecap="round" />
+        <circle data-cursor-lens-dot cx="23" cy="23" r="1.6" fill="#E37722" opacity="0" />
+      </svg>
+    </div>
     <slot />
+    <script>
+      import { initReveal } from '../scripts/reveal';
+      initReveal();
+    </script>
   </body>
 </html>
