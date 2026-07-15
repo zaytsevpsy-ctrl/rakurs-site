@@ -71,14 +71,15 @@ public/              статика, копируется в dist/ как ест
 ```
 
 26 страниц на выходе (RU-лендинг + детальные страницы продуктов/кейсов, те же
-под `/en/`, плюс sitemap.xml/robots.txt/llms.txt).
+под `/en/`, плюс sitemap-index.xml + sitemap-0.xml / robots.txt / llms.txt).
 
 ## SEO / GEO
 
 - `src/components/Seo.astro` + `src/layouts/Base.astro` — canonical,
   hreflang (`ru` / `en` / `x-default`), OG/Twitter-мета на каждой странице.
-- `sitemap.xml` — генерируется автоматически интеграцией `@astrojs/sitemap`
-  (i18n-aware, см. `astro.config.mjs`).
+- sitemap — генерируется автоматически интеграцией `@astrojs/sitemap`
+  (i18n-aware, см. `astro.config.mjs`); файлы `sitemap-index.xml` + `sitemap-0.xml`,
+  в Search Console отправлять `sitemap-index.xml` (robots.txt уже указывает на него).
 - `robots.txt`, `llms.txt`, `llms-full.txt` — рендерятся как API-роуты
   (`src/pages/robots.txt.ts`, `llms.txt.ts`, `llms-full.txt.ts`) из того же
   контента коллекций — каталог продуктов и цены не расходятся с сайтом.
@@ -133,7 +134,7 @@ export const SITE = 'https://rakurs.ai/';
 
 Дальше — DNS на новый домен (Gcore CDN) и Google Search Console / Bing
 Webmaster Tools: добавить новое свойство `rakurs.ai`, отправить новый
-`sitemap.xml`.
+`sitemap-index.xml`.
 
 (Старый `DOMAIN_MIGRATION.md` в корне описывает sed-миграцию легаси-версии
 на GitHub Pages — актуален только для легаси-файлов; чек-лист под
