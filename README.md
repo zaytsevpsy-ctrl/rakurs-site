@@ -119,22 +119,16 @@ public/              статика, копируется в dist/ как ест
 `main` продолжает как ни в чём не бывало отдавать старую (легаси) версию
 сайта, новая ветка/код её не трогает.
 
-## Переезд на rakurs.ai
+## Домен
 
-Единственная правка — в `astro.config.mjs`:
+Сайт собирается под `https://rakurs.io/` (корень домена, без subpath) —
+константа `SITE` в `astro.config.mjs`. Все SEO-артефакты (canonical,
+hreflang, sitemap, OG-урлы, JSON-LD, llms.txt) вычисляются из неё на
+билде — при смене домена правится одна строка.
 
-```js
-export const SITE = 'https://rakurs.ai/';
-```
-
-и удаление строки `base: '/rakurs-site/'` чуть ниже (на своём домене сайт
-живёт в корне, subpath не нужен — см. комментарии в файле). Всё остальное
-(canonical, hreflang, sitemap, OG-урлы, JSON-LD, llms.txt) вычисляется из
-`SITE`/`base` на билде — руками по файлам ничего искать не нужно.
-
-Дальше — DNS на новый домен (Gcore CDN) и Google Search Console / Bing
-Webmaster Tools: добавить новое свойство `rakurs.ai`, отправить новый
-`sitemap-index.xml`.
+Для запуска на rakurs.io остаётся: DNS на Gcore CDN + Google Search
+Console / Bing Webmaster Tools (добавить свойство `rakurs.io`, отправить
+`sitemap-index.xml`).
 
 (Старый `DOMAIN_MIGRATION.md` в корне описывает sed-миграцию легаси-версии
 на GitHub Pages — актуален только для легаси-файлов; чек-лист под
