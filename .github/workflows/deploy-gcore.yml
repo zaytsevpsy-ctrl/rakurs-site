@@ -16,6 +16,9 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.GCORE_S3_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.GCORE_S3_SECRET }}
+          # aws cli требует регион даже с кастомным endpoint (иначе падает
+          # с "NoneType is not a container"); Gcore значение игнорирует.
+          AWS_DEFAULT_REGION: us-east-1
         run: |
           aws s3 sync dist/ "s3://${{ vars.GCORE_BUCKET }}/" \
             --endpoint-url "https://${{ vars.GCORE_S3_ENDPOINT }}" \
