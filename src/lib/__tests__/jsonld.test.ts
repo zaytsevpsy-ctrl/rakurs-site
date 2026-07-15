@@ -1,9 +1,25 @@
 import { describe, it, expect } from 'vitest';
-import { organization, website, professionalService, faqPage } from '../jsonld';
+import { organization, website, professionalService, productService, faqPage } from '../jsonld';
 
 const site = 'https://example.com/';
 
 describe('jsonld', () => {
+  it('productService builds a standalone Service with provider ref to #org', () => {
+    const svc = productService(site, {
+      jsonldName: 'B1 · X / Y',
+      jsonldDesc: 'desc',
+      priceFrom: 2500,
+    });
+    expect(svc).toEqual({
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: 'B1 · X / Y',
+      description: 'desc',
+      offers: { '@type': 'Offer', price: '2500', priceCurrency: 'USD' },
+      provider: { '@id': 'https://example.com/#org' },
+    });
+  });
+
   it('organization has stable @id derived from site', () => {
     const org = organization(site);
     expect(org['@id']).toBe('https://example.com/#org');

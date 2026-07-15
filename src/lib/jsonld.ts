@@ -96,6 +96,20 @@ export function professionalService(site: string, products: ProductLd[]) {
   };
 }
 
+/** Самостоятельный Service для детальной страницы продукта (/products/<slug>/).
+ *  Структура itemOffered — та же, что в professionalService(); provider
+ *  ссылается на общий #org с лендинга. */
+export function productService(site: string, p: ProductLd) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: p.jsonldName,
+    description: p.jsonldDesc,
+    offers: { '@type': 'Offer', price: String(p.priceFrom), priceCurrency: 'USD' },
+    provider: { '@id': `${site}#org` },
+  };
+}
+
 export function faqPage(items: FaqLd[]) {
   return {
     '@context': 'https://schema.org',

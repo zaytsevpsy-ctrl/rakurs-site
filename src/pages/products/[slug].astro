@@ -12,6 +12,7 @@ import Footer from '../../components/Footer.astro';
 import LeadForm from '../../components/LeadForm.astro';
 import ProductDetail from '../../components/ProductDetail.astro';
 import { getLocalized } from '../../lib/content';
+import { productService } from '../../lib/jsonld';
 
 export async function getStaticPaths() {
   const products = await getLocalized('products', 'ru');
@@ -31,14 +32,7 @@ const backHref = `${import.meta.env.BASE_URL}#storefront`;
   locale={locale}
 >
   <Fragment slot="head">
-    <script is:inline type="application/ld+json" set:html={JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'Service',
-      name: d.jsonldName,
-      description: d.jsonldDesc,
-      offers: { '@type': 'Offer', price: String(d.priceFrom), priceCurrency: 'USD' },
-      provider: { '@id': `${Astro.site!.href}#org` },
-    })} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(productService(Astro.site!.href, d))} />
   </Fragment>
   <Nav locale={locale} path={`products/${entry.slug}`} />
   <main>
