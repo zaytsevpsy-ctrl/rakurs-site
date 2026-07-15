@@ -29,3 +29,16 @@ jobs:
           rclone lsd :s3: || true
           # sync = сделать бакет идентичным dist/ (лишние файлы удаляются)
           rclone sync dist/ ":s3:${{ vars.GCORE_BUCKET }}" --checksum -v --stats-one-line
+      # Публичное чтение объектов (сайт отдаётся напрямую/через CDN).
+      # put-bucket-policy идемпотентен; s3api-команды не подвержены багу
+      # высокоуровневого `aws s3 sync` на не-AWS S3.
+      - name: Ensure public-read bucket policy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.GCORE_S3_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.GCORE_S3_SECRET }}
+          AWS_DEFAULT_REGION: us-east-1
+        run: |
+          aws s3api put-bucket-policy \
+            --bucket "${{ vars.GCORE_BUCKET }}" \
+            --endpoint-url "https://${{ vars.GCORE_S3_ENDPOINT }}" \
+            --policy '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"AWS":["*"]},"Action":["s3:GetObject"],"Resource":["arn:aws:s3:::${{ vars.GCORE_BUCKET }}/*"]}]}'
