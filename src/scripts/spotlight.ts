@@ -154,10 +154,14 @@ function keepInView(card: HTMLElement): void {
   const off = navOffset();
   let settled = false;
 
+  // ВАЖНО: не присваивать sc.scrollTop напрямую — в global.css включён
+  // html{scroll-behavior:smooth}, и по CSSOM присваивание scrollTop наследует
+  // это поведение (каждый кадр стал бы отдельной smooth-анимацией и rAF-луп
+  // дёргался бы). behavior:'instant' форсирует мгновенный шаг.
   const snap = (): void => {
     const d = card.getBoundingClientRect().top - off;
     const f = sc.scrollTop + d;
-    sc.scrollTop = f < 0 ? 0 : f;
+    sc.scrollTo({ top: f < 0 ? 0 : f, behavior: 'instant' });
   };
 
   let frames = 0;
@@ -166,7 +170,7 @@ function keepInView(card: HTMLElement): void {
     const delta = card.getBoundingClientRect().top - off;
     let ns = sc.scrollTop + delta * 0.3;
     if (ns < 0) ns = 0;
-    sc.scrollTop = ns; // smooth ease (foreground rAF)
+    sc.scrollTo({ top: ns, behavior: 'instant' }); // свой ease по кадрам, см. комментарий у snap()
     if (++frames < 48 && Math.abs(delta) > 1) {
       requestAnimationFrame(step);
     } else {

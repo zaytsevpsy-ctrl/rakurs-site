@@ -56,3 +56,12 @@ a:hover { color: var(--accent); }
 @media (max-width: 380px) {
   .rk-pipe { zoom: 0.54; }
 }
+
+/* --- Осознанное отличие от легаси (просьба владельца, 2026-07-15): ---
+   плавный скролл по якорным ссылкам хедера вместо мгновенного прыжка.
+   Пользователям с prefers-reduced-motion оставляем мгновенный переход. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
