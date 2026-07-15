@@ -12,14 +12,20 @@ jobs:
         with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npm run build
+      # aws cli v2 падает на listing-ответах не-AWS S3 ("NoneType is not a
+      # container or iterable"), поэтому синкаем rclone'ом — Gcore сам
+      # рекомендует его для Object Storage.
+      - name: Install rclone
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq rclone
       - name: Sync to Gcore Object Storage
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.GCORE_S3_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.GCORE_S3_SECRET }}
-          # aws cli требует регион даже с кастомным endpoint (иначе падает
-          # с "NoneType is not a container"); Gcore значение игнорирует.
-          AWS_DEFAULT_REGION: us-east-1
+          RCLONE_S3_ACCESS_KEY_ID: ${{ secrets.GCORE_S3_KEY }}
+          RCLONE_S3_SECRET_ACCESS_KEY: ${{ secrets.GCORE_S3_SECRET }}
+          RCLONE_S3_PROVIDER: Other
+          RCLONE_S3_REGION: us-east-1
+          RCLONE_S3_ENDPOINT: https://${{ vars.GCORE_S3_ENDPOINT }}
         run: |
-          aws s3 sync dist/ "s3://${{ vars.GCORE_BUCKET }}/" \
-            --endpoint-url "https://${{ vars.GCORE_S3_ENDPOINT }}" \
-            --delete
+          echo "--- доступные бакеты на аккаунте ---"
+          rclone lsd :s3: || true
+          # sync = сделать бакет идентичным dist/ (лишние файлы удаляются)
+          rclone sync dist/ ":s3:${{ vars.GCORE_BUCKET }}" --checksum -v --stats-one-line
