@@ -14,7 +14,6 @@ import Founders from '../../components/Founders.astro';
 import Cases from '../../components/Cases.astro';
 import Faq from '../../components/Faq.astro';
 import LeadForm from '../../components/LeadForm.astro';
-import ChatWidget from '../../components/ChatWidget.astro';
 import Footer from '../../components/Footer.astro';
 import { organization, website, professionalService, faqPage } from '../../lib/jsonld';
 import { getLocalized } from '../../lib/content';
@@ -67,5 +66,4 @@ const ld = [
     <LeadForm locale={locale} />
   </main>
   <Footer locale={locale} />
-  <ChatWidget locale={locale} />
 </Base>

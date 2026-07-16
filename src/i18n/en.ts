@@ -220,16 +220,6 @@ export const en: Dict = {
     submitCta: 'Improve your business—start with a diagnostic', // i18n.js:365
     subnote: '20 minutes · no obligation · we reply within one business day', // i18n.js:366
   },
-  chat: {
-    // "Rakurs AI assistant" — не переводится ни в легаси RU, ни в EN разметке
-    // (идентично ru.ts). Greeting — EN-ветка тернарника state.chat
-    // (index.html:1144); остальное — из i18n.js
-    title: 'Rakurs AI assistant',
-    status: '● demo scenario · this is how product B1 works', // i18n.js:371
-    greeting: "Hi! I’m Rakurs’ AI assistant — a demo scenario of our B1 product. Tell me where you sense money is leaking and I’ll point you to where to start.", // index.html:1144 (EN ternary branch)
-    inputPlaceholder: 'Where do you sense money is leaking?', // placeholder не в i18n.js — переведено вручную
-    openCta: 'Ask the assistant', // i18n.js:368
-  },
   footer: {
     brand: 'rakurs',
     tagline: 'ready-made AI solutions and operational loss diagnostics',
