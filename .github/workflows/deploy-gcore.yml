@@ -42,3 +42,15 @@ jobs:
             --bucket "${{ vars.GCORE_BUCKET }}" \
             --endpoint-url "https://${{ vars.GCORE_S3_ENDPOINT }}" \
             --policy '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"AWS":["*"]},"Action":["s3:GetObject"],"Resource":["arn:aws:s3:::${{ vars.GCORE_BUCKET }}/*"]}]}'
+      # Без этого шага CDN продолжает отдавать закешированный index.html со
+      # ссылками на старые (по контент-хэшу) JS/CSS, которые rclone sync выше
+      # уже удалил из бакета как отсутствующие в новом dist/ — рабочий сайт
+      # ловит 403 на ассеты, пока кеш не протухнет сам.
+      - name: Purge Gcore CDN cache
+        env:
+          GCORE_API_TOKEN: ${{ secrets.GCORE_API_TOKEN }}
+        run: |
+          curl -sf -X POST "https://api.gcore.com/cdn/resources/${{ vars.GCORE_CDN_RESOURCE_ID }}/purge" \
+            -H "Authorization: apikey ${GCORE_API_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d '{"paths": []}'
