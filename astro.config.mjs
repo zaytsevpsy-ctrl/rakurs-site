@@ -3,8 +3,8 @@ import sitemap from '@astrojs/sitemap';
 
 // ЕДИНСТВЕННОЕ место, где живёт домен: canonical, hreflang, OG, sitemap,
 // robots и llms.txt вычисляются от этой константы на билде.
-// Сайт живёт в корне домена (Gcore CDN → rakurs.io), без subpath.
-export const SITE = 'https://rakurs.io/';
+// Сайт живёт в корне домена (Gcore CDN → rakurs.dev), без subpath.
+export const SITE = 'https://rakurs.dev/';
 
 export default defineConfig({
   site: SITE,

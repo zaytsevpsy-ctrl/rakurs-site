@@ -121,13 +121,13 @@ public/              статика, копируется в dist/ как ест
 
 ## Домен
 
-Сайт собирается под `https://rakurs.io/` (корень домена, без subpath) —
+Сайт собирается под `https://rakurs.dev/` (корень домена, без subpath) —
 константа `SITE` в `astro.config.mjs`. Все SEO-артефакты (canonical,
 hreflang, sitemap, OG-урлы, JSON-LD, llms.txt) вычисляются из неё на
 билде — при смене домена правится одна строка.
 
-Для запуска на rakurs.io остаётся: DNS на Gcore CDN + Google Search
-Console / Bing Webmaster Tools (добавить свойство `rakurs.io`, отправить
+Для запуска на rakurs.dev остаётся: DNS на Gcore CDN + Google Search
+Console / Bing Webmaster Tools (добавить свойство `rakurs.dev`, отправить
 `sitemap-index.xml`).
 
 (Старый `DOMAIN_MIGRATION.md` в корне описывает sed-миграцию легаси-версии
