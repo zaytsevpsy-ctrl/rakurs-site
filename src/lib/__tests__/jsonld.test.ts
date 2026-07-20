@@ -34,7 +34,7 @@ describe('jsonld', () => {
     expect(org.alternateName).toEqual(['Ракурс', 'Rakurs AI', 'Rakurs Automation']);
     expect(org.url).toBe('https://example.com/');
     expect(org.logo).toBe('https://example.com/og.png');
-    expect(org.email).toBe('zaytsev.psy@gmail.com');
+    expect(org.email).toBe('info@rakurs.dev');
     expect(org.description).toBe(
       'Rakurs — студия ИИ-автоматизации бизнеса. Находим, где бизнес теряет деньги, и закрываем это готовыми ИИ-решениями с фиксированной ценой: ИИ-ассистент для продаж, автоматизация обработки заявок, ИИ-база знаний по документации, генератор коммерческих предложений. Rakurs is an AI automation studio: we find where a business loses money and close the gaps with ready-made AI solutions at a fixed price.',
     );

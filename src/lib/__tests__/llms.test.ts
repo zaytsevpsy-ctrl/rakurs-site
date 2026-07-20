@@ -31,7 +31,7 @@ describe('buildLlms', () => {
 
   it('keeps the static sections (diagnostics mechanics, cases, contact, llms-full link)', () => {
     expect(txt).toContain('экспресс-диагностика операционных потерь');
-    expect(txt).toContain('zaytsev.psy@gmail.com');
+    expect(txt).toContain('info@rakurs.dev');
     expect(txt).toContain('https://example.com/llms-full.txt');
   });
 });
@@ -42,7 +42,7 @@ describe('buildLlmsFull', () => {
   it('contains site url, no legacy domain, contact email', () => {
     expect(txt).toContain('https://example.com/');
     expect(txt).not.toContain('zaytsevpsy-ctrl');
-    expect(txt).toContain('zaytsev.psy@gmail.com');
+    expect(txt).toContain('info@rakurs.dev');
   });
 
   it('renders numbered catalog entries from products followed by diagnostic and flagship', () => {

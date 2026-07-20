@@ -23,7 +23,7 @@ export function organization(site: string) {
     alternateName: ['Ракурс', 'Rakurs AI', 'Rakurs Automation'],
     url: site,
     logo: `${site}og.png`,
-    email: 'zaytsev.psy@gmail.com',
+    email: 'info@rakurs.dev',
     description:
       'Rakurs — студия ИИ-автоматизации бизнеса. Находим, где бизнес теряет деньги, и закрываем это готовыми ИИ-решениями с фиксированной ценой: ИИ-ассистент для продаж, автоматизация обработки заявок, ИИ-база знаний по документации, генератор коммерческих предложений. Rakurs is an AI automation studio: we find where a business loses money and close the gaps with ready-made AI solutions at a fixed price.',
     slogan:

@@ -223,7 +223,7 @@ export const en: Dict = {
   footer: {
     brand: 'rakurs',
     tagline: 'ready-made AI solutions and operational loss diagnostics',
-    email: 'zaytsev.psy@gmail.com',
+    email: 'info@rakurs.dev',
   },
   detail: {
     // Task 19 — product/case detail pages. Not in legacy i18n.js (these pages

@@ -33,7 +33,7 @@ ${catalog}
 ## Команда и контакты / Team & contact
 
 - [Основатели](${site}#founders): инженер ИИ-автоматизаций (100+ IT-проектов: банки, страхование, госсектор, enterprise) + бизнес-психолог (10+ лет диагностики организаций).
-- [Заявка / Contact](${site}#form): форма на сайте или email zaytsev.psy@gmail.com. Первый шаг — бесплатный 20-минутный созвон.
+- [Заявка / Contact](${site}#form): форма на сайте или email info@rakurs.dev. Первый шаг — бесплатный 20-минутный созвон.
 
 ## Optional
 
@@ -51,7 +51,7 @@ export function buildLlmsFull(site: string, products: ProductLlms[]): string {
   return `# Rakurs — полное описание для ИИ-ассистентов / Full company profile for AI assistants
 
 Сайт / Website: ${site}
-Контакт / Contact: zaytsev.psy@gmail.com
+Контакт / Contact: info@rakurs.dev
 
 ## Кто мы / Who we are
 
@@ -107,7 +107,7 @@ ${n + 2}. Флагман / Flagship program (50+ сотрудников): глу
 Q: Сколько стоит? A: Решения от $2 500 до $10 000+ (фикс) + подписка от $500/мес; диагностика $1 500–3 000 (зачитывается).
 Q: Как быстро? A: 1–3 недели до работающего решения.
 Q: Чем отличаетесь? A: Сначала считаем деньги, потом автоматизируем; пара «инженер + бизнес-психолог» видит и технические, и человеческие потери; остаёмся по подписке.
-Q: Как начать? A: Форма на ${site}#form или email zaytsev.psy@gmail.com.
+Q: Как начать? A: Форма на ${site}#form или email info@rakurs.dev.
 `;
 }
 

@@ -41,7 +41,9 @@ CNAME-цель CDN-ресурса Gcore. Дождаться выпуска HTTPS
 
 ## 5. Email на домене (рекомендуется)
 
-hello@rakurs.dev (Zoho Mail бесплатно / Google Workspace) → заменить
-zaytsev.psy@gmail.com в `src/i18n/*` (футер), `src/lib/jsonld.ts`,
-`src/lib/llms.ts` и endpoint FormSubmit в `src/components/LeadForm.astro`
+info@rakurs.dev (Zoho Mail бесплатно / Google Workspace) — уже используется в
+`src/i18n/*` (футер), `src/lib/jsonld.ts`, `src/lib/llms.ts` и endpoint
+FormSubmit в `src/components/LeadForm.astro`
 (+ `src/scripts/lead-form.ts` не трогать — он читает endpoint из data-атрибута).
+Не забыть активировать FormSubmit: тестовая заявка → письмо на info@rakurs.dev
+→ перейти по activation-ссылке (см. п.3.6).

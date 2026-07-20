@@ -244,7 +244,7 @@ export const ru = {
     // точные строки из index.html:1056–1108 (без плавающего чат-кнопки — Task 12)
     brand: 'rakurs',
     tagline: 'готовые ИИ‑решения и диагностика операционных потерь',
-    email: 'zaytsev.psy@gmail.com',
+    email: 'info@rakurs.dev',
   },
   detail: {
     // Task 19 — страницы /products/<slug> и /cases/<slug>. Новые UI-строки,
