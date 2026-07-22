@@ -18,11 +18,13 @@
 //      lang: document.documentElement.lang || 'ru', — см. ниже
 //      page: location.href,
 //      _subject: 'Заявка с сайта Rakurs'}
-//   .then()/.catch() ОБА ведут к success-состоянию (скрыть форму, показать
-//   [data-form-success], скрыть [data-form-error]) — легаси-особенность:
-//   сетевая ошибка ТОЖЕ показывается пользователю как успех. Сохранено как
-//   есть, это не наша отсебятина (см. header-комментарий LeadForm.astro,
-//   строка "ошибка сети тоже 'успех' в UI").
+//   .then()/.catch() ОБА ведут к success-состоянию — легаси-особенность:
+//   сетевая ошибка ТОЖЕ показывается пользователю как успех (сохранено как
+//   есть, см. header-комментарий LeadForm.astro, "ошибка сети тоже 'успех' в UI").
+//   ОТКЛОНЕНИЕ ОТ ЛЕГАСИ (по запросу пользователя): success больше не заменяет
+//   форму инлайн — вместо этого показывается плавающий алерт (fixed,
+//   [data-form-success]) поверх страницы с автозакрытием через 10с и кнопкой
+//   [data-form-close], а сама форма сбрасывается (form.reset() + chips=[]).
 //   Ошибка НЕ снимается сразу после прохождения consent-проверки — только
 //   внутри then/catch (оба совпадают с успехом) — 1:1 порядок из легаси, где
 //   formError:false выставляется исключительно в колбэках fetch.
@@ -73,14 +75,16 @@ function readField(form: HTMLFormElement, name: string): string {
   return '';
 }
 
+const SUCCESS_AUTOCLOSE_MS = 10_000;
+
 export function initLeadForm(): void {
   const form = document.querySelector<HTMLFormElement>('[data-lead-form]');
   if (!form) return;
   const endpoint = form.dataset.endpoint;
   if (!endpoint) return;
 
-  const wrap = document.querySelector<HTMLElement>('[data-form-wrap]');
   const successEl = document.querySelector<HTMLElement>('[data-form-success]');
+  const closeBtn = document.querySelector<HTMLButtonElement>('[data-form-close]');
   const errorEl = form.querySelector<HTMLElement>('[data-form-error]');
   const countEl = document.querySelector<HTMLElement>('[data-chip-count]');
   const selectedEl = document.querySelector<HTMLElement>('[data-plan-selected]');
@@ -90,6 +94,22 @@ export function initLeadForm(): void {
   if (!errorEl || !countEl || !selectedEl || !emptyEl || !consentInput) return;
 
   let chips: string[] = [];
+  let autocloseTimer: ReturnType<typeof setTimeout> | undefined;
+
+  const closeSuccess = (): void => {
+    if (autocloseTimer) clearTimeout(autocloseTimer);
+    autocloseTimer = undefined;
+    if (successEl) successEl.hidden = true;
+  };
+
+  const openSuccess = (): void => {
+    if (!successEl) return;
+    if (autocloseTimer) clearTimeout(autocloseTimer);
+    successEl.hidden = false;
+    autocloseTimer = setTimeout(closeSuccess, SUCCESS_AUTOCLOSE_MS);
+  };
+
+  closeBtn?.addEventListener('click', closeSuccess);
 
   chipBtns.forEach((btn) => {
     const label = btn.dataset.chip;
@@ -129,8 +149,11 @@ export function initLeadForm(): void {
 
     const onSettled = (): void => {
       hideError(errorEl);
-      if (wrap) wrap.hidden = true;
-      if (successEl) successEl.hidden = false;
+      form.reset();
+      chips = [];
+      chipBtns.forEach((btn) => btn.classList.remove('is-selected'));
+      renderChips(chips, countEl, selectedEl, emptyEl);
+      openSuccess();
     };
 
     fetch(endpoint, {

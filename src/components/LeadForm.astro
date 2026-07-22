@@ -37,8 +37,14 @@
 //                                 (fetch-URL 1:1 из submitForm()); JS вешает
 //                                 submit-обработчик, читает FormData по name=
 //                                 полей ниже, POSTит на data-endpoint
-//   [data-form-wrap]           — обёртка формы (rk-form-grid); скрывается при успехе
-//   [data-form-success]        — блок "Спасибо! Заявка ушла" (изначально hidden)
+//   [data-form-wrap]           — обёртка формы (rk-form-grid); остаётся видимой при
+//                                 успехе, поля сбрасываются (см. lead-form.ts)
+//   [data-form-success]        — плавающий алерт "Спасибо! Заявка ушла" (fixed
+//                                 поверх страницы, изначально hidden); автозакрытие
+//                                 через 10с + [data-form-close] — отклонение от
+//                                 легаси-поведения (там inline-блок вместо формы),
+//                                 сделано по запросу пользователя, не 1:1 порт
+//   [data-form-close]          — кнопка ручного закрытия алерта
 //   [data-form-error]          — текст "Отметьте согласие…" (изначально hidden)
 //   [data-chip]                — кнопка-чип боли (value = label чипа); toggle
 //                                 select/unselect + пересчёт data-chip-count/
@@ -67,7 +73,8 @@ const footerEmail = t(locale).footer.email;
     <h2 data-reveal class="rk-form-heading">{dict.heading}</h2>
     <p data-reveal class="rk-form-lead">{dict.lead}</p>
 
-    <div class="rk-form-success" data-form-success data-lens="grid" hidden>
+    <div class="rk-form-success" data-form-success role="alert" aria-live="assertive" hidden>
+      <button type="button" class="rk-form-success-close" data-form-close aria-label={dict.successClose}>&times;</button>
       <div class="rk-form-success-icon">
         <svg viewBox="0 0 64 64" width="60" height="60"><rect x="10" y="10" width="16" height="4" rx="2" fill="#EDA05C"/><rect x="10" y="10" width="4" height="16" rx="2" fill="#EDA05C"/><g transform="rotate(12 50 16)"><rect x="38" y="10" width="16" height="4" rx="2" fill="#EDA05C"/><rect x="50" y="10" width="4" height="16" rx="2" fill="#EDA05C"/></g><rect x="10" y="50" width="16" height="4" rx="2" fill="#EDA05C"/><rect x="10" y="38" width="4" height="16" rx="2" fill="#EDA05C"/><rect x="38" y="50" width="16" height="4" rx="2" fill="#EDA05C"/><rect x="50" y="38" width="4" height="16" rx="2" fill="#EDA05C"/><path d="M24 33 l6 6 l12 -14" fill="none" stroke="#7E8C7C" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
@@ -180,13 +187,36 @@ const footerEmail = t(locale).footer.email;
   }
 
   .rk-form-success {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 950;
     background: #211d19;
     border: 1px solid #35302b;
     border-radius: 18px;
-    padding: clamp(32px, 5vw, 56px);
+    padding: clamp(28px, 4vw, 40px);
     text-align: center;
-    max-width: 640px;
-    margin: 0 auto;
+    width: min(420px, calc(100vw - 32px));
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  }
+  .rk-form-success[hidden] {
+    display: none;
+  }
+  .rk-form-success-close {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    background: none;
+    border: none;
+    color: var(--ink-muted-dark);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .rk-form-success-close:hover {
+    color: var(--ink-on-dark);
   }
   .rk-form-success-icon {
     display: inline-flex;

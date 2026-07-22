@@ -191,6 +191,7 @@ export const en: Dict = {
     successTitle: 'Thank you! Your request is in.', // i18n.js:376
     successText: 'We reply within one business day—and usually point to where to look for losses right on the first call.', // i18n.js:377
     successFootnoteBefore: "If you don’t hear back within 24 hours, email ", // i18n.js:373
+    successClose: 'Close notification',
     ticketLabel: 'WHAT YOU GET', // i18n.js:349
     ticketItem1: "top-3 money leaks—where and how much you're losing", // i18n.js:350
     ticketItem2: 'which solution closes the costliest one first', // i18n.js:351
